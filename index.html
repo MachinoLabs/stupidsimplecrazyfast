@@ -33,7 +33,18 @@
             padding: 20px 0; margin-bottom: 60px; border-bottom: 1px solid var(--line);
         }
         .brand-name { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
-        .brand-name span { color: var(--cyan); }
+        
+        /* THE MOTION EFFECT IN THE HEADER */
+        .brand-name span.simple { color: #fff; }
+        .brand-name span.fast { 
+            color: var(--cyan); 
+            font-style: italic; 
+            display: inline-block;
+            transform: skewX(-5deg); /* Adds that extra aerodynamic lean */
+            margin-left: 4px;
+            text-shadow: 2px 0 10px rgba(0, 229, 255, 0.3);
+        }
+
         .nav-links { display: flex; gap: 25px; }
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
         .nav-links a:hover { color: var(--cyan); }
@@ -114,7 +125,7 @@
         .star { color: #333; transition: 0.3s; }
         .star:hover, .star.active { color: var(--gold); text-shadow: 0 0 15px rgba(255, 191, 0, 0.5); }
 
-        /* FOOTER (THE ORIGINAL) */
+        /* FOOTER */
         .footer {
             margin-top: 120px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
         }
@@ -129,7 +140,10 @@
 
     <div class="container">
         <nav class="top-nav">
-            <div class="brand-name"><span>SS</span>CF</div>
+            <div class="brand-name">
+                <span class="simple">Stupid Simple</span>
+                <span class="fast">Crazy Fast</span>
+            </div>
             <div class="nav-links">
                 <a href="#apps">Games & Apps</a>
                 <a href="#feedback">Feedback</a>
@@ -141,7 +155,7 @@
             <div>
                 <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
                 <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
                     <a href="#apps" class="btn btn-main">Explore Tools</a>
                     <a href="#new" class="btn btn-alt">New Drops</a>
                 </div>
