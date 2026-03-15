@@ -3,199 +3,152 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stupid Simple Crazy Fast | Arcade Energy</title>
+    <title>Stupid Simple Crazy Fast | Micro-App Framework</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* THE MACHINOLABS ENGINE COLORS */
-            --bg: #020305;          /* Pure Void Black */
-            --panel: #0a0b10;       /* Deep Cabinet Charcoal */
-            --line: #1a1c26;        /* Subtle Border */
+            --bg: #050505;          /* Machino Black */
+            --panel: #111111;       /* Clean Card Background */
+            --cyan: #00e5ff;        /* Electric Cyan */
+            --gold: #ffbf00;        /* Bold Gold */
             --text: #ffffff;
-            --muted: #94a3b8;       /* Machino-style Slate */
-            
-            /* NEON HEAT LEVELS */
-            --cyan: #00f2ff;        /* Electric Cyan */
-            --gold: #ffbf00;        /* Fire Gold */
-            --orange: #ff8c00;      /* Atomic Orange */
-            --green: #39ff14;       /* Plasma Green */
-            
-            /* LIGHT EMISSION */
-            --glow-cyan: 0 0 20px rgba(0, 242, 255, 0.35);
-            --glow-gold: 0 0 20px rgba(255, 191, 0, 0.25);
-            --cabinet-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 60px rgba(0, 242, 255, 0.05);
+            --muted: #94a3b8;       /* High-Readability Slate */
+            --line: #222222;        /* Subtle Border */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        html, body { 
+        body { 
             background-color: var(--bg); 
             color: var(--text); 
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* GRID BACKGROUND */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: 
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
 
-        .wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-
-        /* NAVIGATION */
-        .topbar {
+        /* HEADER */
+        .top-nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px; border: 1px solid var(--line); border-radius: 24px;
-            background: rgba(10, 11, 16, 0.7); backdrop-filter: blur(15px);
-            margin-bottom: 40px;
+            padding: 20px 0; margin-bottom: 60px; border-bottom: 1px solid var(--line);
         }
-        .brand h1 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .brand span { color: var(--cyan); text-shadow: var(--glow-cyan); }
-        .nav-chips { display: flex; gap: 10px; }
-        .chip { 
-            padding: 8px 16px; border-radius: 50px; border: 1px solid var(--line); 
-            font-size: 0.75rem; font-weight: 700; color: var(--muted); text-decoration: none;
-            transition: 0.3s;
-        }
-        .chip:hover { color: var(--cyan); border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+        .brand-name { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
+        .brand-name span { color: var(--cyan); }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
+        .nav-links a:hover { color: var(--cyan); }
 
         /* HERO SECTION */
-        .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; min-height: 500px; }
-
-        .hero-left h2 { 
-            font-size: clamp(3rem, 6vw, 5rem); font-weight: 900; line-height: 0.9; 
-            text-transform: uppercase; letter-spacing: -2px; font-style: italic; margin-bottom: 20px;
-        }
-        .grad-text {
-            background: linear-gradient(to bottom, #fff, var(--muted));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero-copy { font-size: 1.2rem; color: var(--muted); margin-bottom: 30px; max-width: 500px; }
+        .hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
         
+        h2 { 
+            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1; 
+            text-transform: uppercase; letter-spacing: -1.5px; margin-bottom: 20px;
+        }
+        h2 span { color: var(--cyan); }
+        .hero-p { font-size: 1.15rem; color: var(--muted); margin-bottom: 35px; max-width: 600px; }
+        
+        /* THE LOGO SCREEN (Right Side) */
+        .logo-box {
+            background: #000;
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            /* This mimics the glow you liked on MachinoLabs */
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(255, 191, 0, 0.1);
+        }
+        .logo-placeholder {
+            font-size: 2.5rem; font-weight: 900; line-height: 1; text-transform: uppercase;
+            background: linear-gradient(135deg, var(--gold), var(--cyan));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+        }
+
         /* BUTTONS */
         .btn {
-            display: inline-block; padding: 18px 32px; border-radius: 16px; 
+            display: inline-block; padding: 16px 35px; border-radius: 50px; 
             font-weight: 900; text-transform: uppercase; text-decoration: none; transition: 0.3s;
+            font-size: 0.95rem;
         }
-        .btn-primary { 
-            background: var(--cyan); color: #000; box-shadow: var(--glow-cyan); margin-right: 15px; 
-        }
-        .btn-secondary { border: 1px solid var(--line); color: #fff; }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .btn-main { background: var(--cyan); color: #000; margin-right: 15px; }
+        .btn-alt { border: 1px solid var(--line); color: #fff; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
 
-        /* CABINET SCREEN (THE LOGO) */
-        .cabinet-frame {
-            position: relative; background: var(--panel); border: 2px solid var(--line);
-            border-radius: 40px; padding: 30px; box-shadow: var(--cabinet-shadow);
-            overflow: hidden; text-align: center;
-        }
-        /* Scanline effect over logo */
-        .cabinet-frame::after {
-            content: ""; position: absolute; inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 3px, 3px 100%; pointer-events: none;
-        }
-        .main-logo {
-            width: 100%; height: auto; border-radius: 20px;
-            filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.5)) 
-                    drop-shadow(0 0 45px rgba(255, 140, 0, 0.3));
-            animation: flicker 4s infinite;
-        }
-
-        /* GRID CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 60px; }
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 80px; }
         .card {
             background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
-            padding: 30px; text-decoration: none; color: #fff; transition: 0.3s;
+            padding: 35px; text-decoration: none; color: #fff; transition: 0.3s;
         }
-        .card:hover {
-            border-color: var(--cyan); transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.1);
-        }
-        .card h3 { color: var(--cyan); text-transform: uppercase; font-weight: 900; margin-bottom: 10px; }
+        .card:hover { border-color: var(--cyan); transform: translateY(-8px); }
+        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 12px; }
         .card p { color: var(--muted); font-size: 0.95rem; }
 
-        /* SIGNATURE FOOTER */
+        /* FOOTER - BRIGHT & READABLE */
         .footer {
-            margin-top: 100px; padding: 60px 20px; text-align: center;
-            border-top: 1px solid var(--line);
+            margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
         }
-        .framework-tag { 
-            font-size: 0.8rem; color: var(--muted); letter-spacing: 2px; 
-            text-transform: uppercase; margin-bottom: 20px; 
+        .footer-tag { 
+            color: #fff; /* Pure White for readability */
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 15px; letter-spacing: 0.5px;
         }
-        .machino-sig { font-size: 0.75rem; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-        .machino-sig a { color: var(--cyan); text-decoration: none; font-weight: 900; }
+        .footer-credits { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+        .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
-        }
-
-        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+        @media (max-width: 850px) { .hero { grid-template-columns: 1fr; text-align: center; } }
     </style>
 </head>
 <body>
 
-    <div class="wrap">
-        <nav class="topbar">
-            <div class="brand">
-                <h1><span>Stupid Simple</span> Crazy Fast</h1>
-            </div>
-            <div class="nav-chips">
-                <a href="#apps" class="chip">Cabinets</a>
-                <a href="#new" class="chip">New Drops</a>
-                <a href="https://machinolabs.com" class="chip">MachinoLabs</a>
+    <div class="container">
+        <nav class="top-nav">
+            <div class="brand-name"><span>SS</span>CF</div>
+            <div class="nav-links">
+                <a href="#apps">Micro-Apps</a>
+                <a href="#about">About Framework</a>
+                <a href="https://machinolabs.com">Parent Site</a>
             </div>
         </nav>
 
         <section class="hero">
-            <div class="hero-left">
-                <h2><span class="grad-text">Micro-Apps.</span><br>Arcade Energy.</h2>
-                <p class="hero-copy">A neon-charged home base for weird little tools and fast games, built with electric arcade DNA.</p>
-                <div class="hero-actions">
-                    <a href="#apps" class="btn btn-primary">Insert Coin</a>
-                    <a href="#new" class="btn btn-secondary">View Drops</a>
-                </div>
+            <div>
+                <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
+                <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
+                <a href="#apps" class="btn btn-main">Explore Tools</a>
+                <a href="tel:7176232907" class="btn btn-alt">Direct Line</a>
             </div>
 
-            <div class="hero-right">
-                <div class="cabinet-frame">
-                    <img src="sscf-logo.png" alt="SSCF Logo" class="main-logo">
+            <div class="logo-box">
+                <div class="logo-placeholder">
+                    Stupid Simple<br>
+                    <span style="font-size: 3.5rem;">Crazy Fast</span>
                 </div>
             </div>
         </section>
 
         <section class="grid" id="apps">
-            <a href="#" class="card">
+            <div class="card">
                 <h3>The Swami</h3>
-                <p>Digital fortune teller. Big energy. Instant vibe check.</p>
-            </a>
-            <a href="#" class="card">
-                <h3>Spin Wheel</h3>
-                <p>Randomizer logic for fast decisions and prize chaos.</p>
-            </a>
-            <a href="#" class="card">
-                <h3>Scratch Game</h3>
-                <p>Digital silver-foil reveal with high-conversion mechanics.</p>
-            </a>
+                <p>Digital logic-based fortune teller. High-engagement micro-tool for instant user interaction.</p>
+            </div>
+            <div class="card">
+                <h3>Decision Engine</h3>
+                <p>Advanced randomization tool for fast choices, promos, and custom brand experiences.</p>
+            </div>
+            <div class="card">
+                <h3>Interactive Match</h3>
+                <p>High-conversion educational game logic built for mobile-first performance.</p>
+            </div>
         </section>
 
         <footer class="footer">
-            <p class="framework-tag">Built with the <strong>StupidSimpleCrazyFast™</strong> micro-app framework.</p>
-            <p class="machino-sig">
-                Built by <a href="https://machinolabs.com">MachinoLabs</a> • machinolabs.com • stupidsimplecrazyfast.com
-            </p>
-            <p class="machino-sig" style="margin-top: 10px; color: #666;">Joe ~ 717.623.2907</p>
+            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+            <div class="footer-credits">
+                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com">stupidsimplecrazyfast.com</a>
+                <br>
+                Joe • 717.623.2907
+            </div>
         </footer>
     </div>
 
