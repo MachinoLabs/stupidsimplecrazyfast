@@ -25,7 +25,7 @@
             line-height: 1.6;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 
         /* HEADER */
         .top-nav {
@@ -38,68 +38,79 @@
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
         .nav-links a:hover { color: var(--cyan); }
 
-        /* HERO SECTION */
-        .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
+        /* HERO SECTION - UPSIZED LOGO SPACE */
+        .hero { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; /* 50/50 Split */
+            gap: 50px; 
+            align-items: center; 
+            min-height: 500px;
+        }
         
         h2 { 
-            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1; 
-            text-transform: uppercase; letter-spacing: -1.5px; margin-bottom: 20px;
+            font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
+            text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
         }
         h2 span { color: var(--cyan); }
-        .hero-p { font-size: 1.15rem; color: var(--muted); margin-bottom: 35px; max-width: 550px; }
+        .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 550px; }
         
-        /* THE LOGO BOX (HERO IMAGE) */
+        /* THE LOGO BOX (HERO IMAGE) - LARGER PRESENCE */
         .logo-box {
             background: #000;
             border: 1px solid var(--line);
-            border-radius: 30px;
-            padding: 15px;
+            border-radius: 40px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(255, 191, 0, 0.05);
-            overflow: hidden;
+            /* High-Intensity Machino Glow */
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.12), inset 0 0 30px rgba(255, 191, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 350px;
+            min-height: 500px; /* Upsized from previous versions */
+            position: relative;
         }
+        
         .hero-image {
-            width: 100%;
+            width: 95%; /* Maximized width inside the box */
             height: auto;
             border-radius: 20px;
             display: block;
-            /* This mimics the MachinoLabs glow effect */
-            filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4)) drop-shadow(0 0 10px rgba(255, 191, 0, 0.2));
+            filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.45)) drop-shadow(0 0 15px rgba(255, 191, 0, 0.25));
         }
 
         /* BUTTONS */
         .btn {
-            display: inline-block; padding: 16px 35px; border-radius: 50px; 
+            display: inline-block; padding: 18px 38px; border-radius: 50px; 
             font-weight: 900; text-transform: uppercase; text-decoration: none; transition: 0.3s;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
-        .btn-main { background: var(--cyan); color: #000; margin-right: 15px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
+        .btn-main { background: var(--cyan); color: #000; margin-right: 15px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
         .btn-alt { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .btn:hover { transform: translateY(-4px); filter: brightness(1.2); }
 
-        /* GRID */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 80px; }
+        /* APP GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 80px; }
         .card {
-            background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
-            padding: 35px; text-decoration: none; color: #fff; transition: 0.3s;
+            background: var(--panel); border: 1px solid var(--line); border-radius: 28px;
+            padding: 40px; text-decoration: none; color: #fff; transition: 0.3s;
         }
-        .card:hover { border-color: var(--cyan); transform: translateY(-8px); }
-        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 12px; }
-        .card p { color: var(--muted); font-size: 0.95rem; }
+        .card:hover { border-color: var(--cyan); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; font-size: 1.4rem; }
+        .card p { color: var(--muted); font-size: 1rem; line-height: 1.5; }
 
-        /* FOOTER - BRIGHT & READABLE */
+        /* FOOTER */
         .footer {
-            margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
+            margin-top: 120px; padding: 50px 0; border-top: 1px solid var(--line); text-align: center;
         }
-        .footer-tag { color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 15px; }
-        .footer-credits { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+        .footer-tag { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-credits { color: var(--muted); font-size: 0.9rem; line-height: 2; }
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
-        @media (max-width: 850px) { .hero { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { 
+            .hero { grid-template-columns: 1fr; text-align: center; } 
+            .hero-p { margin-left: auto; margin-right: auto; }
+            .logo-box { min-height: 400px; }
+        }
     </style>
 </head>
 <body>
@@ -118,7 +129,7 @@
             <div>
                 <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
                 <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
                     <a href="#apps" class="btn btn-main">Explore Tools</a>
                     <a href="#new" class="btn btn-alt">New Drops</a>
                 </div>
