@@ -27,7 +27,7 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 
-        /* HEADER - BACK TO ORIGINAL SSCF MARK */
+        /* HEADER */
         .top-nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 0; margin-bottom: 60px; border-bottom: 1px solid var(--line);
@@ -49,7 +49,6 @@
             margin-bottom: 100px;
         }
         
-        /* THE MAIN HEADLINE WITH MOTION */
         h2 { 
             font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
             text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
@@ -58,7 +57,7 @@
             color: var(--cyan); 
             font-style: italic; 
             display: inline-block;
-            transform: skewX(-6deg); /* The aerodynamic lean */
+            transform: skewX(-6deg);
             text-shadow: 2px 0 15px rgba(0, 229, 255, 0.3);
         }
 
@@ -92,14 +91,30 @@
         .btn-alt { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
         .btn:hover { transform: translateY(-4px); filter: brightness(1.2); }
 
+        /* SECTION TITLES */
+        .section-title {
+            margin: 100px 0 40px;
+            border-left: 4px solid var(--cyan);
+            padding-left: 20px;
+        }
+        .section-title h3 { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; }
+        .section-title.gold-title { border-left-color: var(--gold); }
+        .section-title.gold-title h3 span { color: var(--gold); }
+
         /* APP GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
         .card {
             background: var(--panel); border: 1px solid var(--line); border-radius: 28px;
             padding: 40px; text-decoration: none; color: #fff; transition: 0.3s;
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 220px;
         }
         .card:hover { border-color: var(--cyan); transform: translateY(-10px); }
-        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+        .card.game-card:hover { border-color: var(--gold); }
+        .card h3 { font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+        .card.tool-card h3 { color: var(--cyan); }
+        .card.game-card h3 { color: var(--gold); }
+        .card p { color: var(--muted); font-size: 1rem; }
 
         /* FEEDBACK SECTION */
         .feedback-station {
@@ -132,7 +147,8 @@
         <nav class="top-nav">
             <div class="brand-mark"><span>SS</span>CF</div>
             <div class="nav-links">
-                <a href="#apps">Games & Apps</a>
+                <a href="#tools">Tools</a>
+                <a href="#games">Games</a>
                 <a href="#feedback">Feedback</a>
                 <a href="https://machinolabs.com">MachinoLabs</a>
             </div>
@@ -143,8 +159,8 @@
                 <h2>Stupid Simple<br><span class="fast-text">Crazy Fast.</span></h2>
                 <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
-                    <a href="#apps" class="btn btn-main">Explore Tools</a>
-                    <a href="#new" class="btn btn-alt">Explore Games</a>
+                    <a href="#tools" class="btn btn-main">Explore Tools</a>
+                    <a href="#games" class="btn btn-alt">Explore Games</a>
                 </div>
             </div>
             <div class="logo-box">
@@ -152,22 +168,44 @@
             </div>
         </section>
 
-        <div class="section-title" id="apps">
-            <h3>Featured Cabinets</h3>
+        <div class="section-title" id="tools">
+            <h3>Utility <span>Deck</span></h3>
         </div>
         <section class="grid">
-            <div class="card">
-                <h3>The Swami</h3>
-                <p>Digital fortune teller. Big energy. Instant fortune-teller vibes and mystic answers.</p>
-            </div>
-            <div class="card">
-                <h3>Alphabet Match</h3>
-                <p>High-speed pattern recognition game. Quick-play card flipping with a bright retro feel.</p>
-            </div>
-            <div class="card">
+            <a href="#" class="card tool-card">
                 <h3>Rubric Tool</h3>
                 <p>Interactive digital logic system focused on performance and custom brand DNA.</p>
-            </div>
+            </a>
+            <a href="#" class="card tool-card">
+                <h3>Buzz Blaster</h3>
+                <p>Social media posting and engagement tool built for high-speed content delivery.</p>
+            </a>
+            <a href="#" class="card tool-card" style="border-style: dashed; opacity: 0.5;">
+                <h3>[ New Tool ]</h3>
+                <p>Cabinet offline. New utility drop scheduled for tomorrow.</p>
+            </a>
+        </section>
+
+        <div class="section-title gold-title" id="games">
+            <h3>Arcade <span>Floor</span></h3>
+        </div>
+        <section class="grid">
+            <a href="#" class="card game-card">
+                <h3>The Swami</h3>
+                <p>Digital fortune teller. Big energy. Instant fortune-teller vibes and mystic answers.</p>
+            </a>
+            <a href="#" class="card game-card">
+                <h3>Alphabet Match</h3>
+                <p>High-speed pattern recognition game. Quick-play card flipping with a retro feel.</p>
+            </a>
+            <a href="#" class="card game-card" style="border-style: dashed; opacity: 0.5;">
+                <h3>[ New Game ]</h3>
+                <p>Cabinet offline. New game drop scheduled for tomorrow.</p>
+            </a>
+            <a href="#" class="card game-card" style="border-style: dashed; opacity: 0.5;">
+                <h3>[ New Game ]</h3>
+                <p>Cabinet offline. New game drop scheduled for tomorrow.</p>
+            </a>
         </section>
 
         <section class="feedback-station" id="feedback">
