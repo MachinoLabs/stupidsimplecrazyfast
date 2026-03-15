@@ -6,19 +6,21 @@
   <title>Stupid Simple Crazy Fast</title>
   <style>
     :root{
-      --bg:#07070b;
-      --bg2:#11111a;
-      --panel:#12131d;
-      --panel2:#171928;
-      --line:#2b2f46;
-      --text:#f4f4f8;
-      --muted:#b8b9c9;
-      --pink:#ff4fd8;
+      --bg:#040507;
+      --bg2:#0a0d14;
+      --panel:#0d1018;
+      --panel2:#121624;
+      --line:#263249;
+      --text:#f5f8ff;
+      --muted:#b8c3d9;
+      --gold:#ffbf00;
+      --gold2:#ffd84d;
+      --green:#b9ff1f;
       --cyan:#39e7ff;
-      --yellow:#ffe45c;
-      --lime:#8fff5a;
-      --orange:#ff9a3d;
-      --shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 24px rgba(57,231,255,.08), 0 0 50px rgba(255,79,216,.06);
+      --blue:#1794ff;
+      --blue2:#66c8ff;
+      --orange:#ff9a1f;
+      --shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 30px rgba(23,148,255,.10), 0 0 70px rgba(255,191,0,.08);
     }
 
     *{box-sizing:border-box}
@@ -48,7 +50,7 @@
     .brand{display:flex;align-items:center;gap:14px}
     .logo{
       width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--pink),var(--cyan));color:#05050a;
+      background:linear-gradient(135deg,var(--gold),var(--green) 48%,var(--cyan) 72%,var(--blue));color:#05050a;
       font-size:26px;font-weight:900;box-shadow:0 0 20px rgba(57,231,255,.25)
     }
     .brand h1{margin:0;font-size:18px;letter-spacing:1.2px;text-transform:uppercase}
@@ -68,12 +70,12 @@
     .hero-left{padding:34px}
     .eyebrow{
       display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;
-      background:#10121b;border:1px solid var(--line);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--yellow)
+      background:#10121b;border:1px solid var(--line);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--green)
     }
     .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px var(--lime)}
     .hero h2{font-size:clamp(44px,6vw,84px);line-height:.93;margin:18px 0 14px;letter-spacing:1px;text-transform:uppercase}
     .gradient{
-      background:linear-gradient(90deg,var(--pink),var(--yellow),var(--cyan));
+      background:linear-gradient(90deg,var(--gold),var(--gold2),var(--green),var(--cyan),var(--blue2));
       -webkit-background-clip:text;background-clip:text;color:transparent
     }
     .hero-copy{font-size:19px;line-height:1.55;color:var(--muted);max-width:760px}
@@ -83,14 +85,14 @@
       background:linear-gradient(180deg,#1c1f31,#131521);color:#fff;box-shadow:var(--shadow)
     }
     .btn.primary{
-      background:linear-gradient(135deg,var(--pink),var(--cyan));color:#07070b;border:none
+      background:linear-gradient(135deg,var(--gold),var(--cyan));color:#07070b;border:none
     }
     .btn:hover{transform:translateY(-1px)}
 
     .hero-right{padding:24px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
     .hero-right::after{
       content:"";position:absolute;inset:auto -80px -80px auto;width:220px;height:220px;border-radius:50%;
-      background:radial-gradient(circle,var(--pink),transparent 65%);opacity:.18;filter:blur(18px)
+      background:radial-gradient(circle,var(--cyan),transparent 65%);opacity:.18;filter:blur(18px)
     }
     .screen{
       border:1px solid #3c415f;border-radius:22px;background:#0a0b13;padding:18px;position:relative;
@@ -128,14 +130,14 @@
       content:"";position:absolute;inset:auto -40px -40px auto;width:120px;height:120px;border-radius:50%;opacity:.16;filter:blur(6px)
     }
     .card:nth-child(1)::after{background:var(--cyan)}
-    .card:nth-child(2)::after{background:var(--pink)}
-    .card:nth-child(3)::after{background:var(--yellow)}
+    .card:nth-child(2)::after{background:var(--gold)}
+    .card:nth-child(3)::after{background:var(--green)}
     .card:nth-child(4)::after{background:var(--orange)}
     .card:nth-child(5)::after{background:var(--lime)}
     .card:nth-child(6)::after{background:var(--cyan)}
 
     .badge{
-      align-self:flex-start;padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--yellow);background:#0f1119
+      align-self:flex-start;padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--green);background:#0f1119
     }
     .card h4{margin:16px 0 8px;font-size:28px;line-height:1;text-transform:uppercase}
     .card p{margin:0;color:var(--muted);font-size:15px;line-height:1.5;max-width:40ch}
@@ -179,7 +181,7 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="logo">⚡</div>
+        <div class="logo" aria-label="SSCF logo mark">⚡</div>
         <div>
           <h1>Stupid Simple Crazy Fast</h1>
           <p>Retro arcade for micro-apps, games, and experiments</p>
@@ -193,11 +195,12 @@
     </div>
 
     <section class="hero">
+      <div style="display:none" id="logo-notes">Replace the small bolt mark or add the full SSCF logo as an image, SVG, or styled text lockup.</div>
       <div class="hero-left">
         <div class="eyebrow"><span class="dot"></span> New quarter inserted</div>
         <h2><span class="gradient">Micro-Apps.</span><br>Arcade Energy.</h2>
         <p class="hero-copy">
-          A neon-soaked home base for weird little tools, fast games, useful experiments, and playful web experiences that load quick and hit hard.
+          A neon-charged home base for weird little tools, fast games, useful experiments, and playful web experiences with electric arcade energy.
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#apps">Enter the Arcade</a>
@@ -206,6 +209,11 @@
       </div>
 
       <div class="hero-right">
+        <div style="display:flex;justify-content:center;margin-bottom:14px;">
+          <div style="width:min(100%,420px);padding:16px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#121624,#0b0e15);box-shadow:var(--shadow);text-align:center;">
+            <img src="sscf-logo.png" alt="Stupid Simple Crazy Fast logo" style="width:100%;height:auto;display:block;filter:drop-shadow(0 0 20px rgba(57,231,255,.18)) drop-shadow(0 0 24px rgba(255,191,0,.16));" />
+          </div>
+        </div>
         <div class="screen">
           <div class="screen-head">
             <span>Now Loading</span>
@@ -355,3 +363,4 @@
   </div>
 </body>
 </html>
+
