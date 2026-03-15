@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stupid Simple Crazy Fast | Micro-App Framework</title>
+    <title>Stupid Simple Crazy Fast | Innovation Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,7 +16,7 @@
             --line: #222222;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
         
         body { 
             background-color: var(--bg); 
@@ -38,13 +38,14 @@
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
         .nav-links a:hover { color: var(--cyan); }
 
-        /* HERO SECTION - UPSIZED LOGO SPACE */
+        /* HERO SECTION */
         .hero { 
             display: grid; 
-            grid-template-columns: 1fr 1fr; /* 50/50 Split */
+            grid-template-columns: 1fr 1fr;
             gap: 50px; 
             align-items: center; 
-            min-height: 500px;
+            min-height: 550px;
+            margin-bottom: 100px;
         }
         
         h2 { 
@@ -54,31 +55,25 @@
         h2 span { color: var(--cyan); }
         .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 550px; }
         
-        /* THE LOGO BOX (HERO IMAGE) - LARGER PRESENCE */
         .logo-box {
             background: #000;
             border: 1px solid var(--line);
             border-radius: 40px;
             padding: 20px;
-            text-align: center;
-            /* High-Intensity Machino Glow */
             box-shadow: 0 0 60px rgba(0, 229, 255, 0.12), inset 0 0 30px rgba(255, 191, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 500px; /* Upsized from previous versions */
-            position: relative;
+            min-height: 500px;
         }
         
         .hero-image {
-            width: 95%; /* Maximized width inside the box */
+            width: 95%;
             height: auto;
             border-radius: 20px;
-            display: block;
             filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.45)) drop-shadow(0 0 15px rgba(255, 191, 0, 0.25));
         }
 
-        /* BUTTONS */
         .btn {
             display: inline-block; padding: 18px 38px; border-radius: 50px; 
             font-weight: 900; text-transform: uppercase; text-decoration: none; transition: 0.3s;
@@ -88,29 +83,46 @@
         .btn-alt { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
         .btn:hover { transform: translateY(-4px); filter: brightness(1.2); }
 
+        /* SECTION TITLES */
+        .section-title {
+            margin: 100px 0 40px;
+            border-left: 4px solid var(--cyan);
+            padding-left: 20px;
+        }
+        .section-title h3 { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; }
+
         /* APP GRID */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 80px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
         .card {
             background: var(--panel); border: 1px solid var(--line); border-radius: 28px;
             padding: 40px; text-decoration: none; color: #fff; transition: 0.3s;
         }
-        .card:hover { border-color: var(--cyan); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; font-size: 1.4rem; }
-        .card p { color: var(--muted); font-size: 1rem; line-height: 1.5; }
+        .card:hover { border-color: var(--cyan); transform: translateY(-10px); }
+        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+
+        /* INNOVATION PIPELINE (NEW DROPS) */
+        .pipeline { background: var(--panel); border-radius: 30px; border: 1px solid var(--line); overflow: hidden; }
+        .pipe-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 25px 40px; border-bottom: 1px solid var(--line); 
+            transition: 0.3s;
+        }
+        .pipe-item:last-child { border-bottom: none; }
+        .pipe-item:hover { background: #1a1a1a; }
+        .pipe-info h4 { font-weight: 900; text-transform: uppercase; color: var(--gold); }
+        .pipe-info p { color: var(--muted); font-size: 0.9rem; }
+        .status { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 10px; border-radius: 4px; }
 
         /* FOOTER */
         .footer {
-            margin-top: 120px; padding: 50px 0; border-top: 1px solid var(--line); text-align: center;
+            margin-top: 120px; padding: 80px 0; border-top: 1px solid var(--line); text-align: center;
+            background: linear-gradient(to bottom, transparent, #0a0a0a);
         }
-        .footer-tag { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .footer-credits { color: var(--muted); font-size: 0.9rem; line-height: 2; }
+        .footer-tag { color: #fff; font-weight: 900; font-size: 1.2rem; margin-bottom: 25px; text-transform: uppercase; }
+        .footer-credits { color: var(--muted); font-size: 0.95rem; line-height: 2; }
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
-        @media (max-width: 900px) { 
-            .hero { grid-template-columns: 1fr; text-align: center; } 
-            .hero-p { margin-left: auto; margin-right: auto; }
-            .logo-box { min-height: 400px; }
-        }
+        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .logo-box { min-height: 400px; } }
     </style>
 </head>
 <body>
@@ -119,8 +131,8 @@
         <nav class="top-nav">
             <div class="brand-name"><span>SS</span>CF</div>
             <div class="nav-links">
-                <a href="#apps">Micro-Apps</a>
-                <a href="#about">About Framework</a>
+                <a href="#apps">Experiments</a>
+                <a href="#pipeline">Innovation Pipeline</a>
                 <a href="https://machinolabs.com">MachinoLabs</a>
             </div>
         </nav>
@@ -128,38 +140,71 @@
         <section class="hero">
             <div>
                 <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
-                <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
-                    <a href="#apps" class="btn btn-main">Explore Tools</a>
-                    <a href="#new" class="btn btn-alt">New Drops</a>
+                <p class="hero-p">The experimental innovation lab for MachinoLabs. High-performance micro-apps, fast games, and weird web logic.</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="#apps" class="btn btn-main">View Lab</a>
+                    <a href="#pipeline" class="btn btn-alt">New Drops</a>
                 </div>
             </div>
-
             <div class="logo-box">
                 <img src="sscf-logo.png" alt="Stupid Simple Crazy Fast Logo" class="hero-image">
             </div>
         </section>
 
-        <section class="grid" id="apps">
+        <div class="section-title" id="apps">
+            <h3>Lab Experiments</h3>
+        </div>
+        <section class="grid">
             <div class="card">
                 <h3>The Swami</h3>
-                <p>Digital logic-based fortune teller. High-engagement micro-tool for instant user interaction.</p>
+                <p>Digital logic-based fortune teller. A study in instant user engagement and predictive patterns.</p>
             </div>
             <div class="card">
-                <h3>Decision Engine</h3>
-                <p>Advanced randomization tool for fast choices, promos, and custom brand experiences.</p>
+                <h3>Logic Match</h3>
+                <p>Memory and pattern recognition engine built for ultra-low latency mobile performance.</p>
             </div>
             <div class="card">
-                <h3>Interactive Match</h3>
-                <p>High-conversion educational game logic built for mobile-first performance.</p>
+                <h3>Chaos Wheel</h3>
+                <p>A randomization experiment focused on physics-based UI and high-speed decision logic.</p>
+            </div>
+        </section>
+
+        <div class="section-title" id="pipeline">
+            <h3>Innovation Pipeline</h3>
+        </div>
+        <section class="pipeline">
+            <div class="pipe-item">
+                <div class="pipe-info">
+                    <h4>Micro-Task Timer</h4>
+                    <p>Focus-based productivity tool with high-octane visual feedback.</p>
+                </div>
+                <span class="status">Testing</span>
+            </div>
+            <div class="pipe-item">
+                <div class="pipe-info">
+                    <h4>Soundboard Alpha</h4>
+                    <p>Web-audio experiment for instant sound-trigger feedback loops.</p>
+                </div>
+                <span class="status">Queued</span>
+            </div>
+            <div class="pipe-item">
+                <div class="pipe-info">
+                    <h4>Gravity Sim v1</h4>
+                    <p>Physics-based experiment for future game mechanics.</p>
+                </div>
+                <span class="status">Concept</span>
             </div>
         </section>
 
         <footer class="footer">
-            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+            <p class="footer-tag">StupidSimpleCrazyFast™</p>
             <div class="footer-credits">
-                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com">stupidsimplecrazyfast.com</a>
+                This is the experimental lab for <a href="https://machinolabs.com">MachinoLabs</a>.
                 <br>
+                For local business tools, Scratch-Offs, and Commercial Apps, visit our portfolio at 
+                <br>
+                <a href="https://machinolabs.com">machinolabs.com</a>
+                <br><br>
                 Joe • 717.623.2907
             </div>
         </footer>
