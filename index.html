@@ -27,23 +27,13 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 
-        /* HEADER */
+        /* HEADER - BACK TO ORIGINAL SSCF MARK */
         .top-nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 0; margin-bottom: 60px; border-bottom: 1px solid var(--line);
         }
-        .brand-name { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
-        
-        /* THE MOTION EFFECT IN THE HEADER */
-        .brand-name span.simple { color: #fff; }
-        .brand-name span.fast { 
-            color: var(--cyan); 
-            font-style: italic; 
-            display: inline-block;
-            transform: skewX(-5deg); /* Adds that extra aerodynamic lean */
-            margin-left: 4px;
-            text-shadow: 2px 0 10px rgba(0, 229, 255, 0.3);
-        }
+        .brand-mark { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
+        .brand-mark span { color: var(--cyan); }
 
         .nav-links { display: flex; gap: 25px; }
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
@@ -59,11 +49,19 @@
             margin-bottom: 100px;
         }
         
+        /* THE MAIN HEADLINE WITH MOTION */
         h2 { 
             font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
             text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
         }
-        h2 span { color: var(--cyan); }
+        h2 .fast-text { 
+            color: var(--cyan); 
+            font-style: italic; 
+            display: inline-block;
+            transform: skewX(-6deg); /* The aerodynamic lean */
+            text-shadow: 2px 0 15px rgba(0, 229, 255, 0.3);
+        }
+
         .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 550px; }
         
         .logo-box {
@@ -93,14 +91,6 @@
         .btn-main { background: var(--cyan); color: #000; margin-right: 15px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
         .btn-alt { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
         .btn:hover { transform: translateY(-4px); filter: brightness(1.2); }
-
-        /* SECTION TITLES */
-        .section-title {
-            margin: 100px 0 40px;
-            border-left: 4px solid var(--cyan);
-            padding-left: 20px;
-        }
-        .section-title h3 { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; }
 
         /* APP GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
@@ -140,10 +130,7 @@
 
     <div class="container">
         <nav class="top-nav">
-            <div class="brand-name">
-                <span class="simple">Stupid Simple</span>
-                <span class="fast">Crazy Fast</span>
-            </div>
+            <div class="brand-mark"><span>SS</span>CF</div>
             <div class="nav-links">
                 <a href="#apps">Games & Apps</a>
                 <a href="#feedback">Feedback</a>
@@ -153,7 +140,7 @@
 
         <section class="hero">
             <div>
-                <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
+                <h2>Stupid Simple<br><span class="fast-text">Crazy Fast.</span></h2>
                 <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
                     <a href="#apps" class="btn btn-main">Explore Tools</a>
