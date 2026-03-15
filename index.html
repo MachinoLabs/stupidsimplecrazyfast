@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stupid Simple Crazy Fast | Micro-App Framework</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;          /* Machino Black */
+            --panel: #111111;       /* Clean Card Background */
+            --cyan: #00e5ff;        /* Electric Cyan */
+            --gold: #ffbf00;        /* Bold Gold */
+            --text: #ffffff;
+            --muted: #94a3b8;       /* High-Readability Slate */
+            --line: #222222;        /* Subtle Border */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+        /* HEADER */
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0; margin-bottom: 60px; border-bottom: 1px solid var(--line);
+        }
+        .brand-name { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
+        .brand-name span { color: var(--cyan); }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
+        .nav-links a:hover { color: var(--cyan); }
+
+        /* HERO SECTION */
+        .hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
+        
+        h2 { 
+            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1; 
+            text-transform: uppercase; letter-spacing: -1.5px; margin-bottom: 20px;
+        }
+        h2 span { color: var(--cyan); }
+        .hero-p { font-size: 1.15rem; color: var(--muted); margin-bottom: 35px; max-width: 600px; }
+        
+        /* THE LOGO SCREEN (Right Side) */
+        .logo-box {
+            background: #000;
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            /* This mimics the glow you liked on MachinoLabs */
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(255, 191, 0, 0.1);
+        }
+        .logo-placeholder {
+            font-size: 2.5rem; font-weight: 900; line-height: 1; text-transform: uppercase;
+            background: linear-gradient(135deg, var(--gold), var(--cyan));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block; padding: 16px 35px; border-radius: 50px; 
+            font-weight: 900; text-transform: uppercase; text-decoration: none; transition: 0.3s;
+            font-size: 0.95rem;
+        }
+        .btn-main { background: var(--cyan); color: #000; margin-right: 15px; }
+        .btn-alt { border: 1px solid var(--line); color: #fff; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 80px; }
+        .card {
+            background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
+            padding: 35px; text-decoration: none; color: #fff; transition: 0.3s;
+        }
+        .card:hover { border-color: var(--cyan); transform: translateY(-8px); }
+        .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 12px; }
+        .card p { color: var(--muted); font-size: 0.95rem; }
+
+        /* FOOTER - BRIGHT & READABLE */
+        .footer {
+            margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
+        }
+        .footer-tag { 
+            color: #fff; /* Pure White for readability */
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 15px; letter-spacing: 0.5px;
+        }
+        .footer-credits { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+        .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
+
+        @media (max-width: 850px) { .hero { grid-template-columns: 1fr; text-align: center; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="top-nav">
+            <div class="brand-name"><span>SS</span>CF</div>
+            <div class="nav-links">
+                <a href="#apps">Micro-Apps</a>
+                <a href="#about">About Framework</a>
+                <a href="https://machinolabs.com">Parent Site</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div>
+                <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
+                <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
+                <a href="#apps" class="btn btn-main">Explore Tools</a>
+                <a href="tel:7176232907" class="btn btn-alt">Direct Line</a>
+            </div>
+
+            <div class="logo-box">
+                <div class="logo-placeholder">
+                    Stupid Simple<br>
+                    <span style="font-size: 3.5rem;">Crazy Fast</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid" id="apps">
+            <div class="card">
+                <h3>The Swami</h3>
+                <p>Digital logic-based fortune teller. High-engagement micro-tool for instant user interaction.</p>
+            </div>
+            <div class="card">
+                <h3>Decision Engine</h3>
+                <p>Advanced randomization tool for fast choices, promos, and custom brand experiences.</p>
+            </div>
+            <div class="card">
+                <h3>Interactive Match</h3>
+                <p>High-conversion educational game logic built for mobile-first performance.</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+            <div class="footer-credits">
+                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com">stupidsimplecrazyfast.com</a>
+                <br>
+                Joe • 717.623.2907
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
