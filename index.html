@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stupid Simple Crazy Fast | Innovation Lab</title>
+    <title>Stupid Simple Crazy Fast | Arcade & Tools</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -100,26 +100,26 @@
         .card:hover { border-color: var(--cyan); transform: translateY(-10px); }
         .card h3 { color: var(--cyan); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
 
-        /* INNOVATION PIPELINE (NEW DROPS) */
-        .pipeline { background: var(--panel); border-radius: 30px; border: 1px solid var(--line); overflow: hidden; }
-        .pipe-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 25px 40px; border-bottom: 1px solid var(--line); 
-            transition: 0.3s;
+        /* FEEDBACK SECTION */
+        .feedback-station {
+            margin-top: 100px;
+            padding: 60px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 40px;
+            text-align: center;
         }
-        .pipe-item:last-child { border-bottom: none; }
-        .pipe-item:hover { background: #1a1a1a; }
-        .pipe-info h4 { font-weight: 900; text-transform: uppercase; color: var(--gold); }
-        .pipe-info p { color: var(--muted); font-size: 0.9rem; }
-        .status { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 10px; border-radius: 4px; }
+        .feedback-station h4 { font-size: 2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .stars { display: flex; justify-content: center; gap: 15px; margin: 30px 0; font-size: 2.5rem; cursor: pointer; }
+        .star { color: #333; transition: 0.3s; }
+        .star:hover, .star.active { color: var(--gold); text-shadow: 0 0 15px rgba(255, 191, 0, 0.5); }
 
-        /* FOOTER */
+        /* FOOTER (THE ORIGINAL) */
         .footer {
-            margin-top: 120px; padding: 80px 0; border-top: 1px solid var(--line); text-align: center;
-            background: linear-gradient(to bottom, transparent, #0a0a0a);
+            margin-top: 120px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
         }
-        .footer-tag { color: #fff; font-weight: 900; font-size: 1.2rem; margin-bottom: 25px; text-transform: uppercase; }
-        .footer-credits { color: var(--muted); font-size: 0.95rem; line-height: 2; }
+        .footer-tag { color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 15px; }
+        .footer-credits { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
         @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .logo-box { min-height: 400px; } }
@@ -131,8 +131,8 @@
         <nav class="top-nav">
             <div class="brand-name"><span>SS</span>CF</div>
             <div class="nav-links">
-                <a href="#apps">Experiments</a>
-                <a href="#pipeline">Innovation Pipeline</a>
+                <a href="#apps">Games & Apps</a>
+                <a href="#feedback">Feedback</a>
                 <a href="https://machinolabs.com">MachinoLabs</a>
             </div>
         </nav>
@@ -140,10 +140,10 @@
         <section class="hero">
             <div>
                 <h2><span>Stupid Simple</span><br>Crazy Fast.</h2>
-                <p class="hero-p">The experimental innovation lab for MachinoLabs. High-performance micro-apps, fast games, and weird web logic.</p>
+                <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <a href="#apps" class="btn btn-main">View Lab</a>
-                    <a href="#pipeline" class="btn btn-alt">New Drops</a>
+                    <a href="#apps" class="btn btn-main">Explore Tools</a>
+                    <a href="#new" class="btn btn-alt">New Drops</a>
                 </div>
             </div>
             <div class="logo-box">
@@ -152,59 +152,41 @@
         </section>
 
         <div class="section-title" id="apps">
-            <h3>Lab Experiments</h3>
+            <h3>Featured Cabinets</h3>
         </div>
         <section class="grid">
             <div class="card">
                 <h3>The Swami</h3>
-                <p>Digital logic-based fortune teller. A study in instant user engagement and predictive patterns.</p>
+                <p>Digital fortune teller. Big energy. Instant fortune-teller vibes and mystic answers.</p>
             </div>
             <div class="card">
-                <h3>Logic Match</h3>
-                <p>Memory and pattern recognition engine built for ultra-low latency mobile performance.</p>
+                <h3>Alphabet Match</h3>
+                <p>High-speed pattern recognition game. Quick-play card flipping with a bright retro feel.</p>
             </div>
             <div class="card">
-                <h3>Chaos Wheel</h3>
-                <p>A randomization experiment focused on physics-based UI and high-speed decision logic.</p>
+                <h3>Rubric Tool</h3>
+                <p>Interactive digital logic system focused on performance and custom brand DNA.</p>
             </div>
         </section>
 
-        <div class="section-title" id="pipeline">
-            <h3>Innovation Pipeline</h3>
-        </div>
-        <section class="pipeline">
-            <div class="pipe-item">
-                <div class="pipe-info">
-                    <h4>Micro-Task Timer</h4>
-                    <p>Focus-based productivity tool with high-octane visual feedback.</p>
-                </div>
-                <span class="status">Testing</span>
+        <section class="feedback-station" id="feedback">
+            <h4>Rate the Experience</h4>
+            <p style="color: var(--muted);">How is the framework performing for you? Tap a star.</p>
+            <div class="stars">
+                <span class="star" onclick="this.parentElement.querySelectorAll('.star').forEach(s => s.classList.remove('active')); this.classList.add('active')">★</span>
+                <span class="star" onclick="this.parentElement.querySelectorAll('.star').forEach(s => s.classList.remove('active')); this.classList.add('active')">★</span>
+                <span class="star" onclick="this.parentElement.querySelectorAll('.star').forEach(s => s.classList.remove('active')); this.classList.add('active')">★</span>
+                <span class="star" onclick="this.parentElement.querySelectorAll('.star').forEach(s => s.classList.remove('active')); this.classList.add('active')">★</span>
+                <span class="star" onclick="this.parentElement.querySelectorAll('.star').forEach(s => s.classList.remove('active')); this.classList.add('active')">★</span>
             </div>
-            <div class="pipe-item">
-                <div class="pipe-info">
-                    <h4>Soundboard Alpha</h4>
-                    <p>Web-audio experiment for instant sound-trigger feedback loops.</p>
-                </div>
-                <span class="status">Queued</span>
-            </div>
-            <div class="pipe-item">
-                <div class="pipe-info">
-                    <h4>Gravity Sim v1</h4>
-                    <p>Physics-based experiment for future game mechanics.</p>
-                </div>
-                <span class="status">Concept</span>
-            </div>
+            <p style="font-size: 0.8rem; color: #444; text-transform: uppercase; letter-spacing: 1px;">Player One Feedback Loop</p>
         </section>
 
         <footer class="footer">
-            <p class="footer-tag">StupidSimpleCrazyFast™</p>
+            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
             <div class="footer-credits">
-                This is the experimental lab for <a href="https://machinolabs.com">MachinoLabs</a>.
+                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com">stupidsimplecrazyfast.com</a>
                 <br>
-                For local business tools, Scratch-Offs, and Commercial Apps, visit our portfolio at 
-                <br>
-                <a href="https://machinolabs.com">machinolabs.com</a>
-                <br><br>
                 Joe • 717.623.2907
             </div>
         </footer>
