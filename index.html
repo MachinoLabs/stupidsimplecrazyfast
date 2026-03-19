@@ -26,34 +26,6 @@
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 20px 20px; }
-
-/* ARCADE CARD STYLES */
-.arcade-card {
-    background: var(--panel); /* Uses your Deep Slate */
-    border: 2px solid var(--line);
-    padding: 24px;
-    border-radius: 8px; /* Lean but modern */
-    transition: 0.2s;
-    text-decoration: none;
-    display: block;
-}
-
-.arcade-card:hover {
-    border-color: var(--cyan); /* Glows Cyan on hover */
-    transform: translateY(-5px);
-}
-
-.app-title {
-    color: var(--text);
-    font-size: 1.5rem;
-    font-weight: 900;
-    margin-bottom: 8px;
-}
-
-.app-tagline {
-    color: var(--muted);
-    font-size: 0.9rem;
-}
         
         /* HEADER */
         .top-nav {
@@ -67,22 +39,21 @@
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
         .nav-links a:hover { color: var(--cyan); }
 
-        /* HERO SECTION - MACHINOLABS ALIGNMENT */
+        /* HERO SECTION */
         .hero { 
             display: grid; 
             grid-template-columns: 1fr 1fr;
             gap: 60px; 
-            align-items: flex-start; /* Aligns both to the top shelf */
+            align-items: flex-start;
             min-height: 500px;
             margin-bottom: 80px;
             padding-top: 20px;
         }
         
-        /* THE MAIN HEADLINE */
         h2 { 
             font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
             text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
-            margin-top: -8px; /* Micro-adjustment for font-ascent */
+            margin-top: -8px;
         }
         h2 .fast-text { 
             color: var(--cyan); 
@@ -94,19 +65,16 @@
 
         .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 520px; }
         
-        /* THE SINGLE MACHINOLABS-STYLE LOGO FRAME */
         .logo-frame {
             background: #000;
             border: 1px solid var(--line);
             border-radius: 20px;
-            padding: 0; /* No inner box-in-box padding */
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            /* The Machino "Fabulous" Bloom Effect */
             box-shadow: 0 0 40px rgba(0, 229, 255, 0.15); 
-            margin-top: 5px; /* Adjusts the logo to sit on the same horizontal shelf as the text */
+            margin-top: 5px;
         }
         
         .hero-image {
@@ -114,7 +82,6 @@
             height: auto;
             border-radius: 18px;
             display: block;
-            /* Direct emissive glow on the artwork itself */
             filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.3));
         }
 
@@ -138,7 +105,7 @@
         .section-title.gold-title { border-left-color: var(--gold); }
         .section-title span { color: var(--muted); font-weight: 400; }
 
-        /* GRID */
+        /* GRID & CARDS */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card {
             background: var(--panel); border: 1px solid var(--line); border-radius: 20px;
@@ -172,28 +139,6 @@
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
         @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .logo-frame { max-width: 500px; margin: 0 auto; } }
-   /* THE ARCADE FLOOR GRID */
-.arcade-floor {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 40px 0;
-}
-
-/* THE CARD */
-.arcade-card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 20px;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.arcade-card:hover {
-    border-color: var(--cyan);
-    transform: translateY(-5px);
-}
-    
     </style>
 </head>
 <body>
@@ -254,9 +199,10 @@
                 <h3>Alphabet Match</h3>
                 <p>High-speed pattern recognition game. Quick-play card flipping with a retro feel.</p>
             </a>
-            <a href="#" class="card game-card" style="border-style: dashed; opacity: 0.4;">
-                <h3>[ New Game ]</h3>
-                <p>Cabinet offline. New game drop scheduled for release.</p>
+            
+            <a href="smak-a-dot/index.html" class="card game-card">
+                <h3>Smak-A-Dot</h3>
+                <p>StupidSimple reflex training. Catch the dots before they vanish from the screen.</p>
             </a>
         </section>
 
@@ -273,7 +219,7 @@
             <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
             <div class="footer-credits">
                 Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com">stupidsimplecrazyfast.com</a>
-                <br>
+                <br><br>
                 Joe • 717.623.2907
             </div>
         </footer>
