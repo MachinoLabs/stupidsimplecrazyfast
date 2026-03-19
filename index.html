@@ -172,6 +172,28 @@
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
 
         @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .logo-frame { max-width: 500px; margin: 0 auto; } }
+   /* THE ARCADE FLOOR GRID */
+.arcade-floor {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 40px 0;
+}
+
+/* THE CARD */
+.arcade-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 20px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.arcade-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-5px);
+}
+    
     </style>
 </head>
 <body>
