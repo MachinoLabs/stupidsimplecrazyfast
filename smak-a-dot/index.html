@@ -27,7 +27,7 @@
             position: fixed; inset: 0;
             display: flex; align-items: center; justify-content: center;
             font-size: 14vw; font-weight: 900; line-height: 0.8;
-            color: rgba(192, 43, 43, 0.782); text-align: center;
+            color: rgba(192, 43, 43, 0.15); text-align: center;
             pointer-events: none; z-index: 1; text-transform: uppercase;
         }
 
@@ -252,7 +252,6 @@
                     
                     spawnFloater(hole, pts);
                     
-                    // FIXED AUDIO: Blue dots now use 'triangle' for better audibility
                     if (pts === 1) playSound(700, 'triangle', 0.1); 
                     if (pts === 5) playSound(850, 'square', 0.15);
                     if (pts === 10) playSound(1300, 'triangle', 0.25);
@@ -300,7 +299,7 @@
         }
 
         document.getElementById('pause-btn').addEventListener('click', function() {
-            if(!state.gameActive) return;sss
+            if(!state.gameActive) return;
             state.isPaused = !state.isPaused;
             this.textContent = state.isPaused ? "RESUME" : "PAUSE";
             if(!state.isPaused) { unlockAudio(); spawnLoop(); }
