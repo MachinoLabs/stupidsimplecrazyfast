@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tip Calculator | SSCF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --border: #e2e8f0;
+      --radius-lg: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    }
+
+    .app-container { width: 100%; max-width: 480px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+    .app-nav { display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; }
+    .hub-link { font-size: 0.75rem; text-decoration: none; color: var(--muted); font-weight: 700; }
+
+    .app-card {
+      background: radial-gradient(circle at top left, #eef2ff, #f4f5f7 45%, #ffffff 100%);
+      border-radius: var(--radius-lg); padding: 24px 20px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border: 1px solid rgba(148, 163, 184, 0.2);
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    .app-title { font-size: 1.7rem; font-weight: 800; margin: 0; }
+    .app-subtitle { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+    .field-group { display: flex; flex-direction: column; gap: 8px; }
+    .field-label { font-size: 0.9rem; font-weight: 700; }
+    .input-row { display: flex; align-items: center; gap: 10px; }
+    .input-prefix {
+      font-size: 1rem; padding: 12px; border-radius: 999px;
+      background: #fff; border: 1px solid var(--border);
+      color: var(--muted); min-width: 46px; text-align: center;
+    }
+    .text-input {
+      flex: 1; padding: 14px 20px; font-size: 1.1rem; border-radius: 999px;
+      border: 1px solid var(--border); outline: none;
+    }
+    .text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+    .tip-buttons-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .tip-btn {
+      border-radius: 999px; padding: 12px 0; font-size: 0.95rem;
+      border: 1px solid var(--border); background: #fff; cursor: pointer; font-weight: 700; color: var(--muted);
+    }
+    .tip-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .tip-custom-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+    .custom-input { width: 80px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); outline: none; text-align: center; }
+
+    .results-card { background: #fff; border-radius: 20px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; }
+    .result-main { font-size: 1.5rem; color: var(--accent); font-weight: 800; }
+
+    .ml-global-footer { width: 100%; max-width: 480px; margin-top: auto; padding: 30px 16px; text-align: center; font-size: 0.75rem; color: var(--muted); line-height: 1.8; }
+    .ml-global-footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+
+    /* MODAL CSS */
+    .ml-info-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 998; }
+    .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+    .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none; }
+    .ml-info-modal-inner { background: #fff; border-radius: 20px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px; overflow-x: auto; }
+    .ml-info-tab { border-radius: 999px; border: 1px solid #ddd; background: #fff; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .ml-info-tab-active { background: #0f172a; color: #fff; border-color: #0f172a; }
+    .ml-info-body { font-size: 14px; line-height: 1.6; max-height: 50vh; overflow-y: auto; }
+    .ml-info-panel[hidden] { display: none; }
+    .ml-info-panel a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <nav class="app-nav">
+      <a href="https://stupidsimplecrazyfast.com" target="_blank" class="hub-link">← SSCF.APP</a>
+      <button id="infoBtn" class="ml-info-btn">ⓘ</button>
+    </nav>
+    
+    <div class="app-card">
+      <header class="app-header">
+        <h1 class="app-title">Tip Calculator</h1>
+        <p class="app-subtitle">Fast, premium bill splitting tool.</p>
+      </header>
+
+      <section class="field-group">
+        <label class="field-label">Bill Amount</label>
+        <div class="input-row">
+          <div class="input-prefix">$</div>
+          <input id="billAmount" class="text-input" type="number" inputmode="decimal" placeholder="0.00" />
+        </div>
+      </section>
+
+      <section class="field-group">
+        <label class="field-label">Tip %</label>
+        <div class="tip-buttons-row" id="tipButtons">
+          <button class="tip-btn" data-tip="10">10%</button>
+          <button class="tip-btn active" data-tip="15">15%</button>
+          <button class="tip-btn" data-tip="18">18%</button>
+          <button class="tip-btn" data-tip="20">20%</button>
+        </div>
+        <div class="tip-custom-row">
+          <span style="font-size:0.8rem; font-weight:600;">Custom:</span>
+          <input id="customTip" class="custom-input" type="number" inputmode="decimal" placeholder="Other" />
+          <span style="font-weight:600;">%</span>
+        </div>
+      </section>
+
+      <section class="field-group">
+        <label class="field-label">Split Between</label>
+        <input id="peopleCount" class="text-input" type="number" inputmode="numeric" value="1" />
+      </section>
+
+      <section class="results-card">
+        <div class="result-row"><span>Tip Amount</span><div id="tipAmount" style="font-weight:700;">$0.00</div></div>
+        <div class="result-row"><strong>Total with Tip</strong><div id="totalAmount" class="result-main">$0.00</div></div>
+        <div class="result-row"><span>Per Person</span><div id="perPersonAmount" style="font-weight:700;">$0.00</div></div>
+      </section>
+    </div>
+
+    <footer class="ml-global-footer">
+      <strong>Built with StupidSimpleCrazyFast™</strong><br>
+      Created by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://stupidsimplecrazyfast.com" target="_blank">sscf.app</a><br>
+      Joe Machino • 717.623.2907
+    </footer>
+  </div>
+
+  <div id="infoOverlay" class="ml-info-overlay" hidden></div>
+  <div id="infoModal" class="ml-info-modal" hidden>
+    <div class="ml-info-modal-inner">
+      <div class="ml-info-header"><h2>App Intelligence</h2><button id="infoCloseBtn" style="border:none; background:none; cursor:pointer; font-size:20px;">✕</button></div>
+      <div class="ml-info-tabs">
+        <button class="ml-info-tab ml-info-tab-active" data-tab="about">About</button>
+        <button class="ml-info-tab" data-tab="how">How to Use</button>
+        <button class="ml-info-tab" data-tab="faq">FAQ</button>
+        <button class="ml-info-tab" data-tab="other">Other Tools</button>
+        <button class="ml-info-tab" data-tab="credits">Credits</button>
+      </div>
+      <div class="ml-info-body">
+        <section class="ml-info-panel" data-panel="about"><p>A high-performance utility from <strong>MachinoLabs</strong>. Offline-first and privacy-focused.</p></section>
+        <section class="ml-info-panel" data-panel="how" hidden><p>Enter bill total, select tip %, and adjust split. Simple.</p></section>
+        <section class="ml-info-panel" data-panel="faq" hidden><p><strong>Offline?</strong> Yes.<br><strong>Ads?</strong> No.</p></section>
+        <section class="ml-info-panel" data-panel="other" hidden><p>Visit <a href="https://stupidsimplecrazyfast.com" target="_blank">SSCF.APP</a> for more.</p></section>
+        
+        <section class="ml-info-panel" data-panel="credits" hidden>
+          <p><strong>Built with StupidSimpleCrazyFast™</strong></p>
+          <p>Created by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a></p>
+          <p>Visit us: <a href="https://machinolabs.com" target="_blank">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com" target="_blank">sscf.app</a></p>
+          <p>Joe Machino • 717.623.2907</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const billIn = document.getElementById("billAmount"), tipBtns = Array.from(document.querySelectorAll(".tip-btn")), 
+            custTip = document.getElementById("customTip"), pplIn = document.getElementById("peopleCount"),
+            tipAmt = document.getElementById("tipAmount"), totAmt = document.getElementById("totalAmount"), perPAmt = document.getElementById("perPersonAmount");
+
+      let curTip = 15;
+
+      function recalc() {
+        const bill = parseFloat(billIn.value) || 0, tip = bill * (curTip / 100), tot = bill + tip, ppl = Math.max(1, parseInt(pplIn.value) || 1);
+        tipAmt.textContent = "$" + tip.toFixed(2); totAmt.textContent = "$" + tot.toFixed(2); perPAmt.textContent = "$" + (tot / ppl).toFixed(2);
+      }
+
+      document.getElementById("tipButtons").addEventListener("click", (e) => {
+        const btn = e.target.closest(".tip-btn"); if (!btn) return;
+        tipBtns.forEach(b => b.classList.remove("active")); btn.classList.add("active");
+        curTip = parseFloat(btn.dataset.tip); custTip.value = ""; recalc();
+      });
+
+      custTip.addEventListener("input", () => { tipBtns.forEach(b => b.classList.remove("active")); curTip = parseFloat(custTip.value) || 0; recalc(); });
+      [billIn, pplIn].forEach(i => i.addEventListener("input", recalc));
+
+      const infoBtn = document.getElementById("infoBtn"), infoOver = document.getElementById("infoOverlay"), infoMod = document.getElementById("infoModal"),
+            closeBtn = document.getElementById("infoCloseBtn"), tabs = Array.from(document.querySelectorAll(".ml-info-tab")), panels = Array.from(document.querySelectorAll(".ml-info-panel"));
+
+      const toggle = (s) => { infoOver.hidden = !s; infoMod.hidden = !s; };
+      infoBtn.addEventListener("click", () => toggle(true));
+      [infoOver, closeBtn].forEach(el => el.addEventListener("click", () => toggle(false)));
+      tabs.forEach(btn => btn.addEventListener("click", () => {
+        tabs.forEach(b => b.classList.remove("ml-info-tab-active")); btn.classList.add("ml-info-tab-active");
+        panels.forEach(p => p.hidden = p.dataset.panel !== btn.dataset.tab);
+      }));
+    })();
+  </script>
+</body>
+</html>
