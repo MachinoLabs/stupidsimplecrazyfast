@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stupid Simple Crazy Fast | Innovation Lab</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,7 +28,7 @@
             line-height: 1.6;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
         /* HEADER */
         .top-nav {
@@ -53,7 +56,6 @@
         h2 { 
             font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
             text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
-            margin-top: -8px; 
         }
         h2 .fast-text { 
             color: var(--cyan); 
@@ -65,7 +67,6 @@
 
         .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 520px; }
         
-        /* THE SINGLE MACHINOLABS-STYLE LOGO FRAME */
         .logo-frame {
             background: #000;
             border: 1px solid var(--line);
@@ -74,17 +75,10 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 40px rgba(0, 229, 255, 0.15); 
-            margin-top: 5px; /* Alignment shim */
             overflow: hidden;
         }
         
-        .hero-image {
-            width: 100%;
-            height: auto;
-            border-radius: 18px;
-            display: block;
-            filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.3));
-        }
+        .hero-image { width: 100%; height: auto; border-radius: 18px; display: block; }
 
         /* BUTTONS */
         .btn {
@@ -97,11 +91,7 @@
         .btn:hover { transform: translateY(-4px); filter: brightness(1.1); }
 
         /* SECTION TITLES */
-        .section-title {
-            margin: 80px 0 30px;
-            border-left: 4px solid var(--cyan);
-            padding-left: 20px;
-        }
+        .section-title { margin: 80px 0 30px; border-left: 4px solid var(--cyan); padding-left: 20px; }
         .section-title h3 { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; }
         .section-title.gold-title { border-left-color: var(--gold); }
 
@@ -131,9 +121,7 @@
         .star:hover { color: var(--gold); }
 
         /* FOOTER */
-        .footer {
-            margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center;
-        }
+        .footer { margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center; }
         .footer-tag { color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; }
         .footer-credits { color: var(--muted); font-size: 0.8rem; line-height: 1.8; }
         .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
@@ -150,15 +138,15 @@
                 <a href="#tools">Tools</a>
                 <a href="#games">Games</a>
                 <a href="#feedback">Feedback</a>
-                <a href="https://machinolabs.com">MachinoLabs</a>
+                <a href="https://machinolabs.com" target="_blank">MachinoLabs</a>
             </div>
         </nav>
 
         <section class="hero">
             <div>
                 <h2>Stupid Simple<br><span class="fast-text">Crazy Fast.</span></h2>
-                <p class="hero-p">A high-performance home base for specialized micro-apps, instant tools, and experimental web experiences.</p>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
+                <p class="hero-p">High-performance micro-apps, instant tools, and experimental web toys. Built for speed, fueled by vibes.</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <a href="#tools" class="btn btn-main">Explore Tools</a>
                     <a href="#games" class="btn btn-alt">Explore Games</a>
                 </div>
@@ -173,17 +161,17 @@
             <h3>Utility Deck</h3>
         </div>
         <section class="grid">
-            <a href="#" class="card tool-card">
-                <h3>Rubric Tool</h3>
-                <p>Interactive digital logic system focused on performance and custom brand DNA.</p>
-            </a>
-            <a href="#" class="card tool-card">
+            <a href="https://buzz.sscf.app" target="_blank" class="card tool-card">
                 <h3>Buzz Blaster</h3>
-                <p>Social media posting and engagement tool built for high-speed content delivery.</p>
+                <p>Social media detonator with 500 hand-crafted prompts to blow up your feed. High-speed content delivery.</p>
+            </a>
+            <a href="https://sscf.app/tip-calculator" target="_blank" class="card tool-card">
+                <h3>Tip Calculator</h3>
+                <p>Precision bill-splitting utility for rapid-fire calculations. 100% offline-ready tool.</p>
             </a>
             <a href="#" class="card tool-card" style="border-style: dashed; opacity: 0.4;">
-                <h3>[ New Tool ]</h3>
-                <p>Cabinet offline. New utility drop scheduled for release.</p>
+                <h3>[ New Utility ]</h3>
+                <p>Cabinet offline. New tool drop scheduled for release.</p>
             </a>
         </section>
 
@@ -210,15 +198,14 @@
             <div class="stars">
                 <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             </div>
-            <p style="font-size: 0.75rem; color: #333; text-transform: uppercase;">Player One Feedback Loop</p>
+            <p style="font-size: 0.75rem; color: #444; text-transform: uppercase;">Player One Feedback Loop</p>
         </section>
 
         <footer class="footer">
             <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
             <div class="footer-credits">
-                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a>
-                <br>
-                Joe • 717.623.2907
+                Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>
+                Joe Machino • 717.623.2907
             </div>
         </footer>
     </div>
