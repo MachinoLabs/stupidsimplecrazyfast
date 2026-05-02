@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Counter Micro-App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .counter-app {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #display {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="counter-app">
+        <h1>Counter</h1>
+        <div id="display">0</div>
+        <button id="decrement">Decrement</button>
+        <button id="increment">Increment</button>
+    </div>
+
+    <script>
+        let count = 0;
+        const display = document.getElementById('display');
+        const incrementButton = document.getElementById('increment');
+        const decrementButton = document.getElementById('decrement');
+
+        function updateDisplay() {
+            display.textContent = count;
+        }
+
+        incrementButton.addEventListener('click', () => {
+            count++;
+            updateDisplay();
+        });
+
+        decrementButton.addEventListener('click', () => {
+            count--;
+            updateDisplay();
+        });
+
+        // Initial display update
+        updateDisplay();
+    </script>
+</body>
+</html>

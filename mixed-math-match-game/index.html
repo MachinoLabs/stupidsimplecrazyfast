@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Math Match • Brain Teaser Edition • MachinoLabs</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1220" />
+
+  <style>
+    :root {
+      /* Page + chrome */
+      --bg: #0b1220;
+      --ink: #e6ecff;
+      --muted: #9fb0ff;
+      --accent: #7cd2ff;
+
+      /* Card fronts */
+      --upper-front: #f4e8d3;   /* Buttercream (Expression side) */
+      --lower-front: #d9eef2;   /* Soft Aqua (Answer side) */
+      --navy: #0a1a3a;
+
+      --front-border-upper: rgba(0, 0, 0, 0.10);
+      --front-border-lower: rgba(0, 0, 0, 0.08);
+      --dot-upper: rgba(196, 159, 105, 0.8);
+      --dot-lower: rgba(108, 180, 199, 0.85);
+
+      --card-radius: 12px;
+      --card-edge: #1d2742;
+
+      --good: #32d17d;
+      --bad: #ff6b6b;
+
+      --hud-pill-bg: rgba(255, 255, 255, 0.05);
+      --hud-pill-border: rgba(255, 255, 255, 0.12);
+
+      --footer-text: rgba(255, 255, 255, 0.55);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 800px at 20% -10%, #1c2644 0%, transparent 60%),
+        radial-gradient(1000px 700px at 120% 10%, #0f6 0%, transparent 40%),
+        linear-gradient(180deg, #0a0f1f, #0a0f1f 60%, #0a1328);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      padding: 12px 16px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .title {
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      font-size: clamp(20px, 3vw, 28px);
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      text-align: center;
+    }
+
+    .header-bar {
+      width: 100%;
+      max-width: 1120px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 16px;
+      align-items: center;
+    }
+
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 10px;
+      border-radius: 14px;
+    }
+
+    .group label {
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    select,
+    input[type="text"] {
+      font: inherit;
+      min-width: 80px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--ink);
+      outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(124, 210, 255, 0.6);
+    }
+
+    .seed-input {
+      width: 120px;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(180deg, #1a2b4d, #142548);
+      color: var(--ink);
+      padding: 7px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      white-space: nowrap;
+    }
+
+    button[disabled] {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    button:not([disabled]):active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .icon {
+      font-size: 0.9em;
+    }
+
+    .hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 14px;
+      color: #cfe1ff;
+    }
+
+    .hud-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--hud-pill-border);
+      background: var(--hud-pill-bg);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-pill strong {
+      font-weight: 700;
+    }
+
+    .player-pill {
+      transition: box-shadow 0.15s ease, background 0.15s ease,
+        transform 0.15s ease, opacity 0.15s ease;
+      opacity: 0.7;
+    }
+
+    .player-pill.active {
+      opacity: 1;
+      box-shadow: 0 0 0 1px rgba(124, 210, 255, 0.7);
+      background: rgba(124, 210, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .player-arrow {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    .sound-toggle {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    /* ---------- Board / grid ---------- */
+    .wrap {
+      width: 100%;
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 8px 16px 16px;
+    }
+
+    .board-shell {
+      width: min(1120px, 98vw);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 55%),
+                  rgba(5, 10, 25, 0.96);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+      padding: 14px;
+      position: relative;
+    }
+
+    .board-shell.paused::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 4;
+    }
+
+    .pause-banner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .pause-banner-inner {
+      background: rgba(5, 10, 25, 0.9);
+      padding: 10px 18px;
+      border-radius: 999px;
+      color: var(--ink);
+      font-weight: 600;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.7);
+    }
+
+    .grid {
+      width: 100%;
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* ---------- Card ---------- */
+    .card {
+      aspect-ratio: 3 / 4;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.46s cubic-bezier(0.3, 0.6, 0.2, 1);
+    }
+
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      border: 1px solid var(--card-edge);
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.45),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+
+    .face.back {
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: #132246;
+    }
+
+    .back-pattern {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .back-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .flip-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #111827;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+    }
+
+    .back-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      align-self: flex-end;
+      margin-right: 6px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+    }
+
+    .face.front {
+      transform: rotateY(180deg);
+      display: grid;
+      place-items: center;
+      padding: 4px;
+    }
+
+    .front-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--card-radius) - 3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      text-align: center;
+    }
+
+    .front-inner.expr {
+      background: var(--upper-front);
+    }
+
+    .front-inner.ans {
+      background: var(--lower-front);
+    }
+
+    .front-border {
+      position: absolute;
+      inset: 3px;
+      border-radius: calc(var(--card-radius) - 6px);
+      border: 1.5px solid var(--front-border-upper);
+      pointer-events: none;
+    }
+
+    .front-inner.ans .front-border {
+      border-color: var(--front-border-lower);
+    }
+
+    .front-dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      bottom: 4px;
+      right: 4px;
+      background: var(--dot-upper);
+    }
+
+    .front-inner.ans .front-dot {
+      background: var(--dot-lower);
+    }
+
+    .front-text {
+      font-weight: 800;
+      color: var(--navy);
+      font-size: clamp(20px, 2.6vw, 28px);
+      line-height: 1.15;
+      white-space: normal;
+      word-wrap: break-word;
+      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+      transform-origin: center;
+    }
+
+    .card.flip-pop .front-text {
+      animation: letter-pop 0.2s ease-out;
+    }
+
+    @keyframes letter-pop {
+      0% { transform: scale(0.94); filter: brightness(1); }
+      60% { transform: scale(1.05); filter: brightness(1.03); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .card.matched .face.front {
+      border-color: rgba(50, 209, 125, 0.7);
+      box-shadow:
+        0 0 0 2px rgba(50, 209, 125, 0.45),
+        0 16px 32px rgba(50, 209, 125, 0.25);
+    }
+
+    .winning-banner {
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+      color: #cfe1ff;
+      min-height: 20px;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 8px 16px 18px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--footer-text);
+      line-height: 1.5;
+    }
+
+    /* ---------- Responsive tweaks ---------- */
+    @media (min-width: 700px) {
+      .grid { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Math Match • Brain Teaser Edition</div>
+    <div class="subtitle">Mixed math pairs — expressions, answers, patterns, and more.</div>
+
+    <div class="header-bar">
+      <!-- Setup group -->
+      <div class="group">
+        <label>
+          Mode:
+          <select id="modeSelect">
+            <option value="mixed" selected>Mixed Brain Teasers</option>
+          </select>
+        </label>
+        <label>
+          Cards:
+          <select id="cardsSelect">
+            <option value="12">12</option>
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="24" selected>24</option>
+            <option value="30">30</option>
+            <option value="36">36</option>
+          </select>
+        </label>
+        <label>
+          Seed:
+          <input id="seedInput" type="text" placeholder="optional" class="seed-input" />
+        </label>
+        <label>
+          Players:
+          <select id="playersSelect">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Action group -->
+      <div class="group">
+        <button id="startBtn"><span class="icon">▶</span>Start</button>
+        <button id="restartBtn" class="btn-soft" disabled><span class="icon">↻</span>Restart</button>
+        <button id="revealBtn" class="btn-soft">👁 Reveal All</button>
+        <button id="pauseBtn" class="btn-soft" disabled>⏸ Pause</button>
+        <button id="soundBtn" class="btn-soft sound-toggle" title="Toggle sound">
+          <span id="soundIcon" class="icon">🔊</span>
+        </button>
+      </div>
+
+      <!-- HUD group -->
+      <div class="group hud">
+        <div class="hud-pill">
+          <span>⏱</span>
+          <span>Time: <strong id="timeValue">0:00</strong></span>
+        </div>
+        <div class="hud-pill">
+          <span>🎯</span>
+          <span>Moves: <strong id="movesValue">0</strong></span>
+        </div>
+        <div class="hud-pill">
+          <span>✅</span>
+          <span>Matched: <strong id="matchedValue">0</strong></span>
+        </div>
+        <div id="p1Pill" class="hud-pill player-pill" style="display:none;">
+          <span class="player-arrow" id="p1Arrow" style="display:none;">►</span>
+          <span>👤 P1: <strong id="p1Score">0</strong></span>
+        </div>
+        <div id="p2Pill" class="hud-pill player-pill" style="display:none;">
+          <span class="player-arrow" id="p2Arrow" style="display:none;">►</span>
+          <span>👥 P2: <strong id="p2Score">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="board-shell" id="boardShell">
+      <div id="grid" class="grid" aria-live="polite"></div>
+
+      <div class="pause-banner" id="pauseBanner" style="display:none;">
+        <div class="pause-banner-inner">Game Paused</div>
+      </div>
+
+      <div class="winning-banner" id="winningBanner"></div>
+    </div>
+  </div>
+
+  <footer>
+    A MachinoLabs Creation • Designed by Joe Machino • Runs fully offline and stores everything safely on your device — no accounts, no syncing, no internet required.
+  </footer>
+
+  <script>
+    // ---------------- Utilities: seeded RNG ----------------
+    function xmur3(str) {
+      let h = 1779033703 ^ str.length;
+      for (let i = 0; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+        h = (h << 13) | (h >>> 19);
+      }
+      return function () {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
+        h ^= h >>> 16;
+        return h >>> 0;
+      };
+    }
+
+    function sfc32(a, b, c, d) {
+      return function () {
+        a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+        let t = (a + b) | 0;
+        a = b ^ (b >>> 9);
+        b = (c + (c << 3)) | 0;
+        c = (c << 21) | (c >>> 11);
+        d = (d + 1) | 0;
+        t = (t + d) | 0;
+        c = (c + t) | 0;
+        return (t >>> 0) / 4294967296;
+      };
+    }
+
+    function makePRNG(seedStr) {
+      const seedMaker = xmur3(seedStr);
+      return sfc32(seedMaker(), seedMaker(), seedMaker(), seedMaker());
+    }
+
+    function randInt(min, max, rnd) {
+      return Math.floor(rnd() * (max - min + 1)) + min;
+    }
+
+    function hsl(h, s, l) {
+      return `hsl(${h} ${s}% ${l}%)`;
+    }
+
+    // ---------------- OG-style pattern themes for card backs ----------------
+    const Themes = {
+      stripes(el, rnd) {
+        const hue = randInt(0, 359, rnd);
+        const hue2 = (hue + randInt(20, 200, rnd)) % 360;
+        const s = randInt(60, 90, rnd),
+          l = randInt(45, 65, rnd);
+        const s2 = randInt(50, 85, rnd),
+          l2 = randInt(30, 60, rnd);
+        const angle = randInt(0, 360, rnd);
+        const w1 = randInt(6, 18, rnd),
+          w2 = randInt(6, 18, rnd);
+        el.style.background = `repeating-linear-gradient(${angle}deg,
+          ${hsl(hue, s, l)} 0 ${w1}px,
+          ${hsl(hue2, s2, l2)} ${w1}px ${w1 + w2}px)`;
+        addBackInset(el);
+      },
+      conic(el, rnd) {
+        const segs = randInt(4, 9, rnd);
+        let acc = 0,
+          parts = [];
+        let hue = randInt(0, 359, rnd);
+        for (let i = 0; i < segs; i++) {
+          const span = randInt(20, 70, rnd);
+          hue = (hue + randInt(10, 60, rnd)) % 360;
+          const col = hsl(hue, randInt(55, 90, rnd), randInt(40, 65, rnd));
+          parts.push(`${col} ${acc}deg ${acc + span}deg`);
+          acc += span;
+        }
+        const rot = randInt(0, 360, rnd);
+        el.style.background = `conic-gradient(from ${rot}deg, ${parts.join(",")})`;
+        addBackInset(el);
+      },
+      targets(el, rnd) {
+        const rings = randInt(3, 7, rnd);
+        let stops = [];
+        for (let i = 0; i < rings; i++) {
+          const hue = randInt(0, 359, rnd);
+          const s = randInt(50, 90, rnd),
+            l = randInt(35, 70, rnd);
+          const col = hsl(hue, s, l);
+          const p1 = Math.round((i / rings) * 100);
+          const p2 = Math.round(((i + 1) / rings) * 100);
+          stops.push(`${col} ${p1}% ${p2}%`);
+        }
+        el.style.background = `radial-gradient(circle at 50% 50%, ${stops.join(",")})`;
+        addBackInset(el);
+      },
+      star(el, rnd) {
+        el.innerHTML = "";
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 100 100");
+        svg.style.width = "85%";
+        svg.style.height = "85%";
+        const pts = randInt(5, 9, rnd);
+        const rot = rnd() * Math.PI * 2;
+        const stroke = hsl(randInt(0, 359, rnd), 80, 60);
+        const fill = hsl(randInt(0, 359, rnd), 70, 45);
+        const path = document.createElementNS(svg.namespaceURI, "path");
+        path.setAttribute("d", starPath(50, 50, 38, 16, pts, rot));
+        path.setAttribute("fill", fill);
+        path.setAttribute("stroke", stroke);
+        path.setAttribute("stroke-width", "4");
+        svg.appendChild(path);
+        el.style.background =
+          "linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.06))";
+        el.appendChild(svg);
+        addBackInset(el);
+      }
+    };
+
+    function addBackInset(el) {
+      el.style.boxShadow =
+        "inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 0 1px rgba(0,0,0,.25)";
+      el.style.borderRadius = "12px";
+      el.style.filter = "saturate(0.95) brightness(0.97)";
+    }
+
+    function starPath(cx, cy, outerR, innerR, points, rotation) {
+      let p = "";
+      for (let i = 0; i < points * 2; i++) {
+        const r = i % 2 === 0 ? outerR : innerR;
+        const a = rotation + (Math.PI * i) / points;
+        const x = cx + r * Math.cos(a);
+        const y = cy + r * Math.sin(a);
+        p += (i === 0 ? "M" : "L") + x.toFixed(3) + " " + y.toFixed(3);
+      }
+      return p + "Z";
+    }
+
+    // ---------------- Sound Manager ----------------
+    class SoundManager {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+        this.vol = {
+          flip: 0.4,
+          match: 0.5,
+          mismatch: 0.3,
+          win: 0.6
+        };
+      }
+      ensure() {
+        if (!this.ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.ctx = new AC();
+        }
+      }
+      toggle() {
+        this.muted = !this.muted;
+      }
+      beep(type) {
+        if (this.muted) return;
+        this.ensure();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        if (type === "flip") {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(380, now);
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.08 * this.vol.flip, now + 0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+          osc.connect(g).connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === "match") {
+          [520, 640].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + i * 0.06);
+            g.gain.setValueAtTime(0, now + i * 0.06);
+            g.gain.linearRampToValueAtTime(
+              0.1 * this.vol.match,
+              now + i * 0.06 + 0.03
+            );
+            g.gain.exponentialRampToValueAtTime(
+              0.0001,
+              now + i * 0.06 + 0.18
+            );
+            osc.connect(g).connect(ctx.destination);
+            osc.start(now + i * 0.06);
+            osc.stop(now + i * 0.06 + 0.22);
+          });
+        } else if (type === "mismatch") {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(220, now);
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.07 * this.vol.mismatch, now + 0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+          osc.connect(g).connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === "win") {
+          [440, 660, 880].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            g.gain.setValueAtTime(0, now + i * 0.08);
+            g.gain.linearRampToValueAtTime(
+              0.09 * this.vol.win,
+              now + i * 0.08 + 0.03
+            );
+            g.gain.exponentialRampToValueAtTime(
+              0.0001,
+              now + i * 0.08 + 0.4
+            );
+            osc.connect(g).connect(ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.45);
+          });
+        }
+      }
+    }
+
+    const sound = new SoundManager();
+
+    // ---------------- DOM refs ----------------
+    const gridEl = document.getElementById("grid");
+    const boardShell = document.getElementById("boardShell");
+    const pauseBanner = document.getElementById("pauseBanner");
+    const winningBanner = document.getElementById("winningBanner");
+
+    const modeSelect = document.getElementById("modeSelect");
+    const cardsSelect = document.getElementById("cardsSelect");
+    const seedInput = document.getElementById("seedInput");
+    const playersSelect = document.getElementById("playersSelect");
+
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const revealBtn = document.getElementById("revealBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const soundBtn = document.getElementById("soundBtn");
+    const soundIcon = document.getElementById("soundIcon");
+
+    const timeValue = document.getElementById("timeValue");
+    const movesValue = document.getElementById("movesValue");
+    const matchedValue = document.getElementById("matchedValue");
+
+    const p1Pill = document.getElementById("p1Pill");
+    const p2Pill = document.getElementById("p2Pill");
+    const p1Arrow = document.getElementById("p1Arrow");
+    const p2Arrow = document.getElementById("p2Arrow");
+    const p1ScoreEl = document.getElementById("p1Score");
+    const p2ScoreEl = document.getElementById("p2Score");
+
+    // ---------------- Game state ----------------
+    let masterPool = [];
+    let deck = [];
+    let flipped = [];
+    let totalPairs = 0;
+    let matchedPairs = 0;
+    let moves = 0;
+    let timerId = null;
+    let seconds = 0;
+    let running = false;
+    let paused = false;
+    let is1P = true;
+    let currentPlayer = 1;
+    let p1Score = 0;
+    let p2Score = 0;
+    let peeking = false;
+    let rng = makePRNG("seed");
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function getSeed() {
+      const base =
+        (seedInput.value.trim() || "math-mix") +
+        "|" +
+        modeSelect.value +
+        "|" +
+        cardsSelect.value;
+      const seedMaker = xmur3(base);
+      const a = seedMaker(),
+        b = seedMaker(),
+        c = seedMaker(),
+        d = seedMaker();
+      return sfc32(a, b, c, d);
+    }
+
+    function resetState() {
+      deck = [];
+      flipped = [];
+      totalPairs = 0;
+      matchedPairs = 0;
+      moves = 0;
+      seconds = 0;
+      running = false;
+      paused = false;
+      peeking = false;
+      p1Score = 0;
+      p2Score = 0;
+      currentPlayer = 1;
+      clearInterval(timerId);
+      timerId = null;
+
+      timeValue.textContent = formatTime(0);
+      movesValue.textContent = "0";
+      matchedValue.textContent = "0";
+      p1ScoreEl.textContent = "0";
+      p2ScoreEl.textContent = "0";
+      winningBanner.textContent = "";
+      boardShell.classList.remove("paused");
+      pauseBanner.style.display = "none";
+
+      startBtn.disabled = false;
+      restartBtn.disabled = true;
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = "⏸ Pause";
+      gridEl.innerHTML = "";
+
+      updatePlayersVisibility();
+    }
+
+    function updatePlayersVisibility() {
+      is1P = playersSelect.value === "1";
+      if (is1P) {
+        p1Pill.style.display = "none";
+        p2Pill.style.display = "none";
+        revealBtn.disabled = false;
+      } else {
+        p1Pill.style.display = "inline-flex";
+        p2Pill.style.display = "inline-flex";
+        revealBtn.disabled = true;
+      }
+      updateTurnHighlight();
+    }
+
+    function updateTurnHighlight() {
+      p1Pill.classList.remove("active");
+      p2Pill.classList.remove("active");
+      p1Arrow.style.display = "none";
+      p2Arrow.style.display = "none";
+
+      if (is1P || !running || paused) return;
+
+      if (currentPlayer === 1) {
+        p1Pill.classList.add("active");
+        p1Arrow.style.display = "inline";
+      } else {
+        p2Pill.classList.add("active");
+        p2Arrow.style.display = "inline";
+      }
+    }
+
+    function startTimer() {
+      if (timerId) clearInterval(timerId);
+      timerId = setInterval(() => {
+        if (!running || paused) return;
+        seconds++;
+        timeValue.textContent = formatTime(seconds);
+      }, 1000);
+    }
+
+    // ---------------- Master math pool generation ----------------
+    function addPair(pool, keySet, prompt, answer, type) {
+      const key = prompt + "=>" + answer;
+      if (keySet.has(key)) return;
+      keySet.add(key);
+      pool.push({ prompt, answer, type });
+    }
+
+    function generateMathPool() {
+      const pool = [];
+      const seen = new Set();
+
+      // Additions up to ~80
+      for (let a = 1; a <= 40; a++) {
+        for (let b = 1; b <= 40; b++) {
+          const sum = a + b;
+          if (sum > 80) continue;
+          addPair(pool, seen, `${a} + ${b}`, String(sum), "add");
+        }
+      }
+
+      // Subtractions (positive results up to 60)
+      for (let a = 2; a <= 60; a++) {
+        for (let b = 1; b < a; b++) {
+          const diff = a - b;
+          if (diff <= 0 || diff > 60) continue;
+          addPair(pool, seen, `${a} − ${b}`, String(diff), "sub");
+        }
+      }
+
+      // Multiplication (clean small facts)
+      for (let a = 2; a <= 15; a++) {
+        for (let b = 2; b <= 15; b++) {
+          const prod = a * b;
+          if (prod > 200) continue;
+          addPair(pool, seen, `${a} × ${b}`, String(prod), "mul");
+        }
+      }
+
+      // Division (from multiplication facts)
+      for (let a = 2; a <= 15; a++) {
+        for (let b = 2; b <= 15; b++) {
+          const prod = a * b;
+          if (prod > 200) continue;
+          addPair(pool, seen, `${prod} ÷ ${b}`, String(a), "div");
+        }
+      }
+
+      // Fractions ↔ decimals
+      const fracs = [
+        [1, 2], [1, 3], [2, 3], [1, 4], [3, 4],
+        [1, 5], [2, 5], [3, 5], [4, 5],
+        [1, 8], [3, 8], [5, 8], [7, 8],
+        [1, 10], [3, 10], [7, 10], [9, 10],
+        [1, 20], [3, 20], [7, 20], [9, 20], [11, 20], [13, 20], [17, 20], [19, 20]
+      ];
+      fracs.forEach(([n, d]) => {
+        const frac = `${n}/${d}`;
+        const dec = (n / d).toString().replace(/(\.\d*?[1-9])0+$/,"$1");
+        addPair(pool, seen, frac, dec, "frac-dec");
+      });
+
+      // Percent ↔ decimals
+      const percents = [5, 10, 12.5, 20, 25, 30, 33, 40, 50, 60, 66, 70, 75, 80, 90, 100, 120, 150, 200];
+      percents.forEach(p => {
+        const dec = (p / 100).toString().replace(/(\.\d*?[1-9])0+$/,"$1");
+        addPair(pool, seen, `${p}%`, dec, "pct-dec");
+      });
+
+      // Percent ↔ fraction (hand-picked)
+      const pctFrac = [
+        ["50%", "1/2"],
+        ["25%", "1/4"],
+        ["75%", "3/4"],
+        ["20%", "1/5"],
+        ["40%", "2/5"],
+        ["60%", "3/5"],
+        ["80%", "4/5"],
+        ["33⅓%", "1/3"],
+        ["66⅔%", "2/3"]
+      ];
+      pctFrac.forEach(([p, f]) => addPair(pool, seen, p, f, "pct-frac"));
+
+      // Squares
+      for (let n = 2; n <= 30; n++) {
+        const sq = n * n;
+        addPair(pool, seen, `${n}²`, String(sq), "square");
+      }
+
+      // Cubes
+      for (let n = 2; n <= 12; n++) {
+        const cu = n * n * n;
+        addPair(pool, seen, `${n}³`, String(cu), "cube");
+      }
+
+      // Simple algebra (x + a = b)
+      for (let x = 1; x <= 20; x++) {
+        const a = randInt(1, 15, makePRNG("xplus" + x));
+        const b = x + a;
+        addPair(pool, seen, `x + ${a} = ${b}`, `x = ${x}`, "alg1");
+      }
+
+      // Simple algebra (2x, 3x)
+      for (let x = 1; x <= 20; x++) {
+        addPair(pool, seen, `2x = ${2 * x}`, `x = ${x}`, "alg2");
+        addPair(pool, seen, `3x = ${3 * x}`, `x = ${x}`, "alg3");
+      }
+
+      // Patterns / sequences
+      const seqs = [
+        { seq: "2, 4, 6, ?", ans: "8" },
+        { seq: "5, 10, 15, ?", ans: "20" },
+        { seq: "3, 9, 27, ?", ans: "81" },
+        { seq: "1, 4, 9, ?", ans: "16" },
+        { seq: "10, 20, 40, ?", ans: "80" },
+        { seq: "100, 90, 80, ?", ans: "70" },
+        { seq: "7, 14, 21, ?", ans: "28" },
+        { seq: "50, 40, 30, ?", ans: "20" }
+      ];
+      seqs.forEach(s => addPair(pool, seen, s.seq, s.ans, "seq"));
+
+      // Simple "double / half" prompts
+      for (let n = 2; n <= 50; n += 2) {
+        addPair(pool, seen, `Double ${n}`, String(n * 2), "dbl");
+      }
+      for (let n = 4; n <= 100; n += 4) {
+        addPair(pool, seen, `Half of ${n}`, String(n / 2), "half");
+      }
+
+      // Digit sum teasers
+      for (let n = 10; n <= 99; n += 3) {
+        const sum = String(n)
+          .split("")
+          .reduce((acc, d) => acc + Number(d), 0);
+        addPair(pool, seen, `Digit sum of ${n}`, String(sum), "digitsum");
+      }
+
+      // If pool is huge, trim to at most ~1000 for sanity.
+      // But ensure we keep it comfortably above 500.
+      if (pool.length > 1000) {
+        const localRng = makePRNG("pool-trim");
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(localRng() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        pool.length = 1000;
+      }
+
+      return pool;
+    }
+
+    // ---------------- Deck building ----------------
+    function bestCols(n) {
+      if (n <= 12) return 4;
+      if (n <= 16) return 4;
+      if (n <= 20) return 5;
+      if (n <= 24) return 6;
+      if (n <= 30) return 6;
+      return 6;
+    }
+
+    function buildDeck() {
+      const count = parseInt(cardsSelect.value, 10);
+      const pairsNeeded = count / 2;
+
+      // Use seeded RNG for pair selection
+      const selRng = getSeed();
+      const indices = masterPool.map((_, idx) => idx);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(selRng() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+
+      const chosen = indices.slice(0, pairsNeeded).map(i => masterPool[i]);
+
+      deck = [];
+      let idCounter = 0;
+      chosen.forEach((p, pairId) => {
+        // Expression card
+        deck.push({
+          id: idCounter++,
+          pairId,
+          text: p.prompt,
+          isExpr: true,
+          matched: false
+        });
+        // Answer card
+        deck.push({
+          id: idCounter++,
+          pairId,
+          text: p.answer,
+          isExpr: false,
+          matched: false
+        });
+      });
+
+      totalPairs = deck.length / 2;
+
+      // Shuffle deck order using a second seeded RNG
+      rng = getSeed();
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+    }
+
+    function renderGrid() {
+      gridEl.innerHTML = "";
+      const count = deck.length;
+      const cols = bestCols(count);
+      gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      deck.forEach((card, idx) => {
+        const cardBtn = document.createElement("button");
+        cardBtn.className = "card";
+        cardBtn.type = "button";
+        cardBtn.dataset.id = card.id;
+
+        const inner = document.createElement("div");
+        inner.className = "card-inner";
+
+        const back = document.createElement("div");
+        back.className = "face back";
+
+        const pattern = document.createElement("div");
+        pattern.className = "back-pattern";
+        back.appendChild(pattern);
+
+        const backContent = document.createElement("div");
+        backContent.className = "back-content";
+        const flipPill = document.createElement("div");
+        flipPill.className = "flip-pill";
+        flipPill.textContent = "Flip";
+        const backDot = document.createElement("div");
+        backDot.className = "back-dot";
+        backContent.appendChild(flipPill);
+        backContent.appendChild(backDot);
+        back.appendChild(backContent);
+
+        const front = document.createElement("div");
+        front.className = "face front";
+        const frontInner = document.createElement("div");
+        frontInner.className = "front-inner " + (card.isExpr ? "expr" : "ans");
+        const border = document.createElement("div");
+        border.className = "front-border";
+        const dot = document.createElement("div");
+        dot.className = "front-dot";
+        const textEl = document.createElement("div");
+        textEl.className = "front-text";
+        textEl.textContent = card.text;
+
+        frontInner.appendChild(border);
+        frontInner.appendChild(dot);
+        frontInner.appendChild(textEl);
+        front.appendChild(frontInner);
+
+        inner.appendChild(back);
+        inner.appendChild(front);
+        cardBtn.appendChild(inner);
+        gridEl.appendChild(cardBtn);
+
+        // Apply OG-style pattern to back
+        const themePool = ["stripes", "conic", "targets", "star"];
+        const chooseRng = makePRNG("back|" + card.id + "|" + idx);
+        const which = themePool[Math.floor(chooseRng() * themePool.length)];
+        const themeRng = makePRNG("backpattern|" + card.id + "|" + idx);
+        Themes[which](pattern, themeRng);
+
+        cardBtn.addEventListener("click", () => onCardClicked(cardBtn));
+      });
+    }
+
+    function onCardClicked(cardEl) {
+      if (!running || paused || peeking) return;
+      const id = parseInt(cardEl.dataset.id, 10);
+      const cardData = deck.find((c) => c.id === id);
+      if (!cardData || cardData.matched) return;
+      if (cardEl.classList.contains("flipped")) return;
+
+      cardEl.classList.add("flipped");
+      sound.beep("flip");
+      cardEl.classList.add("flip-pop");
+      const txt = cardEl.querySelector(".front-text");
+      if (txt) {
+        void txt.offsetWidth;
+      }
+      setTimeout(() => cardEl.classList.remove("flip-pop"), 250);
+
+      flipped.push(cardData);
+      if (flipped.length === 2) {
+        moves++;
+        movesValue.textContent = String(moves);
+        checkMatch();
+      }
+    }
+
+    function flipDownById(id) {
+      const el = gridEl.querySelector('.card[data-id="' + id + '"]');
+      if (el && !el.classList.contains("matched")) {
+        el.classList.remove("flipped");
+      }
+    }
+
+    function checkMatch() {
+      if (flipped.length !== 2) return;
+      const [c1, c2] = flipped;
+      flipped = [];
+
+      if (c1.pairId === c2.pairId) {
+        const el1 = gridEl.querySelector('.card[data-id="' + c1.id + '"]');
+        const el2 = gridEl.querySelector('.card[data-id="' + c2.id + '"]');
+        if (el1) el1.classList.add("matched");
+        if (el2) el2.classList.add("matched");
+        c1.matched = true;
+        c2.matched = true;
+
+        matchedPairs++;
+        matchedValue.textContent = String(matchedPairs);
+        sound.beep("match");
+
+        if (!is1P) {
+          if (currentPlayer === 1) {
+            p1Score++;
+            p1ScoreEl.textContent = String(p1Score);
+          } else {
+            p2Score++;
+            p2ScoreEl.textContent = String(p2Score);
+          }
+          updateTurnHighlight();
+        }
+
+        if (matchedPairs === totalPairs) finishGame();
+      } else {
+        sound.beep("mismatch");
+        const id1 = c1.id, id2 = c2.id;
+        setTimeout(() => {
+          flipDownById(id1);
+          flipDownById(id2);
+          if (!is1P) {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateTurnHighlight();
+          }
+        }, 650);
+      }
+    }
+
+    function finishGame() {
+      running = false;
+      clearInterval(timerId);
+      timerId = null;
+      pauseBtn.disabled = true;
+      startBtn.disabled = false;
+
+      let msg = "All pairs matched!";
+      if (!is1P) {
+        if (p1Score > p2Score) msg = "Player 1 Wins!";
+        else if (p2Score > p1Score) msg = "Player 2 Wins!";
+        else msg = "It’s a tie!";
+      }
+      winningBanner.textContent = msg;
+      sound.beep("win");
+      updateTurnHighlight();
+    }
+
+    function revealAll(duration = 2500) {
+      if (!running || !is1P || paused || peeking) return;
+      peeking = true;
+      revealBtn.disabled = true;
+
+      const cards = Array.from(gridEl.querySelectorAll(".card"));
+      const already = new Set(
+        cards
+          .filter((c) => c.classList.contains("flipped") || c.classList.contains("matched"))
+          .map((c) => c.dataset.id)
+      );
+
+      cards.forEach((c) => {
+        if (!c.classList.contains("matched")) c.classList.add("flipped");
+      });
+
+      setTimeout(() => {
+        cards.forEach((c) => {
+          if (c.classList.contains("matched")) return;
+          if (!already.has(c.dataset.id)) c.classList.remove("flipped");
+        });
+        peeking = false;
+        if (running) revealBtn.disabled = false;
+      }, duration);
+    }
+
+    function togglePause() {
+      if (!running) return;
+      paused = !paused;
+      if (paused) {
+        boardShell.classList.add("paused");
+        pauseBanner.style.display = "flex";
+        pauseBtn.textContent = "▶ Resume";
+      } else {
+        boardShell.classList.remove("paused");
+        pauseBanner.style.display = "none";
+        pauseBtn.textContent = "⏸ Pause";
+      }
+      updateTurnHighlight();
+    }
+
+    function toggleSound() {
+      sound.toggle();
+      soundIcon.textContent = sound.muted ? "🔈" : "🔊";
+    }
+
+    function startGame() {
+      resetState();
+      buildDeck();
+      renderGrid();
+      running = true;
+      startBtn.disabled = true;
+      restartBtn.disabled = false;
+      pauseBtn.disabled = false;
+      startTimer();
+      updateTurnHighlight();
+    }
+
+    function restartGame() {
+      resetState();
+      buildDeck();
+      renderGrid();
+      running = true;
+      startBtn.disabled = true;
+      restartBtn.disabled = false;
+      pauseBtn.disabled = false;
+      startTimer();
+      updateTurnHighlight();
+    }
+
+    // ---------------- Wire up events ----------------
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", restartGame);
+    revealBtn.addEventListener("click", () => revealAll());
+    pauseBtn.addEventListener("click", togglePause);
+    soundBtn.addEventListener("click", toggleSound);
+
+    playersSelect.addEventListener("change", resetState);
+    cardsSelect.addEventListener("change", resetState);
+    modeSelect.addEventListener("change", resetState);
+
+    // Initial setup
+    masterPool = generateMathPool();
+    resetState();
+
+    // PWA: register service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("sw.js")
+          .catch((err) => console.warn("SW registration failed", err));
+      });
+    }
+  </script>
+</body>
+</html>

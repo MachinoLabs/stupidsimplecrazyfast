@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Bowl Special | Tony's Pizza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pizza-red: #e11d48;
+            --pizza-white: #ffffff;
+            --pizza-dark: #1e293b;
+            --scratch-gray: #aaaaaa;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f1f1;
+            /* Super Bowl Background Pattern */
+            background-image: radial-gradient(#e11d48 0.5px, transparent 0.5px), radial-gradient(#e11d48 0.5px, #f1f1f1 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .coupon-card {
+            background: var(--pizza-white);
+            max-width: 400px;
+            width: 100%;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 8px solid var(--pizza-red);
+            text-align: center;
+        }
+
+        .header {
+            background: var(--pizza-red);
+            padding: 20px;
+            color: white;
+        }
+
+        .header h2 { font-family: 'Bungee', cursive; font-size: 1.5rem; margin-bottom: 5px; }
+        .header p { font-weight: 700; text-transform: uppercase; font-size: 0.9rem; opacity: 0.9; }
+
+        .content { padding: 30px 20px; }
+        
+        .promo-text { margin-bottom: 20px; }
+        .promo-text h3 { font-size: 1.2rem; color: var(--pizza-dark); }
+        .promo-text p { color: #64748b; font-size: 0.9rem; margin-top: 5px; }
+
+        /* Scratch Area */
+        .scratch-wrapper {
+            position: relative;
+            width: 280px;
+            height: 140px;
+            margin: 0 auto;
+            background: #fff1f2;
+            border-radius: 15px;
+            border: 3px dashed var(--pizza-red);
+        }
+
+        .revealed-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .revealed-content .amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--pizza-red);
+            line-height: 1;
+        }
+
+        .revealed-content .code-box {
+            background: var(--pizza-dark);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        #scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            cursor: crosshair;
+            touch-action: none;
+            border-radius: 12px;
+        }
+
+        /* CTA Section */
+        #cta-area {
+            margin-top: 25px;
+            display: none; /* Hidden until scratch is done */
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .btn {
+            display: block;
+            background: var(--pizza-red);
+            color: white;
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #9f1239;
+            transition: all 0.1s;
+        }
+
+        .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #9f1239; }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            70% { opacity: 1; transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .footer {
+            padding: 15px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            background: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="coupon-card">
+        <div class="header">
+            <h2>TONY'S PIZZA</h2>
+            <p>Super Bowl Sunday Special</p>
+        </div>
+
+        <div class="content">
+            <div class="promo-text">
+                <h3>Scratch to win your Game Day discount!</h3>
+                <p>Valid for pickup or delivery only.</p>
+            </div>
+
+            <div class="scratch-wrapper">
+                <div class="revealed-content">
+                    <span class="amount">$5 OFF</span>
+                    <span class="code-box">TOUCHDOWN5</span>
+                </div>
+                <canvas id="scratch-canvas" width="280" height="140"></canvas>
+            </div>
+
+            <div id="cta-area">
+                <a href="tel:5550123" class="btn">Order Now: (555) 0123</a>
+                <p style="margin-top:10px; font-size: 0.8rem; color: #e11d48; font-weight:bold;">Code: TOUCHDOWN5 applied!</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Terms: One coupon per customer. Must mention code when ordering. Expires 02/12/2024.
+        </div>
+    </div>
+
+    <canvas id="confetti" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;"></canvas>
+
+    <script>
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const cta = document.getElementById('cta-area');
+        let isDrawing = false;
+        let finished = false;
+
+        // Setup scratch surface
+        function init() {
+            ctx.fillStyle = '#cccccc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add "Scratch Me" text
+            ctx.fillStyle = '#666666';
+            ctx.font = 'bold 20px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('SCRATCH HERE', canvas.width/2, canvas.height/2 + 8);
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function scratch(e) {
+            if (!isDrawing || finished) return;
+            const pos = getPos(e);
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+            ctx.fill();
+            checkPercent();
+        }
+
+        function checkPercent() {
+            const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            let clear = 0;
+            for (let i = 0; i < pixels.length; i += 4) {
+                if (pixels[i + 3] < 128) clear++;
+            }
+            if ((clear / (pixels.length / 4)) > 0.4) { // 40% revealed
+                finished = true;
+                canvas.style.transition = 'opacity 0.5s';
+                canvas.style.opacity = '0';
+                setTimeout(() => {
+                    canvas.style.display = 'none';
+                    cta.style.display = 'block';
+                    triggerConfetti();
+                }, 500);
+            }
+        }
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+        window.addEventListener('mouseup', () => isDrawing = false);
+        window.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchmove', scratch);
+
+        // Confetti effect
+        function triggerConfetti() {
+            const confetti = document.getElementById('confetti');
+            const s = confetti.getContext('2d');
+            confetti.width = window.innerWidth;
+            confetti.height = window.innerHeight;
+            let particles = Array.from({length: 100}, () => ({
+                x: Math.random() * confetti.width,
+                y: -10,
+                r: Math.random() * 6 + 2,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                v: Math.random() * 5 + 2
+            }));
+            function frame() {
+                s.clearRect(0, 0, confetti.width, confetti.height);
+                particles.forEach(p => {
+                    p.y += p.v;
+                    s.fillStyle = p.color;
+                    s.fillRect(p.x, p.y, p.r, p.r);
+                });
+                requestAnimationFrame(frame);
+            }
+            frame();
+        }
+
+        init();
+    </script>
+</body>
+</html>

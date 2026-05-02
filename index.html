@@ -1,340 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stupid Simple Crazy Fast | Innovation Lab</title>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Vault PRO | MachinoLabs</title>
     <style>
-        :root {
-            --bg: #000000;          /* Machino Pure Black */
-            --panel: #0a0a0a;       /* Deep Slate */
-            --cyan: #00e5ff;        /* Machino Cyan */
-            --gold: #ffbf00;        /* Logo Gold */
-            --text: #ffffff;        /* Pure White */
-            --muted: #94a3b8;       /* Clean Slate */
-            --line: #1a1a1a;        /* Subtle Border */
+        :root { 
+            --bg: #0b0f1a; 
+            --card: #161b2b; 
+            --accent: lch(66.07% 89.55 134.39 / 0.698); 
+            --text: #e2e8f0; 
+            --border: #2d3748; 
+            --footer-text: #64748b;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
-        
         body { 
-            background-color: var(--bg); 
+            background: var(--bg); 
             color: var(--text); 
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px;
+        }
+        .vault-card { 
+            background: var(--card); 
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 550px; 
+            border: 1px solid var(--border); 
+        }
+        h1 { margin: 0; color: var(--accent); font-size: 1.75rem; display: flex; align-items: center; gap: 12px; }
+        
+        /* Instructions Section */
+        .instructions {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
             line-height: 1.6;
         }
+        .instructions h3 { margin-top: 0; font-size: 0.9rem; color: var(--accent); text-transform: uppercase; }
+        .instructions ol { padding-left: 1.2rem; margin-bottom: 0; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-
-        /* HEADER */
-        .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 0; margin-bottom: 40px; border-bottom: 1px solid var(--line);
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.8rem; font-weight: bold; color: var(--accent); text-transform: uppercase; }
+        input[type="password"], input[type="file"], textarea { 
+            width: 100%; padding: 0.8rem; background: #0b0f1a; border: 1px solid var(--border); 
+            border-radius: 8px; color: white; box-sizing: border-box; 
         }
-        .brand-mark { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; }
-        .brand-mark span { color: var(--cyan); }
-
-        .nav-links { display: flex; gap: 25px; }
-        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s; }
-        .nav-links a:hover { color: var(--cyan); }
-
-        /* HERO SECTION */
-        .hero { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr;
-            gap: 60px; 
-            align-items: flex-start; 
-            min-height: 500px;
-            margin-bottom: 80px;
-            padding-top: 20px;
+        button { 
+            width: 100%; padding: 1.2rem; background: var(--accent); color: #064e3b; 
+            border: none; border-radius: 8px; font-weight: 800; cursor: pointer; 
+            font-size: 1rem; margin-top: 1rem; transition: all 0.2s;
         }
-        
-        h2 { 
-            font-size: clamp(2.5rem, 5vw, 4.8rem); font-weight: 900; line-height: 0.95; 
-            text-transform: uppercase; letter-spacing: -2px; margin-bottom: 25px;
+        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        /* Branding Footer */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--footer-text);
+            line-height: 1.5;
         }
-        h2 .fast-text { 
-            color: var(--cyan); 
-            font-style: italic; 
-            display: inline-block;
-            transform: skewX(-6deg);
-            text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
-        }
-
-        .hero-p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; max-width: 520px; }
-        
-        .logo-frame {
-            background: #000;
-            border: 1px solid var(--line);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.15); 
-            overflow: hidden;
-        }
-        
-        .hero-image { width: 100%; height: auto; border-radius: 18px; display: block; }
-
-        /* BUTTONS */
-        .btn {
-            display: inline-block; padding: 18px 38px; border-radius: 50px; 
-            font-weight: 900; text-transform: uppercase; text-decoration: none; transition: 0.3s;
-            font-size: 0.95rem;
-        }
-        .btn-main { background: var(--cyan); color: #000; margin-right: 15px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
-        .btn-alt { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
-        .btn:hover { transform: translateY(-4px); filter: brightness(1.1); }
-
-        /* SECTION TITLES */
-        .section-title { margin: 80px 0 30px; border-left: 4px solid var(--cyan); padding-left: 20px; }
-        .section-title h3 { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; }
-        .section-title.gold-title { border-left-color: var(--gold); }
-
-        /* GRID */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .card {
-            background: var(--panel); border: 1px solid var(--line); border-radius: 20px;
-            padding: 35px; text-decoration: none; color: #fff; transition: 0.3s;
-            min-height: 200px;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .card:hover { border-color: var(--cyan); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1); }
-        .card.game-card:hover { border-color: var(--gold); box-shadow: 0 10px 30px rgba(255, 191, 0, 0.1); }
-        
-        .card h3 { font-weight: 900; text-transform: uppercase; margin-bottom: 12px; font-size: 1.3rem; }
-        .card.tool-card h3 { color: var(--cyan); }
-        .card.game-card h3 { color: var(--gold); }
-        .card p { color: var(--muted); font-size: 0.95rem; }
-
-        .card-footer { margin-top: 20px; font-weight: 900; font-size: 0.75rem; letter-spacing: 1px; opacity: 0.6; }
-
-        /* FEEDBACK STATION */
-        .feedback-station {
-            margin-top: 80px; padding: 60px;
-            background: var(--panel); border: 1px solid var(--line);
-            border-radius: 30px; text-align: center;
-        }
-        .feedback-station h4 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
-        .stars { display: flex; justify-content: center; gap: 15px; margin: 25px 0; font-size: 2.5rem; }
-        .star { color: #222; transition: 0.3s; cursor: pointer; }
-        .star:hover { color: var(--gold); }
-
-        /* FOOTER */
-        .footer { margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--line); text-align: center; }
-        .footer-tag { color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; }
-        .footer-credits { color: var(--muted); font-size: 0.8rem; line-height: 1.8; }
-        .footer-credits a { color: var(--cyan); text-decoration: none; font-weight: 700; }
-
-        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .logo-frame { max-width: 500px; margin: 0 auto; } }
+        .footer-tag { font-weight: bold; margin-bottom: 0.5rem; color: var(--accent); opacity: 0.8; }
+        .footer-credits a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+        .footer-credits a:hover { border-bottom: 1px solid var(--accent); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <nav class="top-nav">
-            <div class="brand-mark"><span>SS</span>CF</div>
-            <div class="nav-links">
-                <a href="#tools">Tools</a>
-                <a href="#games">Games</a>
-                <a href="#feedback">Feedback</a>
-                <a href="https://machinolabs.com">MachinoLabs</a>
-            </div>
-        </nav>
-
-        <section class="hero">
-            <div>
-                <h2>Stupid Simple<br><span class="fast-text">Crazy Fast.</span></h2>
-                <p class="hero-p">High-performance micro-apps, instant tools, and experimental web toys. Built for speed, fueled by vibes.</p>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <a href="#tools" class="btn btn-main">Explore Tools</a>
-                    <a href="#games" class="btn btn-alt">Explore Games</a>
-                </div>
-            </div>
-            
-            <div class="logo-frame">
-                <img src="sscf-logo.png" alt="Stupid Simple Crazy Fast Logo" class="hero-image">
-            </div>
-        </section>
-
-        <div class="section-title" id="tools">
-            <h3>Utility Deck</h3>
-        </div>
-        <section class="grid">
-            <a href="crew-portal-app/index.html" class="card tool-card">
-                <div>
-                    <h3>Field Crew Portal</h3>
-                    <p>Centralized logistics and deployment hub for teams on the move.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="doers-dashboard-v2/index.html" class="card tool-card">
-                <div>
-                    <h3>Doers Dashboard</h3>
-                    <p>High-velocity productivity tracking and task management engine.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="foodie-measure_lab/index.html" class="card tool-card">
-                <div>
-                    <h3>Foodie Measure Lab</h3>
-                    <p>Precision culinary conversion and measurement tool for the modern kitchen.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="life-notes-reflection/index.html" class="card tool-card">
-                <div>
-                    <h3>Life Notes: Reflect</h3>
-                    <p>Deep-dive personal analytics and daily insight recording tool.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="life-notes-voice/index.html" class="card tool-card">
-                <div>
-                    <h3>Life Notes: Voice</h3>
-                    <p>Hands-free audio-to-thought capture for rapid-fire idea generation.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="neighborhood-tracker/index.html" class="card tool-card">
-                <div>
-                    <h3>Neighborhood Tracker</h3>
-                    <p>Localized scout mapping and territory data management.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="pizza_coupon/index.html" class="card tool-card">
-                <div>
-                    <h3>Pizza Coupon Engine</h3>
-                    <p>Instant digital voucher deployment for local business loyalty.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="privacy-vault.html" class="card tool-card">
-                <div>
-                    <h3>The Privacy Vault</h3>
-                    <p>The OG MachinoLabs encrypted locker for secure file storage.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="rubrics-magic-pwa-v3/index.html" class="card tool-card">
-                <div>
-                    <h3>Rubrics Magic Pro</h3>
-                    <p>Elite evaluation framework for streamlined grading and assessment.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="simple-counter/index.html" class="card tool-card">
-                <div>
-                    <h3>Simple Counter</h3>
-                    <p>Rapid-fire incremental logic and tally tool for quick counts.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-
-            <a href="tip-calculator/index.html" class="card tool-card">
-                <div>
-                    <h3>Tip Calculator</h3>
-                    <p>The 100% offline-ready bill splitter for instant calculations.</p>
-                </div>
-                <div class="card-footer">PRO UTILITY →</div>
-            </a>
-        </section>
-
-        <div class="section-title gold-title" id="games">
-            <h3>Arcade Floor</h3>
-        </div>
-        <section class="grid">
-            <a href="alphabet-match/index.html" class="card game-card">
-                <div>
-                    <h3>Alphabet Match</h3>
-                    <p>High-speed pattern recognition and card-flipping challenges.</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-
-            <a href="card-memorization-game/index.html" class="card game-card">
-                <div>
-                    <h3>Card Memory Pro</h3>
-                    <p>Elite cognitive retention training in a retro-style environment.</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-
-            <a href="mixed-math-match-game/index.html" class="card game-card">
-                <div>
-                    <h3>Mixed Math Match</h3>
-                    <p>Rapid-fire mental arithmetic testing for the crazy fast mind.</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-
-            <a href="neon-void-squadron/index.html" class="card game-card">
-                <div>
-                    <h3>Neon Void Squadron</h3>
-                    <p>High-intensity reaction testing in a deep-space neon void.</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-
-            <a href="https://smak-a-dot.app" class="card game-card">
-                <div>
-                    <h3>Smak-A-Dot™</h3>
-                    <p>The V9 Master Polish reflex engine. Catch the dots or lose the streak.</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-
-            <a href="stackfive/index.html" class="card game-card">
-                <div>
-                    <h3>StackFive</h3>
-                    <p>Precision timing and strategic logic. How high can you stack?</p>
-                </div>
-                <div class="card-footer">CABINET ONLINE →</div>
-            </a>
-        </section>
-
-        <section class="feedback-station" id="feedback">
-            <h4>Rate the Experience</h4>
-            <div class="stars">
-                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            </div>
-            <p style="font-size: 0.75rem; color: #444; text-transform: uppercase;">Player One Feedback Loop</p>
-        </section>
-
-        <footer class="footer">
-            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
-            <div class="footer-credits">
-                Built by <a href="https://machinolabs.com">MachinoLabs</a> • <a href="https://machinolabs.com">machinolabs.com</a><br>
-                Joe & Machino • support@senditin.app
-                 ⭐ LET'S BUILD SOMETHING ⭐   
-            </div>
-        </footer>
+<div class="vault-card">
+    <h1>🛡️ Privacy Vault <span style="font-size: 0.7rem; background: #064e3b; padding: 2px 10px; border-radius: 12px; color: #10b981; font-weight: 900;">PRO</span></h1>
+    
+    <div class="instructions">
+        <h3>How it Works:</h3>
+        <ol>
+            <li><strong>Input:</strong> Add your secret text and/or a file (photo, audio, doc).</li>
+            <li><strong>Secure:</strong> Enter a Master Password. (Crucial: There is no 'Forgot Password' link).</li>
+            <li><strong>Generate:</strong> We create a new, "Self-Unlocking" HTML file for you to download.</li>
+            <li><strong>Store:</strong> Move that file to a USB or private folder. Your data is now encrypted offline.</li>
+        </ol>
+    </div>
+    
+    <div class="form-group">
+        <label>1. Master Password</label>
+        <input type="password" id="masterPass" placeholder="Pick a password you'll never forget">
     </div>
 
+    <div class="form-group">
+        <label>2. Secret Notes (Optional)</label>
+        <textarea id="secretText" rows="3" placeholder="Passwords, crypto seeds, or private messages..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>3. Attachment (Optional)</label>
+        <input type="file" id="fileInput">
+        <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.5;">Supports Photos, Audio, and PDFs (Max 15MB recommended)</div>
+    </div>
+
+    <button onclick="generateVault()">BUILD MY SECURE VAULT</button>
+</div>
+
+<footer class="footer">
+    <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+    <div class="footer-credits">
+        Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • 
+        <a href="https://machinolabs.com" target="_blank">machinolabs.com</a> • 
+        <a href="https://stupidsimplecrazyfast.com" target="_blank">stupidsimplecrazyfast.com</a>
+        <br>
+        Joe • 717.623.2907
+    </div>
+</footer>
+
+<script>
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    async function deriveKey(password, salt) {
+        const encoder = new TextEncoder();
+        const baseKey = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, ["deriveKey"]);
+        return crypto.subtle.deriveKey(
+            { name: "PBKDF2", salt, iterations: 100000, hash: "SHA-256" },
+            baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt"]
+        );
+    }
+
+    async function generateVault() {
+        const password = document.getElementById('masterPass').value;
+        const text = document.getElementById('secretText').value;
+        const file = document.getElementById('fileInput').files[0];
+
+        if (!password) return alert("You must set a password!");
+        if (!text && !file) return alert("Please provide text or a file to encrypt.");
+
+        let fileData = "";
+        let fileName = "";
+        if (file) {
+            fileData = await toBase64(file);
+            fileName = file.name;
+        }
+
+        const fullPayload = JSON.stringify({ text, fileData, fileName });
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await deriveKey(password, salt);
+        const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(fullPayload));
+
+        const vaultBundle = {
+            s: Array.from(salt),
+            i: Array.from(iv),
+            c: Array.from(new Uint8Array(encrypted))
+        };
+
+        const template = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🔒 Private Locked Vault</title>
+    <style>
+        body { background: #0b0f1a; color: #e2e8f0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 60px; }
+        .box { background: #161b2b; padding: 2.5rem; border-radius: 1.5rem; width: 90%; max-width: 600px; border: 1px solid #2d3748; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; background: #0b0f1a; border: 1px solid #2d3748; color: white; border-radius: 10px; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 14px; background: #10b981; border: none; border-radius: 10px; font-weight: 800; color: #064e3b; cursor: pointer; font-size: 1rem; }
+        #output { margin-top: 30px; text-align: left; display: none; }
+        .media-box { margin-top: 20px; border-top: 1px solid #2d3748; padding-top: 20px; text-align: center; }
+        img, audio, video { max-width: 100%; border-radius: 12px; margin-top: 10px; }
+        pre { background: #0b0f1a; padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-size: 0.95rem; border: 1px solid #2d3748; }
+        .footer-brand { margin-top: 30px; font-size: 0.7rem; opacity: 0.5; color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2 style="color: #10b981; margin-top: 0;">Vault Locked</h2>
+        <p style="opacity: 0.7; font-size: 0.9rem;">Enter the Master Password to decrypt your private data.</p>
+        <input type="password" id="p" placeholder="Master Password">
+        <button onclick="unlock()">ACCESS DATA</button>
+        <div id="output">
+            <h4 style="color:#10b981; margin-bottom: 8px;">Decrypted Notes:</h4>
+            <pre id="textOut"></pre>
+            <div id="mediaOut" class="media-box"></div>
+        </div>
+        <div class="footer-brand">Secured by MachinoLabs Privacy Vault</div>
+    </div>
     <script>
-        document.querySelectorAll('a').forEach(link => {
-            const href = link.getAttribute('href');
-            // If it's not a scroll-anchor (#) and it's not empty, open in new tab
-            if (href && !href.startsWith('#')) {
-                link.setAttribute('target', '_blank');
-                link.setAttribute('rel', 'noopener noreferrer');
-            }
-        });
-    </script>
+        const v = ${JSON.stringify(vaultBundle)};
+        async function unlock() {
+            const pass = document.getElementById('p').value;
+            try {
+                const bk = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+                const key = await crypto.subtle.deriveKey(
+                    { name: "PBKDF2", salt: new Uint8Array(v.s), iterations: 100000, hash: "SHA-256" },
+                    bk, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
+                );
+                const dec = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(v.i) }, key, new Uint8Array(v.c));
+                const data = JSON.parse(new TextDecoder().decode(dec));
+                
+                document.getElementById('textOut').innerText = data.text || "No text notes provided.";
+                if(data.fileData) {
+                    const mo = document.getElementById('mediaOut');
+                    mo.innerHTML = "<div style='font-size: 0.8rem; margin-bottom: 10px;'>ATTACHED FILE: <strong>" + data.fileName + "</strong></div>";
+                    if(data.fileData.startsWith("data:image")) {
+                        mo.innerHTML += "<img src='" + data.fileData + "'>";
+                    } else if(data.fileData.startsWith("data:audio")) {
+                        mo.innerHTML += "<audio controls src='" + data.fileData + "'></audio>";
+                    } else if(data.fileData.startsWith("data:video")) {
+                        mo.innerHTML += "<video controls src='" + data.fileData + "'></video>";
+                    } else {
+                        mo.innerHTML += "<a href='" + data.fileData + "' download='" + data.fileName + "' style='display: inline-block; padding: 10px 20px; background: #2d3748; color: #10b981; border-radius: 8px; text-decoration: none; font-weight: bold;'>DOWNLOAD DECRYPTED FILE</a>";
+                    }
+                }
+                document.getElementById('output').style.display = 'block';
+                document.getElementById('p').style.display = 'none';
+                document.querySelector('button').style.display = 'none';
+                document.querySelector('p').style.display = 'none';
+            } catch(e) { alert("Access Denied: Incorrect Password"); }
+        }
+    <\/script>
+</body>
+</html>`;
+
+        const blob = new Blob([template], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Secure_Vault_' + (fileName || 'Private') + '.html';
+        a.click();
+    }
+</script>
 
 </body>
 </html>

@@ -1,0 +1,10 @@
+{
+  "name": "Foodie Measure Lab",
+  "short_name": "Foodie Measure",
+  "start_url": "foodie-measure-lab.html",
+  "display": "standalone",
+  "background_color": "#0f766e",
+  "theme_color": "#0f766e",
+  "description": "Cooks & bakers’ teal-and-mint lab for quick conversions and recipe scaling.",
+  "icons": []
+}

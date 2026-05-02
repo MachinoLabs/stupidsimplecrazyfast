@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neighborhood Vibes Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --bg-alt: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --border: #e5e7eb;
+      --danger: #b91c1c;
+      --warning: #b45309;
+      --success: #166534;
+      --gold: #f59e0b;
+      --gold-soft: #fffbeb;
+      --card-radius: 12px;
+      --shadow-soft: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    body.dark {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: #082f49;
+      --border: #1f2937;
+      --danger: #fecaca;
+      --warning: #fed7aa;
+      --success: #bbf7d0;
+      --gold: #facc15;
+      --gold-soft: #422006;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.75);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #e5e7eb 0, var(--bg) 40%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 960px;
+      padding: 16px;
+      margin-bottom: 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    h1 span.icon {
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--card-radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    .card-soft {
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      margin: 0 0 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title small {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    label {
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input[type="file"] {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .range-row {
+      margin-bottom: 10px;
+    }
+
+    .range-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+
+    .range-header span.value {
+      font-weight: 600;
+    }
+
+    .range-scale {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.15s ease;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #f9fafb;
+      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-chip {
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle span.icon {
+      font-size: 1rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .pill.good {
+      color: var(--success);
+      border-color: var(--success);
+      background: rgba(22, 101, 52, 0.06);
+    }
+
+    .pill.mixed {
+      color: var(--warning);
+      border-color: var(--warning);
+      background: rgba(180, 83, 9, 0.06);
+    }
+
+    .pill.bad {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(185, 28, 28, 0.06);
+    }
+
+    .snapshot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .snapshot-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .snapshot-notes {
+      font-size: 0.85rem;
+      margin: 6px 0 0;
+      white-space: pre-wrap;
+    }
+
+    .snapshot-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 0.75rem;
+    }
+
+    .snapshot-tag {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .snapshots-empty {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 4px 12px;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .score-item span.value {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .form-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .btn-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      button {
+        justify-content: center;
+      }
+    }
+
+    /* Agent card */
+    .agent-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #eff6ff, #f9fafb);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: #111827;
+    }
+
+    body.dark .agent-card {
+      background: linear-gradient(135deg, #0b1220, #020617);
+      color: #e5e7eb;
+    }
+
+    .agent-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f97316 0, #ea580c 25%, #7c2d12 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fefce8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .agent-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .agent-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .agent-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      color: var(--muted);
+    }
+
+    .agent-line span {
+      white-space: nowrap;
+    }
+
+    .agent-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    /* Star rating */
+    .star-block {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--gold-soft);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+    }
+
+    body.dark .star-block {
+      border-color: rgba(250, 204, 21, 0.6);
+    }
+
+    .star-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
+
+    .star-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .star-label span.value {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .star-buttons {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .star-btn {
+      background: transparent;
+      border-radius: 999px;
+      border: none;
+      padding: 2px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: transform 0.05s ease;
+    }
+
+    .star-btn span {
+      display: block;
+    }
+
+    .star-btn.selected span {
+      color: var(--gold);
+      text-shadow: 0 0 4px rgba(250, 204, 21, 0.6);
+    }
+
+    .star-btn:not(.selected) span {
+      color: rgba(148, 163, 184, 0.8);
+    }
+
+    .star-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .snapshot-stars {
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .snapshot-stars .stars {
+      letter-spacing: 1px;
+    }
+
+    /* Photo */
+    .photo-row {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .snapshot-photo-wrap {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .snapshot-photo {
+      max-width: 180px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+      display: block;
+    }
+
+    .snapshot-photo-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .photo-helper {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>
+          <span class="icon">🏙️</span>
+          <span>Neighborhood Vibes Tracker</span>
+        </h1>
+        <div class="subtitle">
+          Score each street or stop, then let the app rank your best neighborhoods from top to bottom.
+        </div>
+      </div>
+      <button id="themeToggle" class="theme-toggle" type="button">
+        <span class="icon" id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark</span>
+      </button>
+    </header>
+
+    <!-- Agent branding -->
+    <div class="card card-soft" id="agentCard">
+      <div class="agent-label">Shared by your real estate agent</div>
+      <div class="agent-card">
+        <div class="agent-avatar" id="agentAvatar">A</div>
+        <div class="agent-main">
+          <div class="agent-name" id="agentName">Your Agent Name</div>
+          <div class="agent-line" id="agentLine">
+            <span id="agentBrokerage">Your Brokerage</span>
+            <span>•</span>
+            <span id="agentPhone">(000) 000-0000</span>
+            <span>•</span>
+            <span id="agentEmail">agent@example.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Card -->
+    <form id="vibesForm" class="card">
+      <div class="section-title">
+        <span>New vibe snapshot</span>
+        <small>Score a block, corner, or address in under a minute.</small>
+      </div>
+
+      <div class="form-layout">
+        <!-- Left: details -->
+        <div>
+          <label for="spotName">Location / label</label>
+          <input id="spotName" type="text" placeholder="e.g. Elm St @ 3rd Ave, back of property, side street" required>
+
+          <label for="visitTime" style="margin-top: 8px;">Date &amp; time</label>
+          <input id="visitTime" type="datetime-local">
+
+          <label for="visitContext" style="margin-top: 8px;">Context (optional)</label>
+          <select id="visitContext">
+            <option value="">Choose context…</option>
+            <option value="day">Daytime visit</option>
+            <option value="evening">Evening / night</option>
+            <option value="weekday">Weekday</option>
+            <option value="weekend">Weekend</option>
+            <option value="rush">Rush hour</option>
+            <option value="open-house">Open house</option>
+          </select>
+
+          <label for="notes" style="margin-top: 8px;">Notes (optional)</label>
+          <textarea id="notes" placeholder="Smelled like smoke? Dogs barking? Kids playing? Any gut feelings or red flags?"></textarea>
+
+          <div class="photo-row">
+            <label for="photoInput">Optional photo</label>
+            <input id="photoInput" type="file" accept="image/*" capture="environment">
+            <div class="photo-helper">
+              You can snap a quick photo. The app will create an annotated copy you can save to your device.
+            </div>
+          </div>
+
+          <div class="star-block">
+            <div class="star-row">
+              <div class="star-label">
+                Overall impression
+                <span class="value" id="starLabel">(3 / 5)</span>
+              </div>
+              <div class="star-buttons" id="starControl">
+                <button type="button" class="star-btn" data-star="1"><span>★</span></button>
+                <button type="button" class="star-btn" data-star="2"><span>★</span></button>
+                <button type="button" class="star-btn" data-star="3"><span>★</span></button>
+                <button type="button" class="star-btn" data-star="4"><span>★</span></button>
+                <button type="button" class="star-btn" data-star="5"><span>★</span></button>
+              </div>
+            </div>
+            <div class="star-hint" id="starHint">
+              1 = Not a match • 5 = Feels like home
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: sliders -->
+        <div>
+          <div class="range-row">
+            <div class="range-header">
+              <span>Street noise</span>
+              <span class="value" data-range-value="noiseRange">3</span>
+            </div>
+            <input id="noiseRange" type="range" min="1" max="5" value="3" data-range="noiseRange">
+            <div class="range-scale">
+              <span>Silent</span><span>Average</span><span>Loud</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Traffic</span>
+              <span class="value" data-range-value="trafficRange">3</span>
+            </div>
+            <input id="trafficRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Very calm</span><span>Normal</span><span>Heavy</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Cleanliness</span>
+              <span class="value" data-range-value="cleanRange">3</span>
+            </div>
+            <input id="cleanRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Littered</span><span>OK</span><span>Very clean</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Lighting</span>
+              <span class="value" data-range-value="lightRange">3</span>
+            </div>
+            <input id="lightRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Dark</span><span>OK</span><span>Well lit</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Green &amp; parks</span>
+              <span class="value" data-range-value="greenRange">3</span>
+            </div>
+            <input id="greenRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>None</span><span>Some</span><span>Plenty</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Parking ease</span>
+              <span class="value" data-range-value="parkingRange">3</span>
+            </div>
+            <input id="parkingRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Very hard</span><span>OK</span><span>Easy</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>People vibe</span>
+              <span class="value" data-range-value="peopleRange">3</span>
+            </div>
+            <input id="peopleRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Uncomfortable</span><span>Neutral</span><span>Warm</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-header">
+              <span>Safety feeling</span>
+              <span class="value" data-range-value="safetyRange">3</span>
+            </div>
+            <input id="safetyRange" type="range" min="1" max="5" value="3">
+            <div class="range-scale">
+              <span>Not safe</span><span>OK</span><span>Very safe</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn-primary">
+          <span>➕</span>
+          <span>Save snapshot</span>
+        </button>
+        <button type="button" id="quickReset" class="btn-secondary">
+          <span>↺</span>
+          <span>Reset form</span>
+        </button>
+        <button type="button" id="clearAll" class="btn-danger" title="Removes all saved snapshots">
+          <span>🗑️</span>
+          <span>Clear all saved</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Saved snapshots -->
+    <div class="card">
+      <div class="section-title">
+        <span>Saved snapshots</span>
+        <small>Auto-sorted from best match to least.</small>
+      </div>
+      <div id="snapshotsContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "neighborhoodVibesSnapshots_v2";
+      const THEME_KEY = "neighborhoodVibesTheme";
+      const AGENT_KEY = "neighborhoodVibesAgentCache";
+
+      const form = document.getElementById("vibesForm");
+      const spotNameInput = document.getElementById("spotName");
+      const visitTimeInput = document.getElementById("visitTime");
+      const visitContextSelect = document.getElementById("visitContext");
+      const notesInput = document.getElementById("notes");
+      const snapshotsContainer = document.getElementById("snapshotsContainer");
+      const quickResetBtn = document.getElementById("quickReset");
+      const clearAllBtn = document.getElementById("clearAll");
+      const themeToggleBtn = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeLabel = document.getElementById("themeLabel");
+      const photoInput = document.getElementById("photoInput");
+
+      const starControl = document.getElementById("starControl");
+      const starLabel = document.getElementById("starLabel");
+      const starHint = document.getElementById("starHint");
+
+      const agentNameEl = document.getElementById("agentName");
+      const agentBrokerageEl = document.getElementById("agentBrokerage");
+      const agentPhoneEl = document.getElementById("agentPhone");
+      const agentEmailEl = document.getElementById("agentEmail");
+      const agentAvatarEl = document.getElementById("agentAvatar");
+      const agentCardEl = document.getElementById("agentCard");
+
+      const rangeIds = [
+        "noiseRange",
+        "trafficRange",
+        "cleanRange",
+        "lightRange",
+        "greenRange",
+        "parkingRange",
+        "peopleRange",
+        "safetyRange"
+      ];
+
+      const starMessages = {
+        1: "1 = Not a match",
+        2: "2 = Probably not",
+        3: "3 = Mixed",
+        4: "4 = Worth a second look",
+        5: "5 = Feels like home"
+      };
+
+      let snapshots = [];
+      let currentStars = 3;
+      let agentInfo = {
+        name: "Your Agent Name",
+        brokerage: "Your Brokerage",
+        phone: "(000) 000-0000",
+        email: "agent@example.com"
+      };
+
+      function init() {
+        initTheme();
+        initAgentInfo();
+        initDateTime();
+        attachRangeListeners();
+        initStars();
+        loadSnapshots();
+        renderSnapshots();
+
+        form.addEventListener("submit", handleSubmit);
+        quickResetBtn.addEventListener("click", () => resetForm(false));
+        clearAllBtn.addEventListener("click", clearAllSnapshots);
+        themeToggleBtn.addEventListener("click", toggleTheme);
+      }
+
+      function initAgentInfo() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const cachedRaw = localStorage.getItem(AGENT_KEY);
+          let cached = cachedRaw ? JSON.parse(cachedRaw) : null;
+
+          const paramName = params.get("name");
+          const paramBrokerage = params.get("brokerage");
+          const paramPhone = params.get("phone");
+          const paramEmail = params.get("email");
+
+          if (paramName || paramBrokerage || paramPhone || paramEmail) {
+            agentInfo = {
+              name: paramName || (cached && cached.name) || agentInfo.name,
+              brokerage: paramBrokerage || (cached && cached.brokerage) || agentInfo.brokerage,
+              phone: paramPhone || (cached && cached.phone) || agentInfo.phone,
+              email: paramEmail || (cached && cached.email) || agentInfo.email
+            };
+            localStorage.setItem(AGENT_KEY, JSON.stringify(agentInfo));
+          } else if (cached) {
+            agentInfo = cached;
+          }
+
+          if (!agentInfo.name && !agentInfo.brokerage && !agentInfo.phone && !agentInfo.email) {
+            agentCardEl.style.display = "none";
+          } else {
+            updateAgentCard();
+          }
+        } catch (e) {
+          // If anything fails, fall back to default
+          updateAgentCard();
+        }
+      }
+
+      function updateAgentCard() {
+        agentNameEl.textContent = agentInfo.name || "Your Agent Name";
+        agentBrokerageEl.textContent = agentInfo.brokerage || "Your Brokerage";
+        agentPhoneEl.textContent = agentInfo.phone || "";
+        agentEmailEl.textContent = agentInfo.email || "";
+
+        const initials = (agentInfo.name || "Agent")
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map(part => part[0].toUpperCase())
+          .join("");
+        agentAvatarEl.textContent = initials || "A";
+      }
+
+      function initDateTime() {
+        try {
+          const now = new Date();
+          now.setSeconds(0, 0);
+          const off = now.getTimezoneOffset();
+          const local = new Date(now.getTime() - off * 60000);
+          visitTimeInput.value = local.toISOString().slice(0, 16);
+        } catch (e) {
+          // Leave blank if something goes wrong
+        }
+      }
+
+      function attachRangeListeners() {
+        rangeIds.forEach(id => {
+          const input = document.getElementById(id);
+          const display = document.querySelector('[data-range-value="' + id + '"]');
+          if (!input || !display) return;
+          input.addEventListener("input", () => {
+            display.textContent = input.value;
+          });
+        });
+      }
+
+      function initStars() {
+        const buttons = starControl.querySelectorAll(".star-btn");
+        function renderStars() {
+          buttons.forEach(btn => {
+            const val = Number(btn.getAttribute("data-star"));
+            btn.classList.toggle("selected", val <= currentStars);
+          });
+          starLabel.textContent = `(${currentStars} / 5)`;
+          starHint.textContent = starMessages[currentStars] || starMessages[3];
+        }
+        buttons.forEach(btn => {
+          btn.addEventListener("click", () => {
+            const val = Number(btn.getAttribute("data-star"));
+            currentStars = val || 3;
+            renderStars();
+          });
+        });
+        renderStars();
+      }
+
+      function loadSnapshots() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          snapshots = raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          snapshots = [];
+        }
+      }
+
+      function saveSnapshots() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshots));
+        } catch (e) {
+          // Ignore storage errors
+        }
+      }
+
+      async function handleSubmit(event) {
+        event.preventDefault();
+        const name = spotNameInput.value.trim();
+        if (!name) return;
+
+        const visitTime = visitTimeInput.value || null;
+        const context = visitContextSelect.value || "";
+        const notes = notesInput.value.trim();
+
+        const scores = {
+          noise: toNumber("noiseRange"),
+          traffic: toNumber("trafficRange"),
+          cleanliness: toNumber("cleanRange"),
+          lighting: toNumber("lightRange"),
+          green: toNumber("greenRange"),
+          parking: toNumber("parkingRange"),
+          people: toNumber("peopleRange"),
+          safety: toNumber("safetyRange")
+        };
+
+        const overall = average(Object.values(scores));
+        let photoData = null;
+
+        const file = photoInput.files && photoInput.files[0];
+        if (file) {
+          try {
+            photoData = await createAnnotatedPhoto(file, {
+              spotName: name,
+              stars: currentStars,
+              overall,
+              visitTime,
+              agentName: agentInfo.name
+            });
+          } catch (e) {
+            // If annotation fails, just skip photo instead of blocking save
+            photoData = null;
+          }
+        }
+
+        const snapshot = {
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
+          name,
+          visitTime,
+          context,
+          notes,
+          scores,
+          overall,
+          stars: currentStars,
+          photo: photoData
+        };
+
+        snapshots.push(snapshot);
+        sortSnapshots();
+        saveSnapshots();
+        renderSnapshots();
+        resetForm(true);
+      }
+
+      function sortSnapshots() {
+        snapshots.sort((a, b) => {
+          const starsA = a.stars || 0;
+          const starsB = b.stars || 0;
+          if (starsB !== starsA) return starsB - starsA;
+          const overallA = a.overall || 0;
+          const overallB = b.overall || 0;
+          if (overallB !== overallA) return overallB - overallA;
+          const tA = a.createdAt || a.id;
+          const tB = b.createdAt || b.id;
+          return (tB || 0) - (tA || 0);
+        });
+      }
+
+      function toNumber(id) {
+        const el = document.getElementById(id);
+        return el ? Number(el.value) || 0 : 0;
+      }
+
+      function average(values) {
+        if (!values.length) return 0;
+        const sum = values.reduce((a, b) => a + b, 0);
+        return Math.round((sum / values.length) * 10) / 10;
+      }
+
+      function resetForm(keepName) {
+        if (!keepName) {
+          spotNameInput.value = "";
+        }
+        notesInput.value = "";
+        visitContextSelect.value = "";
+        photoInput.value = "";
+        currentStars = 3;
+        initStars();
+        initDateTime();
+
+        rangeIds.forEach(id => {
+          const input = document.getElementById(id);
+          const display = document.querySelector('[data-range-value="' + id + '"]');
+          if (input) input.value = 3;
+          if (display) display.textContent = "3";
+        });
+      }
+
+      function clearAllSnapshots() {
+        if (!confirm("Clear all saved neighborhood snapshots? This cannot be undone.")) return;
+        snapshots = [];
+        saveSnapshots();
+        renderSnapshots();
+      }
+
+      function renderSnapshots() {
+        snapshotsContainer.innerHTML = "";
+        if (!snapshots.length) {
+          const empty = document.createElement("div");
+          empty.className = "snapshots-empty";
+          empty.textContent = "No snapshots yet. Score a block and save it to see your best neighborhoods at the top.";
+          snapshotsContainer.appendChild(empty);
+          return;
+        }
+
+        snapshots.forEach(snapshot => {
+          const card = document.createElement("div");
+          card.className = "card card-soft";
+          card.style.marginBottom = "10px";
+
+          const header = document.createElement("div");
+          header.className = "snapshot-header";
+
+          const titleWrap = document.createElement("div");
+          const title = document.createElement("div");
+          title.textContent = snapshot.name;
+          title.style.fontSize = "0.95rem";
+          title.style.fontWeight = "600";
+
+          const meta = document.createElement("div");
+          meta.className = "snapshot-meta";
+          meta.textContent = buildMeta(snapshot);
+
+          titleWrap.appendChild(title);
+          titleWrap.appendChild(meta);
+
+          const pill = document.createElement("div");
+          const vibe = classifyOverall(snapshot.overall);
+          const starString = renderStarsInline(snapshot.stars || 0);
+          pill.className = "pill " + vibe.className;
+          pill.innerHTML = `<span>${vibe.icon}</span><span>${snapshot.overall.toFixed(1)} / 5 · ${vibe.label}</span>`;
+
+          header.appendChild(titleWrap);
+          header.appendChild(pill);
+
+          const scoresGrid = document.createElement("div");
+          scoresGrid.className = "scores-grid";
+          scoresGrid.innerHTML = `
+            <div class="score-item">Noise: <span class="value">${snapshot.scores.noise}</span></div>
+            <div class="score-item">Traffic: <span class="value">${snapshot.scores.traffic}</span></div>
+            <div class="score-item">Cleanliness: <span class="value">${snapshot.scores.cleanliness}</span></div>
+            <div class="score-item">Lighting: <span class="value">${snapshot.scores.lighting}</span></div>
+            <div class="score-item">Green: <span class="value">${snapshot.scores.green}</span></div>
+            <div class="score-item">Parking: <span class="value">${snapshot.scores.parking}</span></div>
+            <div class="score-item">People: <span class="value">${snapshot.scores.people}</span></div>
+            <div class="score-item">Safety: <span class="value">${snapshot.scores.safety}</span></div>
+          `;
+
+          const starRow = document.createElement("div");
+          starRow.className = "snapshot-stars";
+          starRow.innerHTML = `<span class="stars">${starString}</span><span>(${snapshot.stars || 0} / 5)</span>`;
+
+          const notesBlock = document.createElement("div");
+          if (snapshot.notes) {
+            const notesLabel = document.createElement("div");
+            notesLabel.className = "snapshot-notes";
+            notesLabel.textContent = snapshot.notes;
+            notesBlock.appendChild(notesLabel);
+          }
+
+          const footerRow = document.createElement("div");
+          footerRow.style.display = "flex";
+          footerRow.style.flexDirection = "column";
+          footerRow.style.gap = "6px";
+          footerRow.style.marginTop = "8px";
+
+          const topFooter = document.createElement("div");
+          topFooter.style.display = "flex";
+          topFooter.style.justifyContent = "space-between";
+          topFooter.style.alignItems = "center";
+          topFooter.style.gap = "8px";
+
+          const tags = document.createElement("div");
+          tags.className = "snapshot-tags";
+
+          if (snapshot.context) {
+            const tag = document.createElement("span");
+            tag.className = "snapshot-tag";
+            tag.textContent = snapshot.context.replace("-", " ");
+            tags.appendChild(tag);
+          }
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn-chip";
+          btn.innerHTML = "Remove snapshot";
+          btn.addEventListener("click", () => {
+            removeSnapshot(snapshot.id);
+          });
+
+          topFooter.appendChild(tags);
+          topFooter.appendChild(btn);
+          footerRow.appendChild(starRow);
+          footerRow.appendChild(topFooter);
+
+          if (snapshot.photo) {
+            const photoWrap = document.createElement("div");
+            photoWrap.className = "snapshot-photo-wrap";
+
+            const img = document.createElement("img");
+            img.className = "snapshot-photo";
+            img.src = snapshot.photo;
+            img.alt = "Annotated neighborhood photo";
+
+            const controls = document.createElement("div");
+            controls.style.display = "flex";
+            controls.style.flexDirection = "column";
+            controls.style.gap = "4px";
+
+            const dlBtn = document.createElement("a");
+            dlBtn.href = snapshot.photo;
+            dlBtn.download = `neighborhood-vibe-${snapshot.name.replace(/\s+/g, "-").toLowerCase()}.jpg`;
+            dlBtn.className = "btn-chip";
+            dlBtn.textContent = "Download annotated photo";
+
+            const note = document.createElement("div");
+            note.className = "snapshot-photo-note";
+            note.textContent = "Tip: open this image and save it to your photos to keep the notes attached.";
+
+            controls.appendChild(dlBtn);
+            controls.appendChild(note);
+
+            photoWrap.appendChild(img);
+            photoWrap.appendChild(controls);
+            footerRow.appendChild(photoWrap);
+          }
+
+          card.appendChild(header);
+          card.appendChild(scoresGrid);
+          card.appendChild(notesBlock);
+          card.appendChild(footerRow);
+
+          snapshotsContainer.appendChild(card);
+        });
+      }
+
+      function renderStarsInline(stars) {
+        let out = "";
+        for (let i = 1; i <= 5; i++) {
+          out += i <= stars ? "★" : "☆";
+        }
+        return out;
+      }
+
+      function buildMeta(snapshot) {
+        let parts = [];
+        if (snapshot.visitTime) {
+          const d = new Date(snapshot.visitTime);
+          if (!isNaN(d)) {
+            const options = {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "numeric",
+              minute: "2-digit"
+            };
+            parts.push(d.toLocaleString(undefined, options));
+          }
+        }
+        if (!parts.length) {
+          parts.push("Time not set");
+        }
+        return parts.join(" · ");
+      }
+
+      function classifyOverall(score) {
+        if (score >= 4.0) {
+          return { label: "Feels good", className: "good", icon: "✅" };
+        } else if (score >= 2.5) {
+          return { label: "Mixed / watch", className: "mixed", icon: "⚠️" };
+        } else {
+          return { label: "Concerning", className: "bad", icon: "⛔" };
+        }
+      }
+
+      function removeSnapshot(id) {
+        snapshots = snapshots.filter(s => s.id !== id);
+        saveSnapshots();
+        renderSnapshots();
+      }
+
+      // Theme handling
+      function initTheme() {
+        try {
+          const stored = localStorage.getItem(THEME_KEY);
+          const prefersDark = window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const initial = stored || (prefersDark ? "dark" : "light");
+          applyTheme(initial);
+        } catch (e) {
+          applyTheme("light");
+        }
+      }
+
+      function applyTheme(theme) {
+        const isDark = theme === "dark";
+        document.body.classList.toggle("dark", isDark);
+        themeIcon.textContent = isDark ? "☀️" : "🌙";
+        themeLabel.textContent = isDark ? "Light" : "Dark";
+
+        try {
+          localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      function toggleTheme() {
+        const isDark = document.body.classList.contains("dark");
+        applyTheme(isDark ? "light" : "dark");
+      }
+
+      // Photo annotation helpers
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = src;
+        });
+      }
+
+      async function createAnnotatedPhoto(file, meta) {
+        const dataUrl = await readFileAsDataURL(file);
+        const img = await loadImage(dataUrl);
+
+        const maxWidth = 1200;
+        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+        const width = img.width * scale;
+        const height = img.height * scale;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const barHeight = Math.max(44, height * 0.11);
+        ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+        ctx.fillRect(0, height - barHeight, width, barHeight);
+
+        ctx.font = "16px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        ctx.fillStyle = "#f9fafb";
+
+        const padX = 16;
+        const padY = 10;
+
+        const timeText = meta.visitTime
+          ? formatShortDateTime(meta.visitTime)
+          : "";
+        const line1Parts = [];
+        if (meta.spotName) line1Parts.push(meta.spotName);
+        if (timeText) line1Parts.push(timeText);
+        const line1 = line1Parts.join(" · ");
+
+        const line2Parts = [];
+        if (meta.stars) line2Parts.push(`Rating: ${"★".repeat(meta.stars)}${"☆".repeat(5 - meta.stars)}`);
+        if (meta.overall) line2Parts.push(`Vibe: ${meta.overall.toFixed(1)}/5`);
+        if (meta.agentName) line2Parts.push(`Agent: ${meta.agentName}`);
+        const line2 = line2Parts.join("  •  ");
+
+        const textY1 = height - barHeight + padY + 16;
+        const textY2 = textY1 + 18;
+
+        wrapText(ctx, line1, padX, textY1, width - padX * 2, 18);
+        wrapText(ctx, line2, padX, textY2, width - padX * 2, 18);
+
+        return canvas.toDataURL("image/jpeg", 0.9);
+      }
+
+      function formatShortDateTime(iso) {
+        try {
+          const d = new Date(iso);
+          if (isNaN(d)) return "";
+          const options = {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          };
+          return d.toLocaleString(undefined, options);
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        if (!text) return;
+        const words = text.split(" ");
+        let line = "";
+        let currentY = y;
+
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + " ";
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line.trim(), x, currentY);
+            line = words[n] + " ";
+            currentY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        if (line) {
+          ctx.fillText(line.trim(), x, currentY);
+        }
+      }
+
+      // Kick off
+      init();
+    })();
+  </script>
+</body>
+</html>

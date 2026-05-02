@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Foodie Measure Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root {
+      --mint: #22c55e;
+      --mint-soft: #bbf7d0;
+      --mint-pale: #ecfdf3;
+      --border-soft: #cbd5e1;
+      --bg-page: #f5f7fb;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-soft: #e0f2fe;
+      --danger: #dc2626;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --shadow-soft: 0 14px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 960px;
+      background: var(--bg-card);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 20px 20px 14px;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    header.app-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      letter-spacing: 0.02em;
+    }
+
+    .title-highlight {
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+    }
+
+    .title-block p {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border-soft);
+      background: var(--mint-pale);
+      color: #166534;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--mint);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 16px 14px 12px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .card-header {
+      margin-bottom: 8px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .card-header p {
+      margin: 4px 0 0;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    label {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+
+    .field-row-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+
+    .field-row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+
+    @media (max-width: 720px) {
+      .field-row,
+      .field-row-2,
+      .field-row-3 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .app-shell {
+        padding: 16px 14px 10px;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      color: var(--text-main);
+      padding: 7px 10px;
+      font-size: 0.86rem;
+      outline: none;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 1px var(--mint-soft);
+    }
+
+    .quick-amounts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .quick-amount-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-page);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 4px 9px;
+      cursor: pointer;
+    }
+
+    .quick-amount-btn:hover {
+      background: var(--mint-pale);
+      color: #166534;
+      border-color: var(--mint-soft);
+    }
+
+    .primary-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #bbf7d0, #22c55e);
+      color: #14532d;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 22px rgba(34, 197, 94, 0.35);
+      margin-top: 4px;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(1.03);
+    }
+
+    .result-pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+      font-size: 0.83rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .result-pill span.value {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Baking ingredient card */
+
+    .ingredient-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.8fr) minmax(0, 0.9fr) minmax(0, 0.9fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+
+    @media (max-width: 720px) {
+      .ingredient-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .result-pill-full {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .tag-note {
+      margin-top: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: var(--bg-page);
+    }
+
+    /* Recipe scaling */
+
+    .ingredients-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .ingredients-table th,
+    .ingredients-table td {
+      padding: 4px 5px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .ingredients-table th {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .ingredients-table input[type="number"],
+    .ingredients-table input[type="text"] {
+      width: 100%;
+      border-radius: 10px;
+      padding: 4px 6px;
+      font-size: 0.78rem;
+    }
+
+    .scaled-value {
+      font-weight: 600;
+      color: #166534;
+    }
+
+    .factor-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      background: var(--bg-page);
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+    }
+
+    .factor-pill span.value {
+      font-weight: 600;
+      color: #166534;
+    }
+
+    /* Tips */
+
+    .tip-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 4px 0 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tip-list li {
+      margin-bottom: 4px;
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .tip-list li span.icon {
+      margin-top: 2px;
+    }
+
+    footer.app-footer {
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    footer.app-footer strong {
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .status-offline {
+      background: #f97316;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="title-block">
+        <h1><span class="title-highlight">Foodie Measure Lab</span></h1>
+        <p>Everyday cooking and baking conversions in one simple, light workspace.</p>
+      </div>
+      <div class="badge-row">
+        <div class="badge">
+          <span class="dot"></span>
+          Offline-first · Browser-only
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Quick Converter -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Quick Converter</h2>
+          <p>Convert volume, weight, or oven temperatures without hunting through charts.</p>
+        </div>
+
+        <div class="field-row-2">
+          <div class="field-group">
+            <label for="converter-category">What are you converting?</label>
+            <select id="converter-category">
+              <option value="volume">Volume (teaspoons, tablespoons, cups, ml)</option>
+              <option value="weight">Weight (grams, ounces, pounds)</option>
+              <option value="temperature">Oven temperature (°C, °F)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Volume / Weight converter -->
+        <div id="linear-converter">
+          <div class="field-row">
+            <div class="field-group">
+              <label for="conv-input">Amount</label>
+              <input id="conv-input" type="number" step="0.01" placeholder="e.g. 1.5" />
+            </div>
+            <div class="field-group">
+              <label for="conv-from">From</label>
+              <select id="conv-from"></select>
+            </div>
+            <div class="field-group">
+              <label for="conv-to">To</label>
+              <select id="conv-to"></select>
+            </div>
+          </div>
+
+          <div class="quick-amounts">
+            <button class="quick-amount-btn" data-amount="0.25">¼</button>
+            <button class="quick-amount-btn" data-amount="0.33">⅓</button>
+            <button class="quick-amount-btn" data-amount="0.5">½</button>
+            <button class="quick-amount-btn" data-amount="1">1</button>
+            <button class="quick-amount-btn" data-amount="2">2</button>
+            <button class="quick-amount-btn" data-amount="3">3</button>
+          </div>
+
+          <button id="conv-run" class="primary-btn">
+            <span>Convert</span> <span>➜</span>
+          </button>
+
+          <div id="conv-result" class="result-pill" style="display:none;">
+            <span>Result:</span>
+            <span class="value" id="conv-result-text"></span>
+          </div>
+          <div class="hint">
+            Values are approximate and meant for real-world cooking, not lab calculations.
+          </div>
+        </div>
+
+        <!-- Temperature converter -->
+        <div id="temp-converter" style="display:none; margin-top: 4px;">
+          <div class="field-row">
+            <div class="field-group">
+              <label for="temp-input">Oven temperature</label>
+              <input id="temp-input" type="number" step="1" placeholder="e.g. 350" />
+            </div>
+            <div class="field-group">
+              <label for="temp-from">From</label>
+              <select id="temp-from">
+                <option value="F">°F</option>
+                <option value="C">°C</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="temp-to">To</label>
+              <select id="temp-to">
+                <option value="C">°C</option>
+                <option value="F">°F</option>
+              </select>
+            </div>
+          </div>
+          <button id="temp-run" class="primary-btn">
+            <span>Convert</span> <span>🔥</span>
+          </button>
+          <div id="temp-result" class="result-pill" style="display:none;">
+            <span>Result:</span>
+            <span class="value" id="temp-result-text"></span>
+          </div>
+          <div class="hint">
+            Home ovens often run a bit hot or cold, so treat results as a guide and watch color and doneness.
+          </div>
+        </div>
+      </section>
+
+      <!-- Baking Ingredient Converter -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Baking Ingredient Converter</h2>
+          <p>Rough cups ⇄ grams ⇄ ounces for common baking ingredients.</p>
+        </div>
+
+        <div class="ingredient-row">
+          <div class="field-group">
+            <label for="ingredient-select">Ingredient</label>
+            <select id="ingredient-select">
+              <option value="flour_ap">All-purpose flour</option>
+              <option value="sugar_white">Granulated sugar</option>
+              <option value="sugar_brown">Packed brown sugar</option>
+              <option value="butter">Butter</option>
+              <option value="cocoa">Cocoa powder</option>
+              <option value="oats">Rolled oats</option>
+            </select>
+            <div class="tag-note">
+              Based on typical cookbook charts. Brands can vary, so a kitchen scale is more precise.
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="ingredient-cups">Cups</label>
+            <input id="ingredient-cups" type="number" step="0.01" placeholder="e.g. 2.5" />
+          </div>
+
+          <div class="field-group">
+            <label>Grams (approx.)</label>
+            <div class="result-pill result-pill-full" id="grams-pill">
+              <span>g</span>
+              <span class="value" id="grams-value">–</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Ounces (approx.)</label>
+            <div class="result-pill result-pill-full" id="ounces-pill">
+              <span>oz</span>
+              <span class="value" id="ounces-value">–</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="ingredient-run" class="primary-btn">
+          <span>Convert cups → g & oz</span>
+        </button>
+
+        <div class="hint">
+          Use this when a recipe is written in cups but your scale or notes are in grams.
+        </div>
+      </section>
+
+      <!-- Recipe Scaling Helper -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Recipe Scaling Helper</h2>
+          <p>Change servings and see how each ingredient should scale.</p>
+        </div>
+
+        <div class="field-row-3">
+          <div class="field-group">
+            <label for="servings-original">Original servings</label>
+            <input id="servings-original" type="number" step="0.1" placeholder="e.g. 4" />
+          </div>
+          <div class="field-group">
+            <label for="servings-new">New servings</label>
+            <input id="servings-new" type="number" step="0.1" placeholder="e.g. 10" />
+          </div>
+          <div class="field-group">
+            <label>Scale factor</label>
+            <div class="factor-pill">
+              x <span class="value" id="scale-factor">–</span>
+            </div>
+          </div>
+        </div>
+
+        <table class="ingredients-table">
+          <thead>
+            <tr>
+              <th style="width:22%;">Original qty</th>
+              <th style="width:38%;">Ingredient</th>
+              <th style="width:20%;">Unit (optional)</th>
+              <th style="width:20%;">Scaled qty</th>
+            </tr>
+          </thead>
+          <tbody id="ingredients-body">
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" placeholder="1.5" /></td>
+              <td><input type="text" class="name-input" placeholder="flour" /></td>
+              <td><input type="text" class="unit-input" placeholder="cups" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" placeholder="0.75" /></td>
+              <td><input type="text" class="name-input" placeholder="sugar" /></td>
+              <td><input type="text" class="unit-input" placeholder="cups" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" placeholder="2" /></td>
+              <td><input type="text" class="name-input" placeholder="eggs" /></td>
+              <td><input type="text" class="unit-input" placeholder="eggs" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" /></td>
+              <td><input type="text" class="name-input" placeholder="…" /></td>
+              <td><input type="text" class="unit-input" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" /></td>
+              <td><input type="text" class="name-input" placeholder="…" /></td>
+              <td><input type="text" class="unit-input" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+            <tr>
+              <td><input type="number" step="0.01" class="qty-input" /></td>
+              <td><input type="text" class="name-input" placeholder="…" /></td>
+              <td><input type="text" class="unit-input" /></td>
+              <td class="scaled-value">–</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button id="scale-run" class="primary-btn">
+          <span>Scale ingredients</span> <span>📈</span>
+        </button>
+
+        <div class="hint">
+          After scaling, taste and adjust salt, spices, and baking time — those don’t always scale perfectly.
+        </div>
+      </section>
+
+      <!-- Practical Tips -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Practical Kitchen Tips</h2>
+          <p>Short reminders that actually help when you’re in the middle of cooking.</p>
+        </div>
+        <ul class="tip-list">
+          <li>
+            <span class="icon">⚖️</span>
+            <span>For baking, weighing dry ingredients (especially flour and sugar) is more reliable than scooping with cups.</span>
+          </li>
+          <li>
+            <span class="icon">🥄</span>
+            <span>When using cups, lightly spoon dry ingredients in and level the top with a straight edge instead of packing them down.</span>
+          </li>
+          <li>
+            <span class="icon">🔥</span>
+            <span>Always give the oven time to fully preheat and use the center rack unless a recipe clearly says otherwise.</span>
+          </li>
+          <li>
+            <span class="icon">⏱️</span>
+            <span>Scaled recipes may need a little more or less time. Start checking doneness a bit earlier instead of relying on the clock alone.</span>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div>
+        <strong>A Machino Labs Creation • Offline-First Design • by Joe Machino • StupidSimpleCrazyFast.com</strong>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="status-dot" id="offline-indicator"></span>
+        <span id="offline-label">PWA shell ready</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Converter maps (approximate everyday cooking values)
+    const unitMaps = {
+      volume: {
+        tsp: { label: "teaspoons (tsp)", factor: 4.92892 },
+        tbsp: { label: "tablespoons (Tbsp)", factor: 14.7868 },
+        cup: { label: "cups", factor: 240 },
+        floz: { label: "fluid ounces (fl oz)", factor: 29.5735 },
+        ml: { label: "milliliters (ml)", factor: 1 },
+        l: { label: "liters (L)", factor: 1000 }
+      },
+      weight: {
+        g: { label: "grams (g)", factor: 1 },
+        kg: { label: "kilograms (kg)", factor: 1000 },
+        oz: { label: "ounces (oz)", factor: 28.3495 },
+        lb: { label: "pounds (lb)", factor: 453.592 }
+      }
+    };
+
+    // Baking ingredient densities: grams per cup (approximate)
+    const ingredientMap = {
+      flour_ap: { label: "All-purpose flour", gPerCup: 120 },
+      sugar_white: { label: "Granulated sugar", gPerCup: 200 },
+      sugar_brown: { label: "Packed brown sugar", gPerCup: 220 },
+      butter: { label: "Butter", gPerCup: 227 },
+      cocoa: { label: "Cocoa powder", gPerCup: 85 },
+      oats: { label: "Rolled oats", gPerCup: 90 }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initConverter();
+      initBaking();
+      initScaling();
+      registerServiceWorker();
+    });
+
+    function initConverter() {
+      const categorySelect = document.getElementById("converter-category");
+      const convFrom = document.getElementById("conv-from");
+      const convTo = document.getElementById("conv-to");
+      const convInput = document.getElementById("conv-input");
+      const convRun = document.getElementById("conv-run");
+      const convResult = document.getElementById("conv-result");
+      const convResultText = document.getElementById("conv-result-text");
+      const quickButtons = document.querySelectorAll(".quick-amount-btn");
+
+      const linearSection = document.getElementById("linear-converter");
+      const tempSection = document.getElementById("temp-converter");
+
+      function populateUnits(category) {
+        const map = unitMaps[category];
+        convFrom.innerHTML = "";
+        convTo.innerHTML = "";
+        Object.entries(map).forEach(([key, meta]) => {
+          const opt1 = document.createElement("option");
+          opt1.value = key;
+          opt1.textContent = meta.label;
+          const opt2 = opt1.cloneNode(true);
+          convFrom.appendChild(opt1);
+          convTo.appendChild(opt2);
+        });
+        convFrom.selectedIndex = 0;
+        convTo.selectedIndex = Math.min(1, convTo.options.length - 1);
+      }
+
+      categorySelect.addEventListener("change", () => {
+        const category = categorySelect.value;
+        if (category === "temperature") {
+          linearSection.style.display = "none";
+          tempSection.style.display = "";
+          convResult.style.display = "none";
+        } else {
+          linearSection.style.display = "";
+          tempSection.style.display = "none";
+          populateUnits(category);
+        }
+      });
+
+      function runLinearConversion() {
+        const category = categorySelect.value;
+        if (category === "temperature") return;
+
+        const map = unitMaps[category];
+        const fromKey = convFrom.value;
+        const toKey = convTo.value;
+        const value = parseFloat(convInput.value);
+
+        if (isNaN(value)) {
+          convResult.style.display = "none";
+          return;
+        }
+
+        const base = value * map[fromKey].factor; // into base unit (ml or g)
+        const converted = base / map[toKey].factor;
+        const rounded =
+          converted >= 10 ? converted.toFixed(1) : converted.toFixed(2);
+
+        convResultText.textContent = `${rounded} ${map[toKey].label}`;
+        convResult.style.display = "inline-flex";
+      }
+
+      convRun.addEventListener("click", runLinearConversion);
+
+      quickButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const amt = parseFloat(btn.getAttribute("data-amount"));
+          if (!isNaN(amt)) {
+            convInput.value = amt.toString();
+            runLinearConversion();
+          }
+        });
+      });
+
+      // Temperature converter
+      const tempInput = document.getElementById("temp-input");
+      const tempFrom = document.getElementById("temp-from");
+      const tempTo = document.getElementById("temp-to");
+      const tempRun = document.getElementById("temp-run");
+      const tempResult = document.getElementById("temp-result");
+      const tempResultText = document.getElementById("temp-result-text");
+
+      function runTempConversion() {
+        const val = parseFloat(tempInput.value);
+        if (isNaN(val)) {
+          tempResult.style.display = "none";
+          return;
+        }
+
+        const from = tempFrom.value;
+        const to = tempTo.value;
+
+        if (from === to) {
+          tempResultText.textContent = `${val.toFixed(0)} °${to}`;
+          tempResult.style.display = "inline-flex";
+          return;
+        }
+
+        let converted;
+        if (from === "F" && to === "C") {
+          converted = ((val - 32) * 5) / 9;
+        } else if (from === "C" && to === "F") {
+          converted = (val * 9) / 5 + 32;
+        }
+
+        tempResultText.textContent = `${converted.toFixed(0)} °${to}`;
+        tempResult.style.display = "inline-flex";
+      }
+
+      tempRun.addEventListener("click", runTempConversion);
+
+      // Initial state
+      populateUnits("volume");
+      categorySelect.value = "volume";
+      linearSection.style.display = "";
+      tempSection.style.display = "none";
+    }
+
+    function initBaking() {
+      const ingredientSelect = document.getElementById("ingredient-select");
+      const cupsInput = document.getElementById("ingredient-cups");
+      const gramsValue = document.getElementById("grams-value");
+      const ouncesValue = document.getElementById("ounces-value");
+      const runBtn = document.getElementById("ingredient-run");
+
+      runBtn.addEventListener("click", () => {
+        const key = ingredientSelect.value;
+        const cups = parseFloat(cupsInput.value);
+        if (isNaN(cups)) {
+          gramsValue.textContent = "–";
+          ouncesValue.textContent = "–";
+          return;
+        }
+        const meta = ingredientMap[key];
+        const grams = cups * meta.gPerCup;
+        const ounces = grams / 28.3495;
+        gramsValue.textContent = grams.toFixed(0);
+        ouncesValue.textContent = ounces.toFixed(1);
+      });
+    }
+
+    function initScaling() {
+      const inputOriginal = document.getElementById("servings-original");
+      const inputNew = document.getElementById("servings-new");
+      const factorLabel = document.getElementById("scale-factor");
+      const runBtn = document.getElementById("scale-run");
+      const rows = document.querySelectorAll("#ingredients-body tr");
+
+      function computeFactor() {
+        const orig = parseFloat(inputOriginal.value);
+        const next = parseFloat(inputNew.value);
+        if (isNaN(orig) || isNaN(next) || orig <= 0) {
+          factorLabel.textContent = "–";
+          return null;
+        }
+        const factor = next / orig;
+        factorLabel.textContent = factor.toFixed(2);
+        return factor;
+      }
+
+      runBtn.addEventListener("click", () => {
+        const factor = computeFactor();
+        rows.forEach((row) => {
+          const qtyInput = row.querySelector(".qty-input");
+          const scaledCell = row.querySelector(".scaled-value");
+          if (!qtyInput || !scaledCell) return;
+          const qty = parseFloat(qtyInput.value);
+          if (!factor || isNaN(qty)) {
+            scaledCell.textContent = "–";
+          } else {
+            const scaled = qty * factor;
+            scaledCell.textContent = scaled.toFixed(2);
+          }
+        });
+      });
+    }
+
+    function registerServiceWorker() {
+      const offlineIndicator = document.getElementById("offline-indicator");
+      const offlineLabel = document.getElementById("offline-label");
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .then(() => {
+            offlineIndicator.classList.remove("status-offline");
+            offlineLabel.textContent = "Offline shell ready (PWA-friendly)";
+          })
+          .catch(() => {
+            offlineIndicator.classList.add("status-offline");
+            offlineLabel.textContent =
+              "Service worker failed (app still works online)";
+          });
+      } else {
+        offlineIndicator.classList.add("status-offline");
+        offlineLabel.textContent =
+          "Service workers not supported in this browser";
+      }
+    }
+  </script>
+</body>
+</html>

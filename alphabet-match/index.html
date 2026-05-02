@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alphabet Memory Match • MachinoLabs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0A1A3A" />
+
+  <style>
+    :root {
+      --bg-page: #f4f5f8;
+      --bg-panel: #ffffff;
+      --navy: #0A1A3A;
+
+      --uppercase-front: #F4E8D3; /* Buttercream */
+      --lowercase-front: #D9EEF2; /* Soft Aqua */
+
+      --front-border-upper: rgba(0, 0, 0, 0.10);
+      --front-border-lower: rgba(0, 0, 0, 0.08);
+
+      --dot-upper: rgba(196, 159, 105, 0.7);
+      --dot-lower: rgba(108, 180, 199, 0.7);
+
+      --card-radius: 12px;
+      --card-gap: 10px;
+
+      --header-text: #222;
+      --hud-pill-bg: rgba(10, 26, 58, 0.05);
+      --hud-pill-border: rgba(10, 26, 58, 0.12);
+
+      --btn-bg: #0A1A3A;
+      --btn-bg-soft: #ffffff;
+      --btn-text: #ffffff;
+      --btn-soft-text: #0A1A3A;
+      --btn-border: rgba(10, 26, 58, 0.2);
+
+      --pause-overlay: rgba(0, 0, 0, 0.25);
+      --footer-text: rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #eef2ff 0, #f4f5f8 38%, #f0f3fb 100%);
+      color: #111827;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 16px 8px;
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    header.app-header {
+      text-align: center;
+    }
+
+    header.app-header h1 {
+      margin: 4px 0 8px;
+      font-size: 1.6rem;
+      font-weight: 650;
+      color: var(--navy);
+      letter-spacing: 0.03em;
+    }
+
+    .header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .header-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-group-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--header-text);
+      margin-right: 4px;
+    }
+
+    select,
+    input[type="text"] {
+      font: inherit;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.2);
+      background: #ffffff;
+      min-width: 80px;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 1px rgba(10, 26, 58, 0.25);
+    }
+
+    .seed-input {
+      width: 110px;
+    }
+
+    .btn {
+      font: inherit;
+      border-radius: 999px;
+      border: 1px solid var(--btn-border);
+      padding: 6px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-soft {
+      background: var(--btn-bg-soft);
+      color: var(--btn-soft-text);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.15);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn:not(:disabled):active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.25);
+    }
+
+    .btn-icon {
+      font-size: 0.9em;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .board-shell {
+      background: var(--bg-panel);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
+      position: relative;
+    }
+
+    .hud-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--hud-pill-bg);
+      border: 1px solid var(--hud-pill-border);
+      font-size: 0.85rem;
+      color: var(--navy);
+    }
+
+    .hud-pill strong {
+      font-weight: 650;
+    }
+
+    .hud-pill-icon {
+      font-size: 0.95em;
+      opacity: 0.8;
+    }
+
+    .player-pill {
+      cursor: default;
+      transition: background 0.15s ease, box-shadow 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .player-pill.active {
+      background: rgba(10, 26, 58, 0.1);
+      box-shadow: 0 0 0 1px rgba(10, 26, 58, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--card-gap);
+      justify-content: center;
+    }
+
+    .card {
+      width: 80px;
+      height: 104px;
+      perspective: 800px;
+      position: relative;
+    }
+
+    @media (min-width: 700px) {
+      .card {
+        width: 88px;
+        height: 112px;
+      }
+      :root {
+        --card-gap: 12px;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .card {
+        width: 96px;
+        height: 120px;
+      }
+      :root {
+        --card-gap: 14px;
+      }
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.46s cubic-bezier(0.3, 0.6, 0.2, 1);
+    }
+
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+    }
+
+    .card-face.back {
+      background: #2563eb; /* base, overridden by pattern generator */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(15, 23, 42, 0.65);
+      position: relative;
+    }
+
+    .back-pattern-layer {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .back-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .flip-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      color: #111827;
+      font-size: 0.75rem;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
+    }
+
+    .back-corner-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      align-self: flex-end;
+      margin-right: 6px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.4);
+    }
+
+    .card-face.front {
+      transform: rotateY(180deg);
+      background: var(--uppercase-front);
+      position: relative;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .front-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--card-radius) - 3px);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .front-inset-border {
+      position: absolute;
+      inset: 3px;
+      border-radius: calc(var(--card-radius) - 6px);
+      border: 1.5px solid var(--front-border-upper);
+      pointer-events: none;
+    }
+
+    .card.lowercase .card-face.front {
+      background: var(--lowercase-front);
+    }
+
+    .card.lowercase .front-inset-border {
+      border-color: var(--front-border-lower);
+    }
+
+    .front-dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      bottom: 4px;
+      right: 4px;
+      background: var(--dot-upper);
+    }
+
+    .card.lowercase .front-dot {
+      background: var(--dot-lower);
+    }
+
+    .front-letter {
+      font-weight: 800;
+      color: var(--navy);
+      font-size: 2.1rem;
+      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+      transform-origin: center;
+    }
+
+    @media (min-width: 700px) {
+      .front-letter {
+        font-size: 2.35rem;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .front-letter {
+        font-size: 2.5rem;
+      }
+    }
+
+    .card.flip-pop .front-letter {
+      animation: letter-pop 0.2s ease-out;
+    }
+
+    @keyframes letter-pop {
+      0% { transform: scale(0.94); filter: brightness(1); }
+      60% { transform: scale(1.05); filter: brightness(1.01); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .board-shell.paused::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--pause-overlay);
+      border-radius: inherit;
+      z-index: 4;
+    }
+
+    .pause-banner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .pause-banner-inner {
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.5);
+    }
+
+    .winning-banner {
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .sound-toggle {
+      border-radius: 999px;
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .sound-toggle .btn-icon {
+      font-size: 1.1rem;
+    }
+
+    footer.app-footer {
+      flex-shrink: 0;
+      padding: 14px 10px 18px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--footer-text);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 640px) {
+      header.app-header h1 {
+        font-size: 1.25rem;
+      }
+      .header-bar {
+        gap: 8px 12px;
+      }
+      .card {
+        width: 72px;
+        height: 96px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <h1>Alphabet Memory Match</h1>
+      <div class="header-bar">
+        <!-- Setup group -->
+        <div class="header-group" aria-label="Game setup">
+          <span class="header-group-label">Theme</span>
+          <select id="themeSelect">
+            <option value="upper-lower" selected>Upper ↔ Lower (A/a)</option>
+            <option value="upper-only">Uppercase Only</option>
+            <option value="lower-only">Lowercase Only</option>
+          </select>
+
+          <span class="header-group-label">Cards</span>
+          <select id="cardCountSelect">
+            <option value="12">12</option>
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="24" selected>24</option>
+            <option value="30">30</option>
+            <option value="36">36</option>
+          </select>
+
+          <span class="header-group-label">Seed</span>
+          <input id="seedInput" class="seed-input" type="text" placeholder="auto" />
+
+          <span class="header-group-label">Players</span>
+          <select id="playersSelect">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <!-- Actions group -->
+        <div class="header-group" aria-label="Game controls">
+          <button id="startBtn" class="btn">
+            <span class="btn-icon">▶</span> Start
+          </button>
+          <button id="restartBtn" class="btn btn-soft" disabled>
+            <span class="btn-icon">↻</span> Restart
+          </button>
+          <button id="revealBtn" class="btn btn-soft">
+            👁 Reveal All
+          </button>
+          <button id="pauseBtn" class="btn btn-soft" disabled>
+            ⏸ Pause
+          </button>
+          <button id="soundBtn" class="btn btn-soft sound-toggle" title="Toggle sound">
+            <span class="btn-icon" id="soundIcon">🔊</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="board-shell" id="boardShell">
+        <div class="hud-bar" id="hudBar">
+          <div class="hud-pill" id="timePill">
+            <span class="hud-pill-icon">⏱</span>
+            <span>Time: <strong id="timeValue">0:00</strong></span>
+          </div>
+          <div class="hud-pill">
+            <span class="hud-pill-icon">🎯</span>
+            <span>Moves: <strong id="movesValue">0</strong></span>
+          </div>
+          <div class="hud-pill">
+            <span class="hud-pill-icon">✅</span>
+            <span>Matched: <strong id="matchedValue">0</strong></span>
+          </div>
+          <div class="hud-pill player-pill" id="p1Pill" style="display:none;">
+            <span class="hud-pill-icon">👤</span>
+            <span>P1: <strong id="p1Score">0</strong></span>
+          </div>
+          <div class="hud-pill player-pill" id="p2Pill" style="display:none;">
+            <span class="hud-pill-icon">👥</span>
+            <span>P2: <strong id="p2Score">0</strong></span>
+          </div>
+        </div>
+
+        <div class="grid" id="cardGrid" aria-label="Card grid"></div>
+
+        <div class="pause-banner" id="pauseBanner" style="display:none;">
+          <div class="pause-banner-inner">Game Paused</div>
+        </div>
+      </div>
+
+      <div class="winning-banner" id="winningBanner"></div>
+    </main>
+  </div>
+
+  <footer class="app-footer">
+    A MachinoLabs Creation • Designed by Joe Machino • Runs fully offline and stores everything safely on your device — no accounts, no syncing, no internet required.
+  </footer>
+
+  <script>
+    // ------------------------------
+    // Utility: Seeded RNG (Mulberry32)
+    // ------------------------------
+    function mulberry32(seed) {
+      let a = seed >>> 0;
+      return function () {
+        a |= 0;
+        a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function hashStringToSeed(str) {
+      let h = 2166136261 >>> 0;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    // ------------------------------
+    // Sound Manager (Web Audio)
+    // ------------------------------
+    class SoundManager {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+        this.volumes = {
+          flip: 0.4,
+          match: 0.5,
+          mismatch: 0.3,
+          win: 0.6
+        };
+      }
+
+      ensureContext() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) {
+            this.ctx = new AudioCtx();
+          }
+        }
+      }
+
+      toggleMute() {
+        this.muted = !this.muted;
+      }
+
+      playBeep(type) {
+        if (this.muted) return;
+        this.ensureContext();
+        if (!this.ctx) return;
+
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        if (type === "flip") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(380, now);
+          gain.gain.setValueAtTime(0.0, now);
+          gain.gain.linearRampToValueAtTime(0.08 * this.volumes.flip, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === "match") {
+          const freqs = [520, 640];
+          freqs.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+            gain.gain.setValueAtTime(0, now + idx * 0.06);
+            gain.gain.linearRampToValueAtTime(
+              0.1 * this.volumes.match,
+              now + idx * 0.06 + 0.03
+            );
+            gain.gain.exponentialRampToValueAtTime(
+              0.0001,
+              now + idx * 0.06 + 0.18
+            );
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + idx * 0.06 + 0.22);
+          });
+        } else if (type === "mismatch") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(
+            0.07 * this.volumes.mismatch,
+            now + 0.01
+          );
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === "win") {
+          const freqs = [440, 660, 880];
+          freqs.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(
+              0.09 * this.volumes.win,
+              now + idx * 0.08 + 0.03
+            );
+            gain.gain.exponentialRampToValueAtTime(
+              0.0001,
+              now + idx * 0.08 + 0.4
+            );
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.45);
+          });
+        }
+      }
+    }
+
+    const soundManager = new SoundManager();
+
+    // ------------------------------
+    // Card Pattern Generator (Backs)
+    // ------------------------------
+    function createPatternCanvas(seed, width, height) {
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      const rng = mulberry32(seed);
+
+      // Soft background
+      const bgH = 200 + rng() * 80;
+      const bgS = 50 + rng() * 20;
+      const bgL = 60 + rng() * 10;
+      ctx.fillStyle = `hsl(${bgH}, ${bgS}%, ${bgL}%)`;
+      ctx.fillRect(0, 0, width, height);
+
+      // Overlay shapes
+      const shapes = Math.floor(4 + rng() * 5);
+      for (let i = 0; i < shapes; i++) {
+        const type = Math.floor(rng() * 4);
+        const h = 180 + rng() * 140;
+        const s = 60 + rng() * 30;
+        const l = 50 + rng() * 10;
+        ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, 0.85)`;
+        ctx.strokeStyle = `hsla(${h}, ${s}%, ${Math.max(l - 15, 20)}%, 0.85)`;
+        ctx.lineWidth = 2 + rng() * 2;
+
+        if (type === 0) {
+          // stripes
+          const stripeCount = 6 + Math.floor(rng() * 4);
+          for (let sIdx = 0; sIdx < stripeCount; sIdx++) {
+            const y = (height / stripeCount) * sIdx + rng() * 6;
+            ctx.beginPath();
+            ctx.moveTo(-20, y);
+            ctx.lineTo(width + 20, y + 10 * (rng() - 0.5));
+            ctx.stroke();
+          }
+        } else if (type === 1) {
+          // circles/concentric
+          const cx = width * (0.2 + rng() * 0.6);
+          const cy = height * (0.2 + rng() * 0.6);
+          const rings = 2 + Math.floor(rng() * 4);
+          for (let r = 0; r < rings; r++) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, 8 + r * 10 + rng() * 4, 0, Math.PI * 2);
+            if (r % 2 === 0) ctx.fill();
+            else ctx.stroke();
+          }
+        } else if (type === 2) {
+          // polygon slices
+          const cx = width / 2;
+          const cy = height / 2;
+          const slices = 5 + Math.floor(rng() * 5);
+          for (let sIdx = 0; sIdx < slices; sIdx++) {
+            const a0 = (Math.PI * 2 * sIdx) / slices;
+            const a1 = (Math.PI * 2 * (sIdx + 1)) / slices;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(
+              cx + Math.cos(a0) * (width * 0.8),
+              cy + Math.sin(a0) * (height * 0.8)
+            );
+            ctx.lineTo(
+              cx + Math.cos(a1) * (width * 0.8),
+              cy + Math.sin(a1) * (height * 0.8)
+            );
+            ctx.closePath();
+            if (sIdx % 2 === 0) ctx.fill();
+            else ctx.stroke();
+          }
+        } else {
+          // tiny stars
+          const stars = 8 + Math.floor(rng() * 8);
+          for (let st = 0; st < stars; st++) {
+            const sx = rng() * width;
+            const sy = rng() * height;
+            const r = 2 + rng() * 2;
+            ctx.beginPath();
+            ctx.arc(sx, sy, r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      return canvas.toDataURL("image/png");
+    }
+
+    function applyBackPattern(backEl, seed) {
+      const patternLayer = document.createElement("div");
+      patternLayer.className = "back-pattern-layer";
+      const w = 120;
+      const h = 160;
+      const dataURL = createPatternCanvas(seed, w, h);
+      patternLayer.style.backgroundImage = `url(${dataURL})`;
+      patternLayer.style.backgroundSize = "cover";
+      patternLayer.style.filter = "saturate(0.92) brightness(0.96)";
+      backEl.appendChild(patternLayer);
+
+      const inner = document.createElement("div");
+      inner.className = "back-inner";
+      const flip = document.createElement("div");
+      flip.className = "flip-pill";
+      flip.textContent = "Flip";
+      const cornerDot = document.createElement("div");
+      cornerDot.className = "back-corner-dot";
+      inner.appendChild(flip);
+      inner.appendChild(cornerDot);
+      backEl.appendChild(inner);
+    }
+
+    // ------------------------------
+    // Game State
+    // ------------------------------
+    const gridEl = document.getElementById("cardGrid");
+    const timeValueEl = document.getElementById("timeValue");
+    const movesValueEl = document.getElementById("movesValue");
+    const matchedValueEl = document.getElementById("matchedValue");
+    const p1Pill = document.getElementById("p1Pill");
+    const p2Pill = document.getElementById("p2Pill");
+    const p1ScoreEl = document.getElementById("p1Score");
+    const p2ScoreEl = document.getElementById("p2Score");
+    const winningBannerEl = document.getElementById("winningBanner");
+    const boardShellEl = document.getElementById("boardShell");
+    const pauseBannerEl = document.getElementById("pauseBanner");
+
+    const themeSelect = document.getElementById("themeSelect");
+    const cardCountSelect = document.getElementById("cardCountSelect");
+    const seedInput = document.getElementById("seedInput");
+    const playersSelect = document.getElementById("playersSelect");
+
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const revealBtn = document.getElementById("revealBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const soundBtn = document.getElementById("soundBtn");
+    const soundIcon = document.getElementById("soundIcon");
+
+    let deck = [];
+    let flipped = [];
+    let rng = mulberry32(1);
+    let timerId = null;
+    let elapsedSeconds = 0;
+    let moves = 0;
+    let matchedPairs = 0;
+    let totalPairs = 0;
+    let isRunning = false;
+    let isPaused = false;
+    let isRevealingAll = false;
+    let is1PMode = true;
+    let currentPlayer = 1;
+    let p1Score = 0;
+    let p2Score = 0;
+
+    function resetState() {
+      deck = [];
+      flipped = [];
+      elapsedSeconds = 0;
+      moves = 0;
+      matchedPairs = 0;
+      isRunning = false;
+      isPaused = false;
+      isRevealingAll = false;
+      p1Score = 0;
+      p2Score = 0;
+      currentPlayer = 1;
+      totalPairs = 0;
+      clearInterval(timerId);
+      timerId = null;
+      timeValueEl.textContent = formatTime(0);
+      movesValueEl.textContent = "0";
+      matchedValueEl.textContent = "0";
+      p1ScoreEl.textContent = "0";
+      p2ScoreEl.textContent = "0";
+      winningBannerEl.textContent = "";
+      boardShellEl.classList.remove("paused");
+      pauseBannerEl.style.display = "none";
+      startBtn.disabled = false;
+      restartBtn.disabled = true;
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = "⏸ Pause";
+      gridEl.innerHTML = "";
+      updatePlayersVisibility();
+    }
+
+    function updatePlayersVisibility() {
+      is1PMode = playersSelect.value === "1";
+      if (is1PMode) {
+        p1Pill.style.display = "none";
+        p2Pill.style.display = "none";
+        revealBtn.disabled = false;
+      } else {
+        p1Pill.style.display = "inline-flex";
+        p2Pill.style.display = "inline-flex";
+        revealBtn.disabled = true;
+      }
+      updatePlayerHighlight();
+    }
+
+    function updatePlayerHighlight() {
+      p1Pill.classList.remove("active");
+      p2Pill.classList.remove("active");
+      if (!is1PMode && isRunning && !isPaused) {
+        if (currentPlayer === 1) p1Pill.classList.add("active");
+        else p2Pill.classList.add("active");
+      }
+    }
+
+    function startTimer() {
+      if (timerId) clearInterval(timerId);
+      timerId = setInterval(() => {
+        if (!isRunning || isPaused) return;
+        elapsedSeconds++;
+        timeValueEl.textContent = formatTime(elapsedSeconds);
+      }, 1000);
+    }
+
+    function computeSeed() {
+      const seedStr = seedInput.value.trim();
+      if (seedStr) {
+        return hashStringToSeed(seedStr);
+      }
+      const rand = Math.floor(Math.random() * 1e9);
+      return rand >>> 0;
+    }
+
+    function buildDeck() {
+      const theme = themeSelect.value; // "upper-lower", "upper-only", "lower-only"
+      const cardCount = parseInt(cardCountSelect.value, 10);
+      const pairsNeeded = cardCount / 2;
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      const selectedLetters = letters.slice(0, Math.min(pairsNeeded, letters.length));
+      deck = [];
+      let idCounter = 0;
+      selectedLetters.forEach((letter, pairIndex) => {
+        const pairId = pairIndex;
+        if (theme === "upper-only") {
+          for (let i = 0; i < 2; i++) {
+            deck.push({
+              id: idCounter++,
+              pairId,
+              face: letter,
+              isUpper: true,
+              matched: false
+            });
+          }
+        } else if (theme === "lower-only") {
+          const lower = letter.toLowerCase();
+          for (let i = 0; i < 2; i++) {
+            deck.push({
+              id: idCounter++,
+              pairId,
+              face: lower,
+              isUpper: false,
+              matched: false
+            });
+          }
+        } else {
+          // upper-lower
+          deck.push({
+            id: idCounter++,
+            pairId,
+            face: letter,
+            isUpper: true,
+            matched: false
+          });
+          deck.push({
+            id: idCounter++,
+            pairId,
+            face: letter.toLowerCase(),
+            isUpper: false,
+            matched: false
+          });
+        }
+      });
+
+      // If we didn't reach pairsNeeded (because limited by alphabet),
+      // we just trim deck to desired length:
+      deck = deck.slice(0, pairsNeeded * 2);
+      totalPairs = deck.length / 2;
+
+      // Shuffle with seeded RNG
+      const seed = computeSeed();
+      rng = mulberry32(seed);
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+    }
+
+    function renderGrid() {
+      gridEl.innerHTML = "";
+      const count = deck.length;
+
+      let cols = 4;
+      if (count === 12) cols = 4;
+      else if (count === 16) cols = 4;
+      else if (count === 20) cols = 5;
+      else if (count === 24) cols = 6;
+      else if (count === 30) cols = 6;
+      else if (count === 36) cols = 6;
+
+      gridEl.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+
+      deck.forEach((card, index) => {
+        const cardEl = document.createElement("button");
+        cardEl.type = "button";
+        cardEl.className = "card" + (card.isUpper ? " uppercase" : " lowercase");
+        cardEl.dataset.id = card.id;
+        cardEl.setAttribute("aria-label", "Card");
+        cardEl.setAttribute("aria-pressed", "false");
+
+        const inner = document.createElement("div");
+        inner.className = "card-inner";
+
+        const back = document.createElement("div");
+        back.className = "card-face back";
+        const backSeed = hashStringToSeed("card-back-" + card.id + "-" + index);
+        applyBackPattern(back, backSeed);
+
+        const front = document.createElement("div");
+        front.className = "card-face front";
+
+        const frontInner = document.createElement("div");
+        frontInner.className = "front-inner";
+
+        const insetBorder = document.createElement("div");
+        insetBorder.className = "front-inset-border";
+
+        const dot = document.createElement("div");
+        dot.className = "front-dot";
+
+        const letter = document.createElement("div");
+        letter.className = "front-letter";
+        letter.textContent = card.face;
+
+        frontInner.appendChild(insetBorder);
+        frontInner.appendChild(dot);
+        frontInner.appendChild(letter);
+        front.appendChild(frontInner);
+
+        inner.appendChild(back);
+        inner.appendChild(front);
+        cardEl.appendChild(inner);
+        gridEl.appendChild(cardEl);
+      });
+    }
+
+    function findCardElementById(id) {
+      return gridEl.querySelector('.card[data-id="' + id + '"]');
+    }
+
+    function setRunning(value) {
+      isRunning = value;
+      if (!value) {
+        updatePlayerHighlight();
+      } else {
+        updatePlayerHighlight();
+      }
+    }
+
+    function startGame() {
+      resetState();
+      buildDeck();
+      renderGrid();
+      setRunning(true);
+      restartBtn.disabled = false;
+      pauseBtn.disabled = false;
+      startBtn.disabled = true;
+      startTimer();
+      attachCardHandlers();
+      updatePlayersVisibility();
+    }
+
+    function restartGame() {
+      resetState();
+      buildDeck();
+      renderGrid();
+      setRunning(true);
+      restartBtn.disabled = false;
+      pauseBtn.disabled = false;
+      startBtn.disabled = true;
+      startTimer();
+      attachCardHandlers();
+    }
+
+    function attachCardHandlers() {
+      const cardButtons = gridEl.querySelectorAll(".card");
+      cardButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          onCardClicked(btn);
+        });
+      });
+    }
+
+    function onCardClicked(cardEl) {
+      if (!isRunning || isPaused || isRevealingAll) return;
+      const id = parseInt(cardEl.dataset.id, 10);
+      const cardData = deck.find(c => c.id === id);
+      if (!cardData || cardData.matched) return;
+
+      if (flipped.some(c => c.id === id)) return; // already flipped in current turn
+
+      if (!is1PMode && currentPlayer === 2 && playersSelect.value !== "2" && false) {
+        // guard not needed; is1PMode covers
+      }
+
+      // 2-player: honor current turn (logic is enforced by only matching inside engine)
+
+      flipCardUp(cardEl, cardData);
+      soundManager.playBeep("flip");
+
+      flipped.push(cardData);
+      if (flipped.length === 2) {
+        moves++;
+        movesValueEl.textContent = String(moves);
+        checkForMatch();
+      }
+    }
+
+    function flipCardUp(cardEl, cardData) {
+      cardEl.classList.add("flipped");
+      const letterEl = cardEl.querySelector(".front-letter");
+      if (letterEl) {
+        cardEl.classList.remove("flip-pop");
+        // Force reflow for restarting animation
+        void letterEl.offsetWidth;
+        cardEl.classList.add("flip-pop");
+        setTimeout(() => {
+          cardEl.classList.remove("flip-pop");
+        }, 260);
+      }
+    }
+
+    function flipCardDownById(id) {
+      const cardEl = findCardElementById(id);
+      if (cardEl && !cardEl.classList.contains("matched")) {
+        cardEl.classList.remove("flipped");
+      }
+    }
+
+    function checkForMatch() {
+      if (flipped.length !== 2) return;
+      const [c1, c2] = flipped;
+      flipped = [];
+
+      if (c1.pairId === c2.pairId) {
+        // Match
+        const cardEl1 = findCardElementById(c1.id);
+        const cardEl2 = findCardElementById(c2.id);
+        if (cardEl1) {
+          cardEl1.classList.add("matched");
+          cardEl1.setAttribute("aria-pressed", "true");
+        }
+        if (cardEl2) {
+          cardEl2.classList.add("matched");
+          cardEl2.setAttribute("aria-pressed", "true");
+        }
+        c1.matched = true;
+        c2.matched = true;
+
+        matchedPairs++;
+        matchedValueEl.textContent = String(matchedPairs);
+        soundManager.playBeep("match");
+
+        if (!is1PMode) {
+          if (currentPlayer === 1) {
+            p1Score++;
+            p1ScoreEl.textContent = String(p1Score);
+          } else {
+            p2Score++;
+            p2ScoreEl.textContent = String(p2Score);
+          }
+          updatePlayerHighlight();
+        }
+
+        if (matchedPairs === totalPairs) {
+          endGame();
+        }
+      } else {
+        // Mismatch
+        soundManager.playBeep("mismatch");
+        const id1 = c1.id;
+        const id2 = c2.id;
+        setTimeout(() => {
+          flipCardDownById(id1);
+          flipCardDownById(id2);
+
+          if (!is1PMode) {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updatePlayerHighlight();
+          }
+        }, 650);
+      }
+    }
+
+    function endGame() {
+      setRunning(false);
+      clearInterval(timerId);
+      timerId = null;
+      pauseBtn.disabled = true;
+      startBtn.disabled = false;
+
+      let msg = "All pairs matched!";
+      if (!is1PMode) {
+        if (p1Score > p2Score) msg = "Player 1 Wins!";
+        else if (p2Score > p1Score) msg = "Player 2 Wins!";
+        else msg = "It’s a tie!";
+      }
+      winningBannerEl.textContent = msg;
+      soundManager.playBeep("win");
+    }
+
+    function revealAll() {
+      if (!isRunning || !is1PMode || isPaused) return;
+      isRevealingAll = true;
+      const cards = gridEl.querySelectorAll(".card");
+      cards.forEach(card => card.classList.add("flipped"));
+      setTimeout(() => {
+        cards.forEach(card => {
+          const id = parseInt(card.dataset.id, 10);
+          const data = deck.find(c => c.id === id);
+          if (data && !data.matched) {
+            card.classList.remove("flipped");
+          }
+        });
+        isRevealingAll = false;
+      }, 1400);
+    }
+
+    function togglePause() {
+      if (!isRunning) return;
+      isPaused = !isPaused;
+      if (isPaused) {
+        boardShellEl.classList.add("paused");
+        pauseBannerEl.style.display = "flex";
+        pauseBtn.textContent = "▶ Resume";
+      } else {
+        boardShellEl.classList.remove("paused");
+        pauseBannerEl.style.display = "none";
+        pauseBtn.textContent = "⏸ Pause";
+      }
+      updatePlayerHighlight();
+    }
+
+    function toggleSound() {
+      soundManager.toggleMute();
+      soundIcon.textContent = soundManager.muted ? "🔈" : "🔊";
+    }
+
+    // ------------------------------
+    // Event Wiring
+    // ------------------------------
+    startBtn.addEventListener("click", () => {
+      startGame();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      restartGame();
+    });
+
+    revealBtn.addEventListener("click", () => {
+      revealAll();
+    });
+
+    pauseBtn.addEventListener("click", () => {
+      togglePause();
+    });
+
+    soundBtn.addEventListener("click", () => {
+      toggleSound();
+    });
+
+    playersSelect.addEventListener("change", () => {
+      resetState();
+    });
+
+    themeSelect.addEventListener("change", () => {
+      resetState();
+    });
+
+    cardCountSelect.addEventListener("change", () => {
+      resetState();
+    });
+
+    // initial setup
+    resetState();
+
+    // ------------------------------
+    // PWA: Service Worker Registration
+    // ------------------------------
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("sw.js")
+          .catch(err => {
+            console.warn("Service worker registration failed:", err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>

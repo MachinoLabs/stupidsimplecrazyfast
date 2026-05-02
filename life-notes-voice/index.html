@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Life Notes: Reflection Edition — Offline</title>
+<style>
+  :root{
+    --bg-a:#0f1220; --bg-b:#1b1f36; --ink:#f5f7ff; --muted:#b7bdd8;
+    --accent:#b8bccf;
+    --card:#161a2f; --rule:rgba(255,255,255,.14);
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font:16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+    color:var(--ink);
+    background:linear-gradient(135deg,var(--bg-a),var(--bg-b));
+    transition:background 600ms ease;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:24px;min-height:100%}
+  header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px}
+  .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+        background:linear-gradient(135deg,var(--accent),#ffffff33);color:#0f1220;
+        font-weight:900;box-shadow:var(--shadow)}
+  h1{font-size:22px;margin:0}
+  .tag{color:var(--muted);font-size:14px}
+
+  .panel{background:color-mix(in oklab, var(--card), transparent 20%);
+         border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 4px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+        border:1px solid rgba(255,255,255,.12);cursor:pointer;color:var(--ink);
+        background:rgba(255,255,255,.04)}
+  .pill.active{outline:2px solid color-mix(in oklab, var(--accent), white 10%);background:rgba(255,255,255,.07)}
+  .grow{flex:1}
+  button{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:600;color:#0f1220;
+         background:linear-gradient(135deg,var(--accent),#ffffff88);cursor:pointer;box-shadow:var(--shadow)}
+  button.ghost{background:transparent;color:var(--ink);border:1px dashed rgba(255,255,255,.2)}
+  button.secondary{background:#23284a;color:var(--ink);border:1px solid rgba(255,255,255,.14)}
+  button:disabled{opacity:.6;cursor:not-allowed}
+
+  .stage{display:grid;place-items:center;min-height:42vh;margin-top:6px}
+  .card{max-width:820px}
+  .quote{
+    font-family: "Georgia", ui-serif, serif;
+    font-size: clamp(22px, 4.2vw, 34px);
+    line-height: 1.35;
+    text-align:center;
+    padding:18px 14px;
+    border-radius:16px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    transition:opacity 380ms ease, transform 380ms ease, background 400ms ease, border-color 400ms ease;
+    opacity:0; transform:translateY(6px);
+  }
+  .quote.show{opacity:1; transform:translateY(0)}
+  .meta{display:flex;justify-content:center;gap:10px;color:var(--muted);font-size:13px;margin-top:10px}
+  .rule{height:1px;background:var(--rule);margin:14px 0}
+  .footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;color:var(--muted);font-size:12px;margin-top:12px}
+
+  .drawer{margin-top:14px;display:none}
+  .drawer.open{display:block}
+  .favlist{display:grid;gap:10px;max-height:260px;overflow:auto}
+  .fav{display:flex;gap:10px;justify-content:space-between;align-items:center;background:#0d1126;
+        border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
+  .fav small{color:var(--muted)}
+  .badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14)}
+
+  .selectWrap{
+    display:flex;align-items:center;gap:6px;
+    border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 10px;
+    background:rgba(255,255,255,.04)
+  }
+  .selectWrap label{font-size:12px;color:var(--muted)}
+  .selectWrap select{
+    appearance:none;background:transparent;color:var(--ink);border:none;outline:none;
+    font:inherit;padding:2px 2px 2px 0;max-width:220px
+  }
+
+  @media (max-width:520px){
+    .bar{gap:8px}
+    .pill{padding:7px 10px}
+    button{width:100%}
+    .selectWrap{width:100%;justify-content:space-between}
+    .selectWrap select{max-width:60%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">💫</div>
+      <div>
+        <h1>Life Notes: Reflection Edition</h1>
+        <div class="tag">Every reflection is part of your journey.</div>
+      </div>
+      <div class="grow"></div>
+
+      <!-- Sound toggle -->
+      <div class="pill" id="soundToggle" title="Toggle sound">🔔 Sound: On</div>
+
+      <!-- Voice selector -->
+      <div class="selectWrap" title="Choose a voice">
+        <label for="voiceSel">Voice</label>
+        <select id="voiceSel"><option>Loading voices…</option></select>
+      </div>
+    </header>
+
+    <!-- Category selector -->
+    <div class="panel">
+      <div class="bar" id="cats">
+        <div class="pill active" data-cat="earth">🌿 Earth</div>
+        <div class="pill" data-cat="air">🔍 Air</div>
+        <div class="pill" data-cat="light">🌤️ Light</div>
+        <div class="pill" data-cat="fire">🔥 Fire</div>
+        <div class="pill" data-cat="water">🌊 Water</div>
+        <div class="grow"></div>
+        <button class="secondary" id="favBtn">❤ Favorites</button>
+        <button class="ghost" id="clearBtn" title="Clear the current reflection">Clear</button>
+      </div>
+      <div class="rule"></div>
+
+      <!-- Reflection stage -->
+      <div class="stage">
+        <div class="card">
+          <div id="quote" class="quote" aria-live="polite"></div>
+          <div class="meta">
+            <span id="metaIcon">🌿</span>
+            <span id="metaName">Earth — Gratitude & Presence</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bar" style="justify-content:center">
+        <button id="nextBtn">New Reflection</button>
+        <button class="secondary" id="saveBtn">Save ★</button>
+        <button class="ghost" id="speakBtn" title="Read aloud">🔈 Speak</button>
+      </div>
+
+      <!-- Favorites drawer -->
+      <div class="drawer" id="drawer">
+        <div class="rule"></div>
+        <div class="bar" style="justify-content:space-between">
+          <strong>Saved Favorites</strong>
+          <div>
+            <button class="ghost" id="copyAll">Copy all</button>
+            <button class="ghost" id="clearFavs">Clear all</button>
+          </div>
+        </div>
+        <div class="favlist" id="favlist"></div>
+      </div>
+
+      <div class="footer">
+        <span>Root · Breathe · Release · Rise · Flow</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* -------------------- Themes -------------------- */
+const THEMES = {
+  spirit: { icon:"💫", name:"Spirit / Aether", desc:"The space that holds it all",
+    bgA:"#0f1220", bgB:"#1b1f36", accent:"#b8bccf" },
+  earth:  { icon:"🌿", name:"Earth — Gratitude & Presence",
+    bgA:"#0f1a12", bgB:"#13261b", accent:"#A3D9A5" },
+  air:    { icon:"🔍", name:"Air — Clarity & Focus",
+    bgA:"#0f1826", bgB:"#16273a", accent:"#8FCBFF" },
+  light:  { icon:"🌤️", name:"Light — Letting Go & Healing",
+    bgA:"#161922", bgB:"#2a2d39", accent:"#FFE9A9" },
+  fire:   { icon:"🔥", name:"Fire — Courage & Growth",
+    bgA:"#1f1410", bgB:"#3a1f12", accent:"#FFB74D" },
+  water:  { icon:"🌊", name:"Water — Purpose & Direction",
+    bgA:"#131537", bgB:"#1d1f55", accent:"#5A5AFF" }
+};
+
+/* -------------------- Prompts -------------------- */
+const PROMPTS = {
+  earth: [
+    "What did today give you that you almost missed?",
+    "When was the last time you stopped and said, “this is enough”?",
+    "Who or what feels like sunlight when everything else is gray?",
+    "What sound or smell instantly brings you peace?",
+    "Which small joy always waits patiently for you to notice it?",
+    "What kindness still echoes inside you from long ago?",
+    "What beauty hides in plain sight right now?",
+    "When did you last feel completely unhurried?",
+    "What does “enough” look like for your heart, not your head?",
+    "Who grounds you when life starts spinning?",
+    "What moment in your routine deserves more attention than it gets?",
+    "Who could you thank today for shaping who you’ve become?",
+    "What season of your life are you most grateful for — and why?",
+    "What memory feels like a warm blanket around you?",
+    "What small detail of nature never fails to make you smile?",
+    "When did you last truly savor something — not rush through it?",
+    "What do you love that costs nothing at all?",
+    "How can you bring more softness into your day?",
+    "What part of today would you want to replay just to feel it again?",
+    "What’s one comfort you’d never trade away?",
+    "When did you last feel at peace doing absolutely nothing?",
+    "What color, sound, or scent feels like home?",
+    "What does gratitude sound like when you say it out loud?",
+    "When did you last give thanks just because you could?",
+    "What moment this week made your heart swell unexpectedly?",
+    "What beauty do you find in routine?",
+    "What keeps you steady when things get uncertain?",
+    "How do you show love without words?",
+    "What memory makes you smile even on hard days?",
+    "What does comfort mean to you — really mean?",
+    "What’s something simple that helped you through this week?",
+    "When did you last feel proud of something quiet?",
+    "What would change if you treated today as enough?",
+    "What would your life feel like if you slowed it by half?"
+  ],
+  air: [
+    "What truth keeps knocking that you keep ignoring?",
+    "What do you actually need beneath all the wants?",
+    "What noise in your life blocks your peace?",
+    "What would you start if fear of failure wasn’t an option?",
+    "What are you avoiding that might actually free you?",
+    "What part of your life feels cluttered — and why?",
+    "What does peace of mind look like in real time?",
+    "What would your calmest self choose right now?",
+    "Which decisions steal your energy instead of giving it back?",
+    "What do you keep chasing that never satisfies you?",
+    "Which voices deserve to stay in your head — and which don’t?",
+    "What’s one truth you could finally admit without shame?",
+    "What could you stop explaining and just start doing?",
+    "What goal still feels alive in your chest?",
+    "Which dream belongs to you — and which belongs to others?",
+    "What habit makes your life noisier than it needs to be?",
+    "What belief about yourself needs a rewrite?",
+    "What could you stop worrying about that no longer matters?",
+    "What boundary would bring you peace?",
+    "What unfinished thing keeps tugging on your mind?",
+    "Which area of your life could use more space and less noise?",
+    "What truth do you whisper but never say aloud?",
+    "What if you trusted your intuition as much as your logic?",
+    "What can you see clearly now that used to confuse you?",
+    "What moment from this week deserves reflection, not reaction?",
+    "What would you start saying no to if you believed your time was sacred?",
+    "What would your life look like if you deleted one constant distraction?",
+    "How can you bring more air — more breathing room — into your mind?",
+    "What happens when you stop trying to control the outcome?",
+    "What decision have you delayed that’s quietly costing you peace?",
+    "What would your day look like if you worked with clarity, not urgency?",
+    "What does your truest “yes” feel like inside your body?"
+  ],
+  light: [
+    "What story about yourself are you ready to release?",
+    "Which memory have you visited too many times?",
+    "What could forgiveness free you from today?",
+    "What part of you needs to hear “it’s okay now”?",
+    "What would you say to your younger self in one kind sentence?",
+    "What burden have you carried longer than you needed to?",
+    "What’s one thing you can finally stop fighting?",
+    "What would letting go look like in your body, not your mind?",
+    "What could you honor instead of regret?",
+    "What have you healed that you don’t give yourself credit for?",
+    "Who do you need to forgive to move freely again?",
+    "Which version of you is ready for a gentle goodbye?",
+    "What could you bless and release instead of judge?",
+    "What would peace with the past feel like?",
+    "What emotion do you keep editing instead of allowing?",
+    "What would it mean to forgive yourself completely?",
+    "What if closure isn’t an ending but a soft beginning?",
+    "What thought are you tired of defending?",
+    "What has pain taught you that peace couldn’t?",
+    "What would you stop protecting if you felt truly safe?",
+    "What belief could you unlearn today?",
+    "What could you lay down and walk away from gracefully?",
+    "What new space would forgiveness open inside you?",
+    "What scar do you carry with quiet pride?",
+    "What lesson came disguised as loss?",
+    "What chapter in your life is complete — even if you still reread it?",
+    "What would healing sound like if it had a voice?",
+    "What old apology are you still waiting for?",
+    "What would it mean to be gentle with yourself again?",
+    "What new peace could you make before the day ends?",
+    "How could you honor your past without living there?",
+    "Who could you release with love, not resentment?",
+    "What small act could remind you that you’re healing, not broken?",
+    "What burden could you thank before setting it down?",
+    "What would you feel if you finally forgave yourself?"
+  ],
+  fire: [
+    "What dream keeps resurfacing no matter how often you bury it?",
+    "What would your life look like if you stopped shrinking to fit in?",
+    "What does “enough courage” mean to you today?",
+    "What would you start learning just because it excites you?",
+    "What’s worth doing even if no one notices?",
+    "What could you build if you stopped asking for permission?",
+    "What fear is actually protecting you from something beautiful?",
+    "What would you do differently if you believed you were ready now?",
+    "What could you say “yes” to before you feel fully prepared?",
+    "What risk would make you proud even if it didn’t work?",
+    "When did you last do something brave without announcing it?",
+    "What lesson has failure been trying to teach you?",
+    "What would your future self thank you for starting tonight?",
+    "What habit of playing small could you drop today?",
+    "What does bravery sound like when it whispers, not shouts?",
+    "What would happen if you acted like the main character in your own story?",
+    "What could you ignite that would bring warmth to others too?",
+    "What does growth feel like in your body — tension or thrill?",
+    "What challenge could show you how strong you’ve become?",
+    "What could you risk losing to gain yourself?",
+    "What dream did fear talk you out of — and could you reopen it?",
+    "What new experience are you hungry for?",
+    "What’s something you’re brave enough to admit now?",
+    "What part of you is ready to step into the light?",
+    "What could you start before the voice of doubt wakes up?",
+    "Who inspires you to be bolder just by being themselves?",
+    "What moment made you realize you were stronger than you thought?",
+    "What’s your next tiny act of courage?",
+    "What could you say “no” to that isn’t helping you grow?",
+    "What does success mean when you strip away applause?",
+    "What would it look like to lead from your heart instead of your fear?",
+    "What could you create if you didn’t worry about judgment?",
+    "What does courage look like in this exact season of your life?"
+  ],
+  water: [
+    "What’s quietly calling you forward right now?",
+    "What’s pulling you even when no one else understands why?",
+    "What could you give the world that only you can?",
+    "When do you feel most like yourself?",
+    "What does “purpose” feel like in your body?",
+    "What makes you feel connected to something bigger?",
+    "What keeps you going when motivation disappears?",
+    "What’s whispering for your attention lately?",
+    "What kind of legacy would make you proud quietly, not loudly?",
+    "What would your life say if it could speak?",
+    "What gives your days meaning even when they’re hard?",
+    "What would you pursue if fear didn’t count against you?",
+    "What matters more than achievement?",
+    "What’s one small way you could honor your calling today?",
+    "What could you release to move forward lighter?",
+    "What does your intuition keep trying to tell you?",
+    "Who helps you remember who you really are?",
+    "What lights you up that you rarely talk about?",
+    "What dream feels like home?",
+    "What would a meaningful life look like if it were simple?",
+    "What’s worth building even if it takes years?",
+    "What’s one way you can honor your purpose this week?",
+    "What would your 80-year-old self tell you to focus on?",
+    "How would you measure your life in moments instead of milestones?",
+    "What belief keeps you small when you’re meant to flow?",
+    "What would change if you trusted where the current is taking you?",
+    "What would happen if you followed peace instead of pressure?",
+    "When do you feel most alive and present?",
+    "What’s something your heart aches to do, even if it scares you?",
+    "What’s calling you toward deeper meaning right now?",
+    "What do you want to contribute to the world before you’re done?",
+    "If your life were a message, what would you want it to say?"
+  ]
+};
+
+/* -------------------- Elements -------------------- */
+const qEl = document.getElementById('quote');
+const metaIcon = document.getElementById('metaIcon');
+const metaName = document.getElementById('metaName');
+const catsEl = document.getElementById('cats');
+const drawer = document.getElementById('drawer');
+const favlist = document.getElementById('favlist');
+const voiceSel = document.getElementById('voiceSel');
+
+let currentCat = 'earth';
+let lastIndex = -1;
+let soundOn = true;
+let AC;
+
+/* -------------------- Guitar-like strum (Web Audio) -------------------- */
+function guitarStrum(){
+  if(!soundOn) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const now = AC.currentTime;
+    const CHORDS = {
+      earth: [196.00, 246.94, 293.66, 392.00],
+      air:   [220.00, 277.18, 329.63, 440.00],
+      light: [261.63, 329.63, 392.00, 523.25],
+      fire:  [246.94, 311.13, 369.99, 493.88],
+      water: [233.08, 293.66, 349.23, 466.16],
+      spirit:[261.63, 311.13, 392.00, 523.25]
+    };
+    const notes = CHORDS[currentCat] || CHORDS.spirit;
+
+    notes.forEach((f, i)=>{
+      const start = now + 0.02*i;
+      const osc = AC.createOscillator();
+      const g   = AC.createGain();
+      const lp  = AC.createBiquadFilter();
+      const pan = AC.createStereoPanner ? AC.createStereoPanner() : null;
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f*(1 + (Math.random()-0.5)*0.006), start);
+
+      lp.type = 'lowpass';
+      lp.frequency.setValueAtTime(2200, start);
+
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(0.08 + Math.random()*0.02, start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + (0.45 + Math.random()*0.1));
+
+      if(pan){
+        pan.pan.setValueAtTime(-0.2 + i*(0.15), start);
+        osc.connect(lp).connect(g).connect(pan).connect(AC.destination);
+      }else{
+        osc.connect(lp).connect(g).connect(AC.destination);
+      }
+      osc.start(start);
+      osc.stop(start + 0.6);
+    });
+  }catch(e){}
+}
+
+/* -------------------- Speech: voices + prosody -------------------- */
+let voices = [];
+function loadVoices(){
+  voices = speechSynthesis.getVoices();
+  voiceSel.innerHTML = '';
+  const prefer = /(Siri|Apple|Microsoft (Aria|Emma|Guy)|Google US English|English)/i;
+  const sorted = [...voices].sort((a,b)=>prefer.test(b.name)-prefer.test(a.name) || a.name.localeCompare(b.name));
+  sorted.forEach(v=>{
+    const opt = document.createElement('option');
+    opt.value = v.name; opt.textContent = `${v.name}${v.lang ? ' · '+v.lang : ''}`;
+    voiceSel.appendChild(opt);
+  });
+  const saved = localStorage.getItem('lifeNotesVoice');
+  if(saved && [...voiceSel.options].some(o=>o.value===saved)) voiceSel.value = saved;
+}
+speechSynthesis.onvoiceschanged = loadVoices;
+if(speechSynthesis.getVoices().length) loadVoices();
+
+voiceSel.addEventListener('change', ()=>{
+  localStorage.setItem('lifeNotesVoice', voiceSel.value);
+});
+
+function prosodyFor(cat){
+  switch(cat){
+    case 'earth':  return { rate: 0.95, pitch: 0.95 };
+    case 'air':    return { rate: 1.05, pitch: 1.00 };
+    case 'light':  return { rate: 1.00, pitch: 1.05 };
+    case 'fire':   return { rate: 1.08, pitch: 1.02 };
+    case 'water':  return { rate: 0.98, pitch: 0.98 };
+    default:       return { rate: 1.00, pitch: 1.00 };
+  }
+}
+
+document.getElementById('speakBtn').addEventListener('click', ()=>{
+  const text = qEl.textContent.trim(); if(!text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  const vname = localStorage.getItem('lifeNotesVoice');
+  const v = (voices||[]).find(x=>x.name===vname);
+  if(v) u.voice = v;
+  const p = prosodyFor(currentCat);
+  u.rate = p.rate; u.pitch = p.pitch; u.volume = 1;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+});
+
+/* -------------------- Theme switching -------------------- */
+function applyTheme(cat){
+  const t = THEMES[cat] || THEMES.spirit;
+  document.documentElement.style.setProperty('--bg-a', t.bgA);
+  document.documentElement.style.setProperty('--bg-b', t.bgB);
+  document.documentElement.style.setProperty('--accent', t.accent);
+  metaIcon.textContent = t.icon;
+  metaName.textContent = t.name;
+}
+
+/* -------------------- Quote rendering -------------------- */
+function randInt(n){ return Math.floor(Math.random()*n) }
+function nextQuote(){
+  const list = PROMPTS[currentCat];
+  if(!list || !list.length){ qEl.textContent = ''; return }
+  let i = randInt(list.length);
+  if(list.length>1 && i===lastIndex) i = (i+1)%list.length;
+  lastIndex = i;
+
+  qEl.classList.remove('show');
+  setTimeout(()=>{
+    qEl.textContent = list[i];
+    qEl.classList.add('show');
+    guitarStrum();
+  }, 180);
+}
+
+/* -------------------- Favorites -------------------- */
+const KEY = 'lifeNotesFavorites_v1';
+function loadFavs(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]') }catch(e){ return [] } }
+function saveFavs(arr){ localStorage.setItem(KEY, JSON.stringify(arr)) }
+
+function renderFavs(){
+  const list = loadFavs();
+  favlist.innerHTML = '';
+  if(!list.length){
+    const p = document.createElement('div');
+    p.className='tag'; p.textContent='No favorites saved yet.';
+    favlist.appendChild(p); return;
+  }
+  list.forEach((it, idx)=>{
+    const row = document.createElement('div');
+    row.className='fav';
+    const left = document.createElement('div');
+    left.textContent = it.text;
+    const right = document.createElement('div');
+    right.style.display='flex'; right.style.gap='8px'; right.style.alignItems='center';
+    const badge = document.createElement('span'); badge.className='badge'; badge.textContent = (THEMES[it.cat]?.icon||'💫')+' '+(THEMES[it.cat]?.name.split(' — ')[0]||'Spirit');
+    const copy = document.createElement('button'); copy.className='ghost'; copy.textContent='Copy';
+    copy.addEventListener('click',()=>{ navigator.clipboard.writeText(it.text); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy',800) });
+    const del = document.createElement('button'); del.className='ghost'; del.textContent='✕';
+    del.addEventListener('click',()=>{
+      const arr = loadFavs(); arr.splice(idx,1); saveFavs(arr); renderFavs();
+    });
+    right.append(badge, copy, del);
+    row.append(left,right);
+    favlist.appendChild(row);
+  });
+}
+
+/* -------------------- UI wiring -------------------- */
+document.getElementById('nextBtn').addEventListener('click', nextQuote);
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  const text = qEl.textContent.trim(); if(!text) return;
+  const arr = loadFavs();
+  if(!arr.some(x=>x.text===text)){ arr.unshift({text, cat:currentCat, ts:Date.now()}); saveFavs(arr) }
+  document.getElementById('saveBtn').textContent='Saved ★';
+  setTimeout(()=>document.getElementById('saveBtn').textContent='Save ★',900);
+});
+document.getElementById('favBtn').addEventListener('click', ()=>{
+  drawer.classList.toggle('open');
+  if(drawer.classList.contains('open')) renderFavs();
+});
+document.getElementById('clearFavs').addEventListener('click', ()=>{ localStorage.removeItem(KEY); renderFavs() });
+document.getElementById('copyAll').addEventListener('click', ()=>{
+  const list = loadFavs(); const txt = list.map(x=>`${THEMES[x.cat]?.icon||'💫'} ${x.text}`).join('\n');
+  if(!txt){ return }
+  navigator.clipboard.writeText(txt);
+  document.getElementById('copyAll').textContent='Copied all'; setTimeout(()=>document.getElementById('copyAll').textContent='Copy all',900);
+});
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  qEl.classList.remove('show'); setTimeout(()=>{ qEl.textContent=''; }, 150);
+});
+
+document.getElementById('soundToggle').addEventListener('click', ()=>{
+  soundOn = !soundOn;
+  document.getElementById('soundToggle').textContent = (soundOn?'🔔 Sound: On':'🔕 Sound: Off');
+});
+
+catsEl.addEventListener('click', (e)=>{
+  const el = e.target.closest('.pill[data-cat]'); if(!el) return;
+  const cat = el.getAttribute('data-cat');
+  if(cat===currentCat) return;
+  [...catsEl.querySelectorAll('.pill[data-cat]')].forEach(p=>p.classList.toggle('active', p===el));
+  currentCat = cat; lastIndex=-1;
+  applyTheme(cat);
+  nextQuote();
+});
+
+/* -------------------- Init -------------------- */
+applyTheme(currentCat);
+setTimeout(()=>{ qEl.classList.add('show'); }, 50);
+nextQuote();
+</script>
+</body>
+</html>

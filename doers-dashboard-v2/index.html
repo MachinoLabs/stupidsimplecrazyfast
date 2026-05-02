@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Doers Get Paid – Daily Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1020;
+      --accent: #ffd700;
+      --accent-soft: rgba(255, 215, 0, 0.15);
+      --text: #f5f5f5;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 50%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(3,7,18,0.98));
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 20px 18px 22px;
+    }
+
+    @media (min-width: 768px) {
+      .app-shell {
+        padding: 24px 26px 26px;
+      }
+    }
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .app-title {
+      font-size: 1.35rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      color: var(--muted);
+    }
+
+    .app-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .date-badge {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: radial-gradient(circle at top left, rgba(248,250,252,0.12), transparent 55%);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .spark {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(255,215,0,0.9);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(248,250,252,0.06), transparent 60%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31,41,55,0.95);
+      padding: 14px 14px 13px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.65);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      color: var(--muted);
+    }
+
+    .toggles {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 768px) {
+      .toggles {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(31,41,55,0.9);
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+      user-select: none;
+    }
+
+    .toggle-label {
+      font-size: 0.84rem;
+    }
+
+    .toggle-sub {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .toggle.active {
+      background: radial-gradient(circle at top left, rgba(250,250,250,0.06), rgba(17,24,39,1));
+      border-color: rgba(250,250,250,0.4);
+      transform: translateY(-1px);
+    }
+
+    .switch-shell {
+      width: 42px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(75,85,99,0.9);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+    }
+
+    .switch-knob {
+      height: 16px;
+      width: 16px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      transform: translateX(0);
+      transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+      box-shadow: 0 0 0 rgba(255,215,0,0);
+    }
+
+    .toggle.active .switch-shell {
+      background: rgba(250,204,21,0.12);
+      border-color: rgba(250,204,21,0.8);
+    }
+
+    .toggle.active .switch-knob {
+      transform: translateX(18px);
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(255,215,0,0.8);
+    }
+
+    .priorities {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .priority-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 4px 0;
+    }
+
+    .priority-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(31,41,55,0.9);
+    }
+
+    .priority-checkbox {
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      border: 1px solid rgba(148,163,184,0.8);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      background: rgba(15,23,42,1);
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .priority-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.84rem;
+    }
+
+    .priority-input::placeholder {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .priority-note {
+      width: 100%;
+      min-height: 42px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .priority-note::placeholder {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .priority-row.done {
+      border-color: rgba(52,211,153,0.9);
+      background: radial-gradient(circle at left, rgba(52,211,153,0.14), rgba(15,23,42,0.95));
+    }
+
+    .priority-row.done .priority-input {
+      text-decoration: line-through;
+      color: rgba(209,250,229,0.96);
+    }
+
+    .priority-row.done .priority-checkbox {
+      border-color: rgba(16,185,129,0.9);
+      background: rgba(16,185,129,0.35);
+    }
+
+    .priority-row.done .priority-checkbox span {
+      opacity: 1;
+    }
+
+    .priority-checkbox span {
+      opacity: 0;
+    }
+
+    .progress-card {
+      margin-top: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, rgba(250,204,21,0.11), rgba(15,23,42,0.9));
+      border: 1px solid rgba(250,204,21,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .progress-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 600;
+    }
+
+    .progress-value {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .bar-shell {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      overflow: hidden;
+      border: 1px solid rgba(55,65,81,0.9);
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f97316, #fbbf24, #22c55e);
+      transition: width 0.16s ease-out;
+    }
+
+    .streak-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .streak-main {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .streak-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .streak-number span {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+    }
+
+    .streak-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      max-width: 260px;
+    }
+
+    .streak-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .streak-pill {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      color: var(--muted);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      padding: 7px 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, border-color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, rgba(250,250,250,0.16), var(--accent));
+      color: #171717;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.65);
+      border: 1px solid rgba(250,250,250,0.9);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.7);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border: 1px solid rgba(75,85,99,0.9);
+    }
+
+    .btn-ghost:active {
+      transform: translateY(1px);
+    }
+
+    .flash-text {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .danger-text {
+      color: var(--danger);
+    }
+
+    .badge-soft {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(250,204,21,0.55);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #fef9c3;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    /* Micro log styles */
+    .log-card {
+      margin-top: 6px;
+      padding: 8px 9px 7px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31,41,55,0.9);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(2,6,23,0.9));
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .log-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .log-caption {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .log-list {
+      margin-top: 4px;
+      max-height: 170px;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-item {
+      padding: 5px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(31,41,55,0.95);
+      background: rgba(15,23,42,0.95);
+      font-size: 0.74rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .log-date-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .log-date {
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .log-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .log-tag {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .log-tag.hot {
+      border-color: rgba(250,204,21,0.8);
+      color: #fef9c3;
+    }
+
+    .log-move {
+      margin-top: 1px;
+      color: #e5e7eb;
+    }
+
+    .log-note {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-left: 10px;
+    }
+
+    .log-empty {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="title-wrap">
+        <div class="app-title">
+          Doers Get Paid
+          <span class="pill">Daily Dashboard</span>
+        </div>
+        <div class="app-subtitle">
+          One screen. Ship. Make a money move. Repeat.
+        </div>
+      </div>
+      <div class="date-badge">
+        <span class="spark"></span>
+        <span id="todayLabel">Today</span>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- Left column: actions + priorities + progress -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Today’s Non-Negotiables</div>
+          <div class="chip" id="statusChip">Warming up</div>
+        </div>
+
+        <div class="toggles">
+          <div class="toggle" id="toggleShip">
+            <div>
+              <div class="toggle-label">Shipped something today?</div>
+              <div class="toggle-sub">Post, offer, product, email, anything that left your head.</div>
+            </div>
+            <div class="switch-shell">
+              <div class="switch-knob"></div>
+            </div>
+          </div>
+
+          <div class="toggle" id="toggleMoney">
+            <div>
+              <div class="toggle-label">Did a money move?</div>
+              <div class="toggle-sub">Listed, pitched, launched, followed up, raised your hand to get paid.</div>
+            </div>
+            <div class="switch-shell">
+              <div class="switch-knob"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="priorities">
+          <div class="card-header" style="margin-bottom: 4px;">
+            <div class="card-title">Today’s Top 3 Moves</div>
+            <span class="badge-soft">Doers mode</span>
+          </div>
+
+          <div class="priority-block">
+            <div class="priority-row" data-index="0">
+              <div class="priority-checkbox"><span>✓</span></div>
+              <input class="priority-input" type="text" placeholder="Move #1 – the one that actually moves the needle." />
+            </div>
+            <textarea class="priority-note" placeholder="Optional reminder or outcome for Move #1 (shows up in your 30-day log)."></textarea>
+          </div>
+
+          <div class="priority-block">
+            <div class="priority-row" data-index="1">
+              <div class="priority-checkbox"><span>✓</span></div>
+              <input class="priority-input" type="text" placeholder="Move #2 – support the first move." />
+            </div>
+            <textarea class="priority-note" placeholder="Optional reminder or outcome for Move #2."></textarea>
+          </div>
+
+          <div class="priority-block">
+            <div class="priority-row" data-index="2">
+              <div class="priority-checkbox"><span>✓</span></div>
+              <input class="priority-input" type="text" placeholder="Move #3 – tiny but important." />
+            </div>
+            <textarea class="priority-note" placeholder="Optional reminder or outcome for Move #3."></textarea>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-header">
+            <div class="progress-label">Today’s completion</div>
+            <div class="progress-value" id="progressText">0%</div>
+          </div>
+          <div class="bar-shell">
+            <div class="bar-fill" id="progressBar"></div>
+          </div>
+          <div class="flash-text" id="progressHint">
+            Lock in both toggles and all 3 moves to hit 100%.
+          </div>
+        </div>
+      </section>
+
+      <!-- Right column: streak, log & controls -->
+      <section class="card streak-card">
+        <div class="streak-main">
+          <div class="card-header">
+            <div class="card-title">Execution Streak</div>
+            <div class="chip">Local Only • No Login</div>
+          </div>
+
+          <div class="streak-number" id="streakNumber">
+            0
+            <span>Days in a row</span>
+          </div>
+
+          <div class="streak-sub" id="streakSub">
+            Hit <strong>“Lock In Today”</strong> once you’ve shipped and made a money move. The streak counts days, not perfection.
+          </div>
+
+          <div class="streak-pills">
+            <div class="streak-pill" id="lastLockedLabel">Last locked: —</div>
+            <div class="streak-pill">Ship + Money = 1 day</div>
+          </div>
+
+          <div class="log-card">
+            <div class="log-header">
+              <div class="log-title">Last 30 Days</div>
+              <div class="log-caption">Snapshot of locked-in days & moves.</div>
+            </div>
+            <div class="log-list" id="logList">
+              <div class="log-empty">No days logged yet. Your streak will start filling this in.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="lockButton">
+              ⏺ Lock In Today
+            </button>
+            <button class="btn btn-ghost" id="resetTodayButton">
+              Reset Today
+            </button>
+            <button class="btn btn-ghost" id="resetAllButton">
+              Reset All
+            </button>
+          </div>
+          <div class="flash-text">
+            <span class="danger-text">*</span> Reset All clears streak, today, and the 30-day log on this device only.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      <span><strong>Reminder:</strong> The only metric that matters here is “Did I do the work today?”</span>
+      <span>Doers. Get. Paid.</span>
+    </footer>
+  </div>
+
+  <script>
+    // --------- Helpers ---------
+    function todayKey() {
+      return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem("dgp-dashboard-v1");
+      if (!raw) {
+        return {
+          ship: false,
+          money: false,
+          priorities: ["", "", ""],
+          done: [false, false, false],
+          notes: ["", "", ""],
+          streak: 0,
+          lastLockedDate: null,
+          lastSeenDate: todayKey(),
+          log: []
+        };
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const base = {
+          ship: false,
+          money: false,
+          priorities: ["", "", ""],
+          done: [false, false, false],
+          notes: ["", "", ""],
+          streak: 0,
+          lastLockedDate: null,
+          lastSeenDate: todayKey(),
+          log: []
+        };
+        const merged = Object.assign(base, parsed);
+        if (!Array.isArray(merged.priorities)) merged.priorities = ["", "", ""];
+        if (!Array.isArray(merged.done)) merged.done = [false, false, false];
+        if (!Array.isArray(merged.notes)) merged.notes = ["", "", ""];
+        if (!Array.isArray(merged.log)) merged.log = [];
+        return merged;
+      } catch (e) {
+        return {
+          ship: false,
+          money: false,
+          priorities: ["", "", ""],
+          done: [false, false, false],
+          notes: ["", "", ""],
+          streak: 0,
+          lastLockedDate: null,
+          lastSeenDate: todayKey(),
+          log: []
+        };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem("dgp-dashboard-v1", JSON.stringify(state));
+    }
+
+    function formatDateLabel(iso) {
+      if (!iso) return "Last locked: —";
+      return "Last locked: " + iso;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function (ch) {
+        return (
+          {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[ch] || ch
+        );
+      });
+    }
+
+    // --------- State ---------
+    let state = loadState();
+
+    // Keep track of last seen calendar date (for future logic if needed)
+    state.lastSeenDate = todayKey();
+    saveState();
+
+    // --------- DOM ---------
+    const todayLabel = document.getElementById("todayLabel");
+    const statusChip = document.getElementById("statusChip");
+    const toggleShip = document.getElementById("toggleShip");
+    const toggleMoney = document.getElementById("toggleMoney");
+    const priorityRows = document.querySelectorAll(".priority-row");
+    const priorityNotes = document.querySelectorAll(".priority-note");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const progressHint = document.getElementById("progressHint");
+    const streakNumber = document.getElementById("streakNumber");
+    const streakSub = document.getElementById("streakSub");
+    const lastLockedLabel = document.getElementById("lastLockedLabel");
+    const lockButton = document.getElementById("lockButton");
+    const resetTodayButton = document.getElementById("resetTodayButton");
+    const resetAllButton = document.getElementById("resetAllButton");
+    const logList = document.getElementById("logList");
+
+    // --------- Initial UI Setup ---------
+    function initDateLabel() {
+      const date = new Date();
+      const opts = { weekday: "short", month: "short", day: "numeric" };
+      todayLabel.textContent = date.toLocaleDateString(undefined, opts);
+    }
+
+    function updateProgress() {
+      // 5 items total: 2 toggles + 3 priorities
+      const totalPieces = 5;
+      let donePieces = 0;
+
+      if (state.ship) donePieces++;
+      if (state.money) donePieces++;
+      state.done.forEach((flag) => {
+        if (flag) donePieces++;
+      });
+
+      const percent = Math.round((donePieces / totalPieces) * 100);
+      progressBar.style.width = percent + "%";
+      progressText.textContent = percent + "%";
+
+      if (percent === 0) {
+        progressHint.textContent = "Lock in both toggles and all 3 moves to hit 100%.";
+        statusChip.textContent = "Warming up";
+      } else if (percent < 60) {
+        progressHint.textContent = "You’ve started. Now push one move all the way to done.";
+        statusChip.textContent = "In motion";
+      } else if (percent < 100) {
+        progressHint.textContent = "Close the loop on what’s open. Done beats perfect.";
+        statusChip.textContent = "Closing loops";
+      } else {
+        progressHint.textContent = "This is what execution looks like. Hit “Lock In Today” to feed your streak.";
+        statusChip.textContent = "Executioner mode";
+      }
+    }
+
+    function renderLog() {
+      const rawLog = Array.isArray(state.log) ? state.log.slice() : [];
+      if (!rawLog.length) {
+        logList.innerHTML = '<div class="log-empty">No days logged yet. Your streak will start filling this in.</div>';
+        return;
+      }
+
+      // Sort descending by date and keep last 30
+      rawLog.sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0));
+      const trimmed = rawLog.slice(0, 30);
+
+      let html = "";
+      trimmed.forEach((entry) => {
+        const date = escapeHtml(entry.date || "");
+        const ship = !!entry.ship;
+        const money = !!entry.money;
+        const moves = Array.isArray(entry.priorities) ? entry.priorities : [];
+        const notes = Array.isArray(entry.notes) ? entry.notes : [];
+
+        html += '<div class="log-item">';
+        html += '<div class="log-date-row">';
+        html += '<div class="log-date">' + date + "</div>";
+        html += '<div class="log-tags">';
+        if (ship) {
+          html += '<span class="log-tag hot">Shipped</span>';
+        }
+        if (money) {
+          html += '<span class="log-tag hot">Money move</span>';
+        }
+        if (!ship && !money) {
+          html += '<span class="log-tag">Logged</span>';
+        }
+        html += "</div></div>";
+
+        for (let i = 0; i < 3; i++) {
+          const moveText = moves[i] ? String(moves[i]).trim() : "";
+          const noteText = notes[i] ? String(notes[i]).trim() : "";
+          if (!moveText && !noteText) continue;
+
+          if (moveText) {
+            html += '<div class="log-move">#' + (i + 1) + ": " + escapeHtml(moveText) + "</div>";
+          }
+          if (noteText) {
+            html += '<div class="log-note">↳ ' + escapeHtml(noteText) + "</div>";
+          }
+        }
+
+        html += "</div>";
+      });
+
+      logList.innerHTML = html || '<div class="log-empty">Nothing locked yet in this window.</div>';
+    }
+
+    function syncUIFromState() {
+      // toggles
+      toggleShip.classList.toggle("active", state.ship);
+      toggleMoney.classList.toggle("active", state.money);
+
+      // priorities + done + notes
+      priorityRows.forEach((row, index) => {
+        const input = row.querySelector(".priority-input");
+        const isDone = !!state.done[index];
+        const noteEl = priorityNotes[index];
+        input.value = state.priorities[index] || "";
+        if (noteEl) {
+          noteEl.value = (state.notes && state.notes[index]) || "";
+        }
+        row.classList.toggle("done", isDone);
+      });
+
+      // streak
+      streakNumber.childNodes[0].nodeValue = state.streak || 0;
+      lastLockedLabel.textContent = formatDateLabel(state.lastLockedDate);
+
+      if (state.streak >= 7) {
+        streakSub.innerHTML =
+          "This is a <strong>compound-effect streak</strong>. Keep showing up; the money lags the behavior.";
+      } else if (state.streak >= 1) {
+        streakSub.innerHTML =
+          "Nice. A streak of <strong>" +
+          state.streak +
+          "</strong> means you’re already ahead of the version of you that didn’t start.";
+      } else {
+        streakSub.innerHTML =
+          'Hit <strong>“Lock In Today”</strong> once you’ve shipped and made a money move. The streak counts days, not perfection.';
+      }
+
+      updateProgress();
+      renderLog();
+    }
+
+    // --------- Event Handlers ---------
+    toggleShip.addEventListener("click", () => {
+      state.ship = !state.ship;
+      saveState();
+      syncUIFromState();
+    });
+
+    toggleMoney.addEventListener("click", () => {
+      state.money = !state.money;
+      saveState();
+      syncUIFromState();
+    });
+
+    priorityRows.forEach((row, index) => {
+      const checkbox = row.querySelector(".priority-checkbox");
+      const input = row.querySelector(".priority-input");
+
+      checkbox.addEventListener("click", (e) => {
+        e.stopPropagation();
+        state.done[index] = !state.done[index];
+        saveState();
+        syncUIFromState();
+      });
+
+      row.addEventListener("click", () => {
+        input.focus();
+      });
+
+      input.addEventListener("input", () => {
+        state.priorities[index] = input.value;
+        saveState();
+      });
+    });
+
+    priorityNotes.forEach((noteEl, index) => {
+      noteEl.addEventListener("input", () => {
+        state.notes[index] = noteEl.value;
+        saveState();
+      });
+    });
+
+    lockButton.addEventListener("click", () => {
+      if (!state.ship || !state.money) {
+        alert("To lock in today, make sure you’ve:\n\n• Shipped something\n• Done a money move");
+        return;
+      }
+
+      const today = todayKey();
+      const last = state.lastLockedDate;
+
+      if (last === today) {
+        alert("Today is already locked in. Keep the streak going tomorrow.");
+        return;
+      }
+
+      if (!last) {
+        state.streak = 1;
+      } else {
+        const lastDate = new Date(last);
+        const todayDate = new Date(today);
+        const diffDays = Math.round(
+          (todayDate - lastDate) / (1000 * 60 * 60 * 24)
+        );
+
+        if (diffDays === 1) {
+          state.streak = (state.streak || 0) + 1;
+        } else if (diffDays > 1) {
+          state.streak = 1;
+        }
+      }
+
+      state.lastLockedDate = today;
+
+      // Update micro log for this day
+      if (!Array.isArray(state.log)) state.log = [];
+      const entry = {
+        date: today,
+        ship: state.ship,
+        money: state.money,
+        priorities: (state.priorities || ["", "", ""]).slice(0, 3),
+        done: (state.done || [false, false, false]).slice(0, 3),
+        notes: (state.notes || ["", "", ""]).slice(0, 3)
+      };
+
+      // Remove any existing entry for today, then add
+      state.log = state.log.filter((item) => item.date !== today);
+      state.log.push(entry);
+
+      // Keep log to a reasonable size (e.g., last 60 records)
+      state.log.sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+      if (state.log.length > 60) {
+        state.log = state.log.slice(state.log.length - 60);
+      }
+
+      saveState();
+      syncUIFromState();
+      alert("Today locked in. Streak and log updated.");
+    });
+
+    resetTodayButton.addEventListener("click", () => {
+      if (!confirm("Reset today’s toggles, priorities, and notes? This won’t touch your streak or past log.")) {
+        return;
+      }
+      state.ship = false;
+      state.money = false;
+      state.priorities = ["", "", ""];
+      state.done = [false, false, false];
+      state.notes = ["", "", ""];
+      saveState();
+      syncUIFromState();
+    });
+
+    resetAllButton.addEventListener("click", () => {
+      if (!confirm("Reset EVERYTHING on this device? This clears today, your streak, and the 30-day log.")) {
+        return;
+      }
+      state = {
+        ship: false,
+        money: false,
+        priorities: ["", "", ""],
+        done: [false, false, false],
+        notes: ["", "", ""],
+        streak: 0,
+        lastLockedDate: null,
+        lastSeenDate: todayKey(),
+        log: []
+      };
+      saveState();
+      syncUIFromState();
+    });
+
+    // --------- Init ---------
+    initDateLabel();
+    syncUIFromState();
+  </script>
+</body>
+</html>
