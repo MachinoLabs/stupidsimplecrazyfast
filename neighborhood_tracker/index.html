@@ -2,236 +2,243 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Neighborhood Vibes Tracker v3</title>
+  <title>Neighborhood Vibes Tracker v3 (Pro)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      /* Refined Dark Theme to kill the glare */
+      /* Deep Matte Theme - Kills the glare */
       --bg: #020617;
-      --bg-gradient: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-      --bg-alt: rgba(30, 41, 59, 0.7); /* Translucent for glass effect */
-      --text: #f1f5f9;
+      --bg-alt: rgba(15, 23, 42, 0.8);
+      --text: #f8fafc;
       --muted: #94a3b8;
       --accent: #38bdf8;
       --border: rgba(255, 255, 255, 0.1);
-      --card-radius: 16px;
-      --glass-blur: blur(12px);
+      --card-radius: 12px;
+      --glass: blur(10px);
     }
-
-    * { box-sizing: border-box; font-family: system-ui, sans-serif; }
 
     body {
-      margin: 0;
-      background: var(--bg);
+      margin: 0; padding: 0;
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 70%);
       background-attachment: fixed;
       color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex; justify-content: center;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
     }
 
-    /* The "Anti-Glare" Scrim */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; height: 300px;
-      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.9), transparent);
-      z-index: 1;
-      pointer-events: none;
+    .app { width: 100%; max-width: 900px; padding: 20px; }
+
+    /* Header Scrim for Readability */
+    header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
     }
 
-    .app { width: 100%; max-width: 600px; z-index: 2; position: relative; }
-
-    /* Premium Agent Header */
-    .agent-card {
+    .agent-header-card {
       background: var(--bg-alt);
-      backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass);
       border: 1px solid var(--border);
       border-radius: var(--card-radius);
       padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 12px;
     }
 
-    .agent-photo {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: var(--accent);
-      object-fit: cover;
+    .agent-photo-wrap {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--accent); overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 1.5rem; color: #fff;
-      border: 2px solid var(--accent);
+      font-weight: bold; border: 2px solid var(--accent);
     }
 
-    .agent-info h2 { margin: 0; font-size: 1.1rem; color: var(--text); }
-    .agent-info p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+    .agent-details h2 { margin: 0; font-size: 1.1rem; }
+    .agent-details p { margin: 2px 0; font-size: 0.85rem; color: var(--muted); }
 
     .buyer-badge {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent);
-      padding: 4px 12px;
-      border-radius: 99px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-top: 8px;
+      background: rgba(56, 189, 248, 0.15); color: var(--accent);
+      padding: 3px 10px; border-radius: 99px; font-size: 0.75rem;
+      display: inline-block; margin-top: 5px; font-weight: 600;
     }
 
     .card {
       background: var(--bg-alt);
-      backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass);
       border: 1px solid var(--border);
       border-radius: var(--card-radius);
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 20px; margin-bottom: 16px;
     }
 
-    input, textarea, select {
-      width: 100%; padding: 12px; border-radius: 8px;
-      border: 1px solid var(--border); background: rgba(0,0,0,0.2);
-      color: white; margin-bottom: 12px;
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
     }
 
+    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+
+    label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--muted); }
+    input, select, textarea {
+      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: rgba(0,0,0,0.3); color: white; margin-bottom: 12px;
+    }
+
+    /* Sliders styling */
+    .range-row { margin-bottom: 12px; }
+    .range-header { display: flex; justify-content: space-between; font-size: 0.8rem; }
+    input[type="range"] { accent-color: var(--accent); }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
     .btn {
-      width: 100%; padding: 14px; border-radius: 99px; border: none;
-      font-weight: 600; cursor: pointer; transition: 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 20px; border-radius: 99px; border: none; cursor: pointer;
+      font-weight: 600; display: flex; align-items: center; gap: 8px;
     }
-
     .btn-primary { background: var(--accent); color: #020617; }
-    .btn-share { background: transparent; border: 1px solid var(--accent); color: var(--accent); margin-top: 10px; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border); color: white; }
 
-    /* Modal for Buyer Name */
-    #onboardingModal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(5px); z-index: 100;
-      display: none; align-items: center; justify-content: center; padding: 20px;
+    /* Modal */
+    #welcomeModal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      z-index: 100; display: none; align-items: center; justify-content: center;
     }
 
-    /* Print Styles for PDF */
-    @media print {
-      .no-print, .btn, #vibesForm { display: none !important; }
-      body { background: white; color: black; }
-      .card { border: 1px solid #ccc; background: white; backdrop-filter: none; }
-    }
+    @media print { .no-print { display: none !important; } }
   </style>
 </head>
 <body>
 
-<div id="onboardingModal">
-  <div class="card" style="width: 100%; max-width: 400px;">
+<div id="welcomeModal">
+  <div class="card" style="width: 350px;">
     <h3>Welcome!</h3>
-    <p>Who is scouting neighborhoods today?</p>
-    <input type="text" id="buyerInput" placeholder="e.g. The Miller Family">
-    <button class="btn btn-primary" onclick="saveBuyerName()">Start Scouting</button>
+    <p style="font-size: 0.85rem; color: var(--muted);">Who is scouting today?</p>
+    <input type="text" id="buyerInput" placeholder="e.g. The Smiths">
+    <button class="btn btn-primary" style="width: 100%;" onclick="saveBuyer()">Get Started</button>
   </div>
 </div>
 
 <div class="app">
-  <div class="agent-card">
-    <div id="agentPhoto" class="agent-photo">?</div>
-    <div class="agent-info">
-      <h2 id="agentName">Your Agent</h2>
-      <p id="agentBiz">Brokerage Info</p>
-      <div id="buyerNameDisplay" class="buyer-badge">Scout: Guest</div>
+  <header>
+    <h1 style="font-size: 1.5rem; margin: 0;">🏙️ Neighborhood Vibes Tracker</h1>
+    <div class="agent-header-card">
+      <div id="agentPhoto" class="agent-photo-wrap">?</div>
+      <div class="agent-details">
+        <h2 id="agentName">Your Agent</h2>
+        <p id="agentInfoLine">Brokerage • Phone • Email</p>
+        <div id="buyerDisplay" class="buyer-badge">Scout: Guest</div>
+      </div>
     </div>
-  </div>
+  </header>
 
   <form id="vibesForm" class="card">
-    <label>Location / Address</label>
-    <input id="spotName" type="text" placeholder="e.g. 123 Maple St" required>
-    
-    <label>Overall Vibe (1-5)</label>
-    <input id="vibeScore" type="range" min="1" max="5" value="3">
-    
-    <textarea id="notes" placeholder="Notes on noise, traffic, or gut feelings..."></textarea>
-    
-    <button type="submit" class="btn btn-primary">Save Snapshot</button>
+    <div class="form-grid">
+      <div>
+        <label>Location / label</label>
+        <input id="spotName" type="text" placeholder="e.g. Elm St @ 3rd Ave" required>
+        
+        <label>Context</label>
+        <select id="context">
+          <option value="Daytime">Daytime</option>
+          <option value="Evening">Evening / Night</option>
+          <option value="Weekend">Weekend</option>
+        </select>
+
+        <label>Notes (optional)</label>
+        <textarea id="notes" rows="4" placeholder="Gut feelings? Red flags?"></textarea>
+      </div>
+
+      <div>
+        <div class="range-row">
+          <div class="range-header"><span>Street Noise</span><span id="v_noise">3</span></div>
+          <input type="range" id="noise" min="1" max="5" value="3" oninput="dv('noise')">
+        </div>
+        <div class="range-row">
+          <div class="range-header"><span>Traffic</span><span id="v_traffic">3</span></div>
+          <input type="range" id="traffic" min="1" max="5" value="3" oninput="dv('traffic')">
+        </div>
+        <div class="range-row">
+          <div class="range-header"><span>Cleanliness</span><span id="v_clean">3</span></div>
+          <input type="range" id="clean" min="1" max="5" value="3" oninput="dv('clean')">
+        </div>
+        <div class="range-row">
+          <div class="range-header"><span>Safety Feeling</span><span id="v_safety">3</span></div>
+          <input type="range" id="safety" min="1" max="5" value="3" oninput="dv('safety')">
+        </div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary">➕ Save Snapshot</button>
+      <button type="button" class="btn btn-secondary" onclick="resetForm()">↺ Reset</button>
+    </div>
   </form>
 
   <div id="archive">
     <h3 class="no-print">Saved Snapshots</h3>
     <div id="snapshotsContainer"></div>
+    <button class="btn btn-secondary no-print" style="margin-top: 20px;" onclick="window.print()">📄 Generate PDF Report</button>
   </div>
-  
-  <button class="btn btn-share no-print" onclick="window.print()">Generate PDF Report</button>
 </div>
 
 <script>
-  const STORAGE_KEY = "neighborhoodVibes_v3";
+  const STORAGE_KEY = "vibes_pro_v3";
   let agentPhone = "";
 
-  // 1. URL Branding Logic
+  // Dynamic Value Update
+  function dv(id) { document.getElementById('v_'+id).textContent = document.getElementById(id).value; }
+
+  // Branding Logic (URL Parameters)
   function initBranding() {
     const params = new URLSearchParams(window.location.search);
-    const data = {
-      n: params.get('n') || localStorage.getItem('agent_n') || "Your Agent",
-      b: params.get('b') || localStorage.getItem('agent_b') || "Professional Realtor",
-      p: params.get('p') || localStorage.getItem('agent_p') || "",
-      img: params.get('img') || localStorage.getItem('agent_img') || ""
-    };
+    const n = params.get('n') || localStorage.getItem('a_n') || "Your Agent";
+    const b = params.get('b') || localStorage.getItem('a_b') || "Brokerage";
+    const p = params.get('p') || localStorage.getItem('a_p') || "";
+    const img = params.get('img') || localStorage.getItem('a_img') || "";
 
-    // Save to localStorage so it persists even if link changes
-    Object.keys(data).forEach(key => localStorage.setItem('agent_' + key, data[key]));
+    localStorage.setItem('a_n', n); localStorage.setItem('a_b', b);
+    localStorage.setItem('a_p', p); localStorage.setItem('a_img', img);
 
-    document.getElementById('agentName').textContent = data.n;
-    document.getElementById('agentBiz').textContent = data.b;
-    agentPhone = data.p;
+    document.getElementById('agentName').textContent = n;
+    document.getElementById('agentInfoLine').textContent = `${b} • ${p}`;
+    agentPhone = p;
 
-    const photoEl = document.getElementById('agentPhoto');
-    if (data.img) {
-      photoEl.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-    } else {
-      photoEl.textContent = data.n.charAt(0);
-    }
+    const photo = document.getElementById('agentPhoto');
+    if (img) photo.innerHTML = `<img src="${img}" style="width:100%; height:100%; object-fit:cover;">`;
+    else photo.textContent = n.charAt(0);
   }
 
-  // 2. Buyer Personalization
+  // Buyer Logic
   function checkBuyer() {
     const name = localStorage.getItem('buyer_name');
-    if (!name) {
-      document.getElementById('onboardingModal').style.display = 'flex';
-    } else {
-      document.getElementById('buyerNameDisplay').textContent = `Scout: ${name}`;
-    }
+    if (!name) document.getElementById('welcomeModal').style.display = 'flex';
+    else document.getElementById('buyerDisplay').textContent = `Scout: ${name}`;
   }
 
-  function saveBuyerName() {
-    const name = document.getElementById('buyerInput').value.trim();
-    if (name) {
-      localStorage.setItem('buyer_name', name);
-      document.getElementById('onboardingModal').style.display = 'none';
-      checkBuyer();
-    }
+  function saveBuyer() {
+    const n = document.getElementById('buyerInput').value;
+    if (n) { localStorage.setItem('buyer_name', n); location.reload(); }
   }
 
-  // 3. Native SMS Sharing
-  function textAgent(location, score) {
-    const buyer = localStorage.getItem('buyer_name') || "Your Client";
-    const msg = `Hi! It's ${buyer}. I just scored ${location} a ${score}/5 on the Vibe Tracker. I think we should talk about this one!`;
+  // SMS Feature
+  function textAgent(loc, score) {
+    const buyer = localStorage.getItem('buyer_name') || "Client";
+    const msg = `Hi! It's ${buyer}. I just rated ${loc} a ${score}/5 vibe score. Let's talk!`;
     window.location.href = `sms:${agentPhone}?body=${encodeURIComponent(msg)}`;
   }
 
-  // 4. Core Logic
-  const form = document.getElementById('vibesForm');
-  form.addEventListener('submit', (e) => {
+  // Storage Logic
+  document.getElementById('vibesForm').onsubmit = (e) => {
     e.preventDefault();
     const snap = {
       id: Date.now(),
       name: document.getElementById('spotName').value,
-      score: document.getElementById('vibeScore').value,
       notes: document.getElementById('notes').value,
+      score: (Number(document.getElementById('noise').value) + Number(document.getElementById('traffic').value) + Number(document.getElementById('clean').value) + Number(document.getElementById('safety').value)) / 4,
       date: new Date().toLocaleDateString()
     };
     const snaps = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     snaps.push(snap);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snaps));
-    render();
-    form.reset();
-  });
+    location.reload();
+  };
 
   function render() {
     const container = document.getElementById('snapshotsContainer');
@@ -239,22 +246,18 @@
     container.innerHTML = snaps.reverse().map(s => `
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong>${s.name}</strong>
-          <span style="color:var(--accent)">★ ${s.score}/5</span>
+          <h4 style="margin:0;">${s.name} <small style="font-weight:normal; color:var(--muted)">${s.date}</small></h4>
+          <span style="color:var(--accent); font-weight:bold;">${s.score.toFixed(1)} / 5</span>
         </div>
-        <p style="font-size:0.9rem; color:var(--muted)">${s.notes}</p>
-        <button class="btn btn-share no-print" onclick="textAgent('${s.name}', '${s.score}')">
-          Text to Agent
-        </button>
+        <p style="font-size:0.85rem; color:var(--muted); margin:10px 0;">${s.notes}</p>
+        <button class="btn btn-secondary no-print" style="font-size:0.75rem; padding:8px 15px;" onclick="textAgent('${s.name}', '${s.score.toFixed(1)}')">💬 Text Agent</button>
       </div>
     `).join('');
   }
 
-  // Initialize
   initBranding();
   checkBuyer();
   render();
 </script>
-
 </body>
 </html>
