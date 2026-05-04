@@ -2,262 +2,360 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Neighborhood Vibes Tracker v3 (Pro)</title>
+  <title>Neighborhood Vibes Tracker v3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      /* Deep Matte Theme - Kills the glare */
-      --bg: #020617;
-      --bg-alt: rgba(15, 23, 42, 0.8);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --border: rgba(255, 255, 255, 0.1);
+      --bg: #f3f4f6;
+      --bg-alt: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --border: #e5e7eb;
+      --danger: #b91c1c;
+      --warning: #b45309;
+      --success: #166534;
+      --gold: #f59e0b;
+      --gold-soft: #fffbeb;
       --card-radius: 12px;
-      --glass: blur(10px);
+      --shadow-soft: 0 8px 18px rgba(15, 23, 42, 0.08);
+      --glass: none;
     }
+
+    /* V3 Anti-Glare Dark Mode */
+    body.dark {
+      --bg: #020617;
+      --bg-alt: rgba(15, 23, 42, 0.7); /* Translucent for Glass effect */
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: #082f49;
+      --border: rgba(255, 255, 255, 0.1);
+      --danger: #fecaca;
+      --warning: #fed7aa;
+      --success: #bbf7d0;
+      --gold: #facc15;
+      --gold-soft: #422006;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
+      --glass: blur(12px);
+    }
+
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
     body {
       margin: 0; padding: 0;
+      background: radial-gradient(circle at top, #e5e7eb 0, var(--bg) 40%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; justify-content: center;
+    }
+
+    body.dark {
       background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 70%);
       background-attachment: fixed;
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      display: flex; justify-content: center;
-      min-height: 100vh;
     }
 
-    .app { width: 100%; max-width: 900px; padding: 20px; }
-
-    /* Header Scrim for Readability */
-    header {
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
+    /* Anti-Glare Header Scrim */
+    body.dark::before {
+      content: ""; position: fixed; top: 0; left: 0; right: 0; height: 200px;
+      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.9), transparent);
+      z-index: 1; pointer-events: none;
     }
 
-    .agent-header-card {
-      background: var(--bg-alt);
-      backdrop-filter: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: var(--card-radius);
-      padding: 16px;
-      display: flex; align-items: center; gap: 16px;
-      margin-top: 12px;
-    }
+    .app { width: 100%; max-width: 960px; padding: 16px; margin-bottom: 32px; z-index: 2; position: relative; }
 
-    .agent-photo-wrap {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: var(--accent); overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; border: 2px solid var(--accent);
-    }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 
-    .agent-details h2 { margin: 0; font-size: 1.1rem; }
-    .agent-details p { margin: 2px 0; font-size: 0.85rem; color: var(--muted); }
-
-    .buyer-badge {
-      background: rgba(56, 189, 248, 0.15); color: var(--accent);
-      padding: 3px 10px; border-radius: 99px; font-size: 0.75rem;
-      display: inline-block; margin-top: 5px; font-weight: 600;
-    }
+    h1 { font-size: 1.7rem; margin: 0; display: flex; align-items: center; gap: 8px; }
 
     .card {
       background: var(--bg-alt);
       backdrop-filter: var(--glass);
-      border: 1px solid var(--border);
       border-radius: var(--card-radius);
-      padding: 20px; margin-bottom: 16px;
+      padding: 16px; margin-bottom: 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
     }
 
-    .form-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    /* Agent Card Upgrades */
+    .agent-header-wrap { display: flex; align-items: center; gap: 12px; }
+    .agent-photo-v3 {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); object-fit: cover;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; border: 2px solid var(--accent); color: white;
+    }
+    .buyer-badge-v3 {
+      background: var(--accent-soft); color: var(--accent);
+      padding: 2px 10px; border-radius: 99px; font-size: 0.75rem;
+      font-weight: 600; margin-top: 4px; display: inline-block;
     }
 
-    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+    /* V2 Form Layout & Grid */
+    .form-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+    @media (max-width: 720px) { .form-layout { grid-template-columns: minmax(0, 1fr); } }
 
-    label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--muted); }
     input, select, textarea {
-      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-      background: rgba(0,0,0,0.3); color: white; margin-bottom: 12px;
+      width: 100%; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid var(--border); background: rgba(0,0,0,0.05); color: var(--text);
     }
+    body.dark input, body.dark select, body.dark textarea { background: rgba(0,0,0,0.3); }
 
-    /* Sliders styling */
-    .range-row { margin-bottom: 12px; }
-    .range-header { display: flex; justify-content: space-between; font-size: 0.8rem; }
-    input[type="range"] { accent-color: var(--accent); }
+    .range-row { margin-bottom: 10px; }
+    .range-header { display: flex; justify-content: space-between; font-size: 0.85rem; }
+    .range-scale { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
 
-    .btn-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-    .btn {
-      padding: 12px 20px; border-radius: 99px; border: none; cursor: pointer;
-      font-weight: 600; display: flex; align-items: center; gap: 8px;
-    }
-    .btn-primary { background: var(--accent); color: #020617; }
-    .btn-secondary { background: transparent; border: 1px solid var(--border); color: white; }
+    /* Star rating */
+    .star-block { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: var(--gold-soft); border: 1px solid rgba(250, 204, 21, 0.4); }
+    .star-buttons { display: inline-flex; gap: 4px; }
+    .star-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; color: var(--muted); }
+    .star-btn.selected { color: var(--gold); }
 
-    /* Modal */
-    #welcomeModal {
+    /* Onboarding Modal */
+    #onboardingOverlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      z-index: 100; display: none; align-items: center; justify-content: center;
+      z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
     }
 
-    @media print { .no-print { display: none !important; } }
+    @media print { .no-print { display: none !important; } body { background: white; color: black; } .card { box-shadow: none; border: 1px solid #eee; } }
   </style>
 </head>
-<body>
+<body class="dark">
 
-<div id="welcomeModal">
-  <div class="card" style="width: 350px;">
-    <h3>Welcome!</h3>
-    <p style="font-size: 0.85rem; color: var(--muted);">Who is scouting today?</p>
-    <input type="text" id="buyerInput" placeholder="e.g. The Smiths">
-    <button class="btn btn-primary" style="width: 100%;" onclick="saveBuyer()">Get Started</button>
+<div id="onboardingOverlay">
+  <div class="card" style="max-width: 400px; width: 100%;">
+    <h3>👋 Welcome!</h3>
+    <p style="color: var(--muted); font-size: 0.9rem;">Who is scouting neighborhoods today?</p>
+    <input type="text" id="buyerNameInput" placeholder="e.g. The Miller Family">
+    <button class="btn-primary" style="width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px;" onclick="saveBuyer()">Start Scouting</button>
   </div>
 </div>
 
 <div class="app">
-  <header>
-    <h1 style="font-size: 1.5rem; margin: 0;">🏙️ Neighborhood Vibes Tracker</h1>
-    <div class="agent-header-card">
-      <div id="agentPhoto" class="agent-photo-wrap">?</div>
-      <div class="agent-details">
-        <h2 id="agentName">Your Agent</h2>
-        <p id="agentInfoLine">Brokerage • Phone • Email</p>
-        <div id="buyerDisplay" class="buyer-badge">Scout: Guest</div>
-      </div>
+  <header class="no-print">
+    <div>
+      <h1><span class="icon">🏙️</span> Neighborhood Vibes</h1>
     </div>
+    <button id="themeToggle" class="theme-toggle" type="button">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
   </header>
 
-  <form id="vibesForm" class="card">
-    <div class="form-grid">
+  <div class="card card-soft" id="agentCard">
+    <div class="agent-header-wrap">
+      <div id="agentAvatarV3" class="agent-photo-v3">?</div>
+      <div class="agent-main">
+        <div id="agentNameV3" style="font-weight:600;">Agent Name</div>
+        <div id="agentSublineV3" style="font-size:0.8rem; color: var(--muted);">Brokerage • Contact Info</div>
+        <div id="buyerBadge" class="buyer-badge-v3">Scout: Guest</div>
+      </div>
+    </div>
+  </div>
+
+  <form id="vibesForm" class="card no-print">
+    <div class="form-layout">
       <div>
         <label>Location / label</label>
         <input id="spotName" type="text" placeholder="e.g. Elm St @ 3rd Ave" required>
-        
-        <label>Context</label>
-        <select id="context">
-          <option value="Daytime">Daytime</option>
-          <option value="Evening">Evening / Night</option>
-          <option value="Weekend">Weekend</option>
+        <label style="margin-top: 8px;">Date & time</label>
+        <input id="visitTime" type="datetime-local">
+        <label style="margin-top: 8px;">Context</label>
+        <select id="visitContext">
+          <option value="">Choose context…</option>
+          <option value="day">Daytime</option><option value="evening">Evening</option>
+          <option value="weekend">Weekend</option><option value="rush">Rush Hour</option>
         </select>
-
-        <label>Notes (optional)</label>
-        <textarea id="notes" rows="4" placeholder="Gut feelings? Red flags?"></textarea>
+        <label style="margin-top: 8px;">Notes</label>
+        <textarea id="notes" placeholder="Gut feelings or red flags?"></textarea>
+        <label style="margin-top: 8px;">Photo</label>
+        <input id="photoInput" type="file" accept="image/*" capture="environment">
+        
+        <div class="star-block">
+          <div class="star-label">Overall Impression <span id="starLabel">(3/5)</span></div>
+          <div id="starControl" class="star-buttons">
+            <button type="button" class="star-btn" data-star="1">★</button>
+            <button type="button" class="star-btn" data-star="2">★</button>
+            <button type="button" class="star-btn" data-star="3">★</button>
+            <button type="button" class="star-btn" data-star="4">★</button>
+            <button type="button" class="star-btn" data-star="5">★</button>
+          </div>
+        </div>
       </div>
 
       <div>
         <div class="range-row">
-          <div class="range-header"><span>Street Noise</span><span id="v_noise">3</span></div>
-          <input type="range" id="noise" min="1" max="5" value="3" oninput="dv('noise')">
+          <div class="range-header"><span>Street noise</span><span class="value" data-range-val="noise">3</span></div>
+          <input id="noise" type="range" min="1" max="5" value="3" oninput="uVal('noise')">
         </div>
         <div class="range-row">
-          <div class="range-header"><span>Traffic</span><span id="v_traffic">3</span></div>
-          <input type="range" id="traffic" min="1" max="5" value="3" oninput="dv('traffic')">
+          <div class="range-header"><span>Traffic</span><span class="value" data-range-val="traffic">3</span></div>
+          <input id="traffic" type="range" min="1" max="5" value="3" oninput="uVal('traffic')">
         </div>
         <div class="range-row">
-          <div class="range-header"><span>Cleanliness</span><span id="v_clean">3</span></div>
-          <input type="range" id="clean" min="1" max="5" value="3" oninput="dv('clean')">
+          <div class="range-header"><span>Cleanliness</span><span class="value" data-range-val="clean">3</span></div>
+          <input id="clean" type="range" min="1" max="5" value="3" oninput="uVal('clean')">
         </div>
         <div class="range-row">
-          <div class="range-header"><span>Safety Feeling</span><span id="v_safety">3</span></div>
-          <input type="range" id="safety" min="1" max="5" value="3" oninput="dv('safety')">
+          <div class="range-header"><span>Lighting</span><span class="value" data-range-val="light">3</span></div>
+          <input id="light" type="range" min="1" max="5" value="3" oninput="uVal('light')">
         </div>
+        <div class="range-row">
+          <div class="range-header"><span>Green & parks</span><span class="value" data-range-val="green">3</span></div>
+          <input id="green" type="range" min="1" max="5" value="3" oninput="uVal('green')">
         </div>
+        <div class="range-row">
+          <div class="range-header"><span>Parking ease</span><span class="value" data-range-val="parking">3</span></div>
+          <input id="parking" type="range" min="1" max="5" value="3" oninput="uVal('parking')">
+        </div>
+        <div class="range-row">
+          <div class="range-header"><span>People vibe</span><span class="value" data-range-val="people">3</span></div>
+          <input id="people" type="range" min="1" max="5" value="3" oninput="uVal('people')">
+        </div>
+        <div class="range-row">
+          <div class="range-header"><span>Safety feeling</span><span class="value" data-range-val="safety">3</span></div>
+          <input id="safety" type="range" min="1" max="5" value="3" oninput="uVal('safety')">
+        </div>
+      </div>
     </div>
-
-    <div class="btn-row">
-      <button type="submit" class="btn btn-primary">➕ Save Snapshot</button>
-      <button type="button" class="btn btn-secondary" onclick="resetForm()">↺ Reset</button>
+    <div style="margin-top:15px; display:flex; gap:10px;">
+      <button type="submit" class="btn-primary" style="flex:2; padding:12px; border-radius:99px; background:var(--accent); color:white; border:none; font-weight:bold; cursor:pointer;">Save Snapshot</button>
+      <button type="button" onclick="location.reload()" style="flex:1; border-radius:99px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer;">Clear</button>
     </div>
   </form>
 
-  <div id="archive">
-    <h3 class="no-print">Saved Snapshots</h3>
-    <div id="snapshotsContainer"></div>
-    <button class="btn btn-secondary no-print" style="margin-top: 20px;" onclick="window.print()">📄 Generate PDF Report</button>
-  </div>
+  <div id="snapshotsContainer"></div>
+  <button class="no-print" style="width:100%; padding:15px; border-radius:12px; border:1px dashed var(--accent); color:var(--accent); background:transparent; cursor:pointer; font-weight:bold;" onclick="window.print()">📄 Generate Branded PDF Report</button>
 </div>
 
 <script>
-  const STORAGE_KEY = "vibes_pro_v3";
+  const STORAGE_KEY = "vibe_tracker_v3_data";
+  const AGENT_KEY = "vibe_tracker_v3_agent";
+  let currentStars = 3;
   let agentPhone = "";
 
-  // Dynamic Value Update
-  function dv(id) { document.getElementById('v_'+id).textContent = document.getElementById(id).value; }
+  function uVal(id) { document.querySelector(`[data-range-val="${id}"]`).textContent = document.getElementById(id).value; }
 
-  // Branding Logic (URL Parameters)
+  // 1. Branding & URL Logic
   function initBranding() {
     const params = new URLSearchParams(window.location.search);
-    const n = params.get('n') || localStorage.getItem('a_n') || "Your Agent";
-    const b = params.get('b') || localStorage.getItem('a_b') || "Brokerage";
-    const p = params.get('p') || localStorage.getItem('a_p') || "";
-    const img = params.get('img') || localStorage.getItem('a_img') || "";
+    const cache = JSON.parse(localStorage.getItem(AGENT_KEY) || "{}");
+    
+    const info = {
+      n: params.get('n') || cache.n || "Your Agent",
+      b: params.get('b') || cache.b || "Professional Realtor",
+      p: params.get('p') || cache.p || "",
+      img: params.get('img') || cache.img || ""
+    };
 
-    localStorage.setItem('a_n', n); localStorage.setItem('a_b', b);
-    localStorage.setItem('a_p', p); localStorage.setItem('a_img', img);
+    localStorage.setItem(AGENT_KEY, JSON.stringify(info));
+    document.getElementById('agentNameV3').textContent = info.n;
+    document.getElementById('agentSublineV3').textContent = `${info.b} • ${info.p}`;
+    agentPhone = info.p;
 
-    document.getElementById('agentName').textContent = n;
-    document.getElementById('agentInfoLine').textContent = `${b} • ${p}`;
-    agentPhone = p;
-
-    const photo = document.getElementById('agentPhoto');
-    if (img) photo.innerHTML = `<img src="${img}" style="width:100%; height:100%; object-fit:cover;">`;
-    else photo.textContent = n.charAt(0);
+    const avatar = document.getElementById('agentAvatarV3');
+    if (info.img) avatar.innerHTML = `<img src="${info.img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    else avatar.textContent = info.n.charAt(0);
   }
 
-  // Buyer Logic
+  // 2. Buyer Personalization
   function checkBuyer() {
-    const name = localStorage.getItem('buyer_name');
-    if (!name) document.getElementById('welcomeModal').style.display = 'flex';
-    else document.getElementById('buyerDisplay').textContent = `Scout: ${name}`;
+    const name = localStorage.getItem('v3_buyer_name');
+    if (!name) document.getElementById('onboardingOverlay').style.display = 'flex';
+    else document.getElementById('buyerBadge').textContent = `Scout: ${name}`;
   }
 
   function saveBuyer() {
-    const n = document.getElementById('buyerInput').value;
-    if (n) { localStorage.setItem('buyer_name', n); location.reload(); }
+    const name = document.getElementById('buyerNameInput').value;
+    if (name) { localStorage.setItem('v3_buyer_name', name); location.reload(); }
   }
 
-  // SMS Feature
+  // 3. SMS Logic
   function textAgent(loc, score) {
-    const buyer = localStorage.getItem('buyer_name') || "Client";
+    const buyer = localStorage.getItem('v3_buyer_name') || "Client";
     const msg = `Hi! It's ${buyer}. I just rated ${loc} a ${score}/5 vibe score. Let's talk!`;
     window.location.href = `sms:${agentPhone}?body=${encodeURIComponent(msg)}`;
   }
 
-  // Storage Logic
-  document.getElementById('vibesForm').onsubmit = (e) => {
+  // 4. V2 Engine (Stars, Storage, Rendering)
+  function initStars() {
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.onclick = () => {
+        currentStars = btn.dataset.star;
+        document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('selected', b.dataset.star <= currentStars));
+        document.getElementById('starLabel').textContent = `(${currentStars}/5)`;
+      };
+    });
+  }
+
+  document.getElementById('vibesForm').onsubmit = async (e) => {
     e.preventDefault();
     const snap = {
       id: Date.now(),
       name: document.getElementById('spotName').value,
       notes: document.getElementById('notes').value,
-      score: (Number(document.getElementById('noise').value) + Number(document.getElementById('traffic').value) + Number(document.getElementById('clean').value) + Number(document.getElementById('safety').value)) / 4,
+      stars: currentStars,
+      score: (['noise','traffic','clean','light','green','parking','people','safety'].reduce((a,c)=>a+Number(document.getElementById(c).value),0)/8).toFixed(1),
       date: new Date().toLocaleDateString()
     };
+    
+    // V2 Photo Annotation Engine Integration
+    const file = document.getElementById('photoInput').files[0];
+    if (file) snap.photo = await createAnnotatedPhoto(file, snap);
+
     const snaps = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     snaps.push(snap);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snaps));
     location.reload();
   };
 
+  async function createAnnotatedPhoto(file, meta) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width; canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          ctx.fillStyle = "rgba(0,0,0,0.7)";
+          ctx.fillRect(0, img.height - 60, img.width, 60);
+          ctx.fillStyle = "white"; ctx.font = "20px Arial";
+          ctx.fillText(`${meta.name} • Score: ${meta.score}/5 • ${meta.date}`, 20, img.height - 25);
+          resolve(canvas.toDataURL("image/jpeg", 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   function render() {
     const container = document.getElementById('snapshotsContainer');
     const snaps = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    container.innerHTML = snaps.reverse().map(s => `
+    container.innerHTML = snaps.sort((a,b)=>b.score-a.score).map(s => `
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h4 style="margin:0;">${s.name} <small style="font-weight:normal; color:var(--muted)">${s.date}</small></h4>
-          <span style="color:var(--accent); font-weight:bold;">${s.score.toFixed(1)} / 5</span>
+          <strong>${s.name}</strong>
+          <span style="color:var(--accent); font-weight:bold;">${s.score} / 5</span>
         </div>
-        <p style="font-size:0.85rem; color:var(--muted); margin:10px 0;">${s.notes}</p>
-        <button class="btn btn-secondary no-print" style="font-size:0.75rem; padding:8px 15px;" onclick="textAgent('${s.name}', '${s.score.toFixed(1)}')">💬 Text Agent</button>
+        ${s.photo ? `<img src="${s.photo}" style="width:100%; border-radius:8px; margin:10px 0;">` : ''}
+        <p style="font-size:0.85rem; color:var(--muted);">${s.notes}</p>
+        <button class="no-print" style="background:var(--accent-soft); color:var(--accent); border:none; padding:8px 15px; border-radius:99px; cursor:pointer; font-weight:600;" onclick="textAgent('${s.name}', '${s.score}')">💬 Text Agent</button>
       </div>
     `).join('');
   }
 
-  initBranding();
-  checkBuyer();
-  render();
+  // Theme Toggle
+  document.getElementById('themeToggle').onclick = () => {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    document.getElementById('themeIcon').textContent = isDark ? "☀️" : "🌙";
+    document.getElementById('themeLabel').textContent = isDark ? "Light" : "Dark";
+  };
+
+  initBranding(); checkBuyer(); initStars(); render();
 </script>
 </body>
 </html>
