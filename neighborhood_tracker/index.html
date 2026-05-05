@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Neighborhood Vibes Tracker v3.11 (Master)</title>
-  <link rel="icon" type="image/png" href="favicon.png?v=2">
+  <title>Neighborhood Vibes Tracker v3.12 (Master)</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -28,10 +28,27 @@
     body.dark { background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 70%); background-attachment: fixed; }
 
     .app { width: 100%; max-width: 960px; padding: 16px; margin-bottom: 32px; z-index: 2; position: relative; }
-    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+    
+    /* Header Container */
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    
+    /* Left side (Icon + Title + Info button) */
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    
+    /* Right side (Greeting + Clock + Moon) */
+    .header-right { text-align: right; }
     
     #smartGreeting { font-weight: 700; color: var(--accent); font-size: 1.15rem; margin-bottom: 4px; }
     .clock-display { font-size: 0.8rem; color: var(--muted); }
+
+    /* MOBILE: Force greeting block to the top, full width */
+    @media (max-width: 720px) {
+      header { flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 20px; }
+      .header-right { order: -1; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+      .header-left { justify-content: center; }
+      /* Position the moon toggle back to the top right */
+      #themeToggle { position: absolute; top: 0; right: 0; margin-top: 0; font-size: 1.2rem; }
+    }
 
     .card { background: var(--bg-alt); backdrop-filter: blur(12px); border-radius: var(--card-radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border); }
 
@@ -51,7 +68,7 @@
     input, select, textarea { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--text); font-size: 0.95rem; }
     select { background: #1e293b !important; color: white !important; border: 1px solid var(--accent) !important; font-weight: 600; cursor: pointer; }
     
-    /* ADDED: Highly visible borders for dark mode inputs */
+    /* Highly visible borders for dark mode inputs */
     body.dark input, body.dark select, body.dark textarea { background: rgba(0,0,0,0.25); border: 1px solid rgba(255, 255, 255, 0.4); }
 
     .notes-box { height: 110px; resize: vertical !important; }
@@ -64,7 +81,7 @@
     .range-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
     .range-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--muted); font-weight: 800; margin-top: 4px; }
 
-    /* RESTORED: Burnt Orange / Gold Soft Star Background */
+    /* Burnt Orange / Gold Soft Star Background */
     .star-block { background: var(--gold-soft); padding: 14px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.4); }
     .star-btn { background: transparent; border: none; font-size: 2.2rem; cursor: pointer; color: var(--muted); padding: 0 4px; transition: transform 0.1s; }
     .star-btn.selected { color: var(--gold); }
@@ -109,12 +126,12 @@
 
 <div class="app">
   <header class="no-print">
-    <div style="display:flex; align-items:center; gap:12px;">
+    <div class="header-left">
       <span style="font-size: 2.2rem;">🏙️</span>
       <h1 style="font-size: 1.5rem; margin:0;">Neighborhood Vibes</h1>
       <button onclick="toggleModal(true)" style="background:transparent; border:1px solid var(--border); border-radius:50%; width:36px; height:36px; color:var(--muted); cursor:pointer;">ⓘ</button>
     </div>
-    <div style="text-align:right;">
+    <div class="header-right">
       <div id="smartGreeting">Hello!</div>
       <div id="liveClock" class="clock-display">...</div>
       <button id="themeToggle" style="background:transparent; border:none; font-size:1.5rem; cursor:pointer; margin-top:8px;">🌙</button>
@@ -209,14 +226,18 @@
         <div class="range-row"><div class="range-header"><span>People Vibe</span><span data-v="people">3</span></div><input type="range" id="people" min="1" max="5" value="3" oninput="uVal('people')"><div class="range-labels"><span>Reserved</span><span>Friendly</span></div></div>
         <div class="range-row"><div class="range-header"><span>Safety</span><span data-v="safety">3</span></div><input type="range" id="safety" min="1" max="5" value="3" oninput="uVal('safety')"><div class="range-labels"><span>Uncomfortable</span><span>Secure</span></div></div>
         
-        <button type="submit" class="btn-primary" style="margin-top:24px;">Save & Share</button>
+        <button type="submit" class="btn-primary" style="margin-top:24px;">Generate Dossier & Share</button>
         <button type="button" onclick="hardReset()" class="btn-reset">Reset Form</button>
       </div>
     </div>
   </form>
 
   <div id="archive"></div>
-  <button class="no-print btn-reset" style="border:2px dashed var(--accent); color:var(--accent); background:transparent;" onclick="window.print()">📄 Generate Branded PDF Dossier</button>
+  
+  <div class="no-print" style="text-align: center; margin-top: 32px;">
+    <span style="font-size: 0.8rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Need to keep a copy?</span>
+    <button class="btn-reset" style="border:2px dashed var(--accent); color:var(--accent); background:transparent; margin-top: 8px;" onclick="window.print()">📥 Download PDF Dossier to Phone</button>
+  </div>
 </div>
 
 <div id="infoOverlay" class="ml-info-overlay" hidden onclick="toggleModal(false)"></div>
@@ -251,18 +272,26 @@
 
   function uVal(id) { document.querySelector(`[data-v="${id}"]`).textContent = document.getElementById(id).value; }
 
-  // New Hard Reset Function to wipe inputs without reloading
+  // New Hard Reset Function to wipe inputs AND wipe archive
   function hardReset() {
+    // 1. Wipe the form inputs
     document.getElementById('vibesForm').reset();
+    
+    // 2. Reset the stars back to 3
     curStars = 3;
     document.getElementById('starScore').textContent = `(3/5)`;
     document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('selected', b.dataset.s <= curStars));
     
+    // 3. Reset the 8 sliders back to 3
     const sliders = ['noise','traffic','clean','light','green','parking','people','safety'];
     sliders.forEach(id => {
       document.getElementById(id).value = 3;
       uVal(id);
     });
+
+    // 4. Wipe the saved archive from memory and screen
+    localStorage.removeItem(DATA_KEY);
+    document.getElementById('archive').innerHTML = '';
   }
 
   function updateClock() {
