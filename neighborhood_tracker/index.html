@@ -17,7 +17,7 @@
       --bg: #020617; --bg-alt: rgba(15, 23, 42, 0.7); --text: #f1f5f9;
       --muted: #94a3b8; --accent: #38bdf8; --accent-soft: #082f49;
       --border: rgba(255, 255, 255, 0.1); --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
-      --gold-soft: #422006; /* The burnt orange/brown star background */
+      --gold-soft: #422006;
     }
 
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
@@ -29,24 +29,17 @@
 
     .app { width: 100%; max-width: 960px; padding: 16px; margin-bottom: 32px; z-index: 2; position: relative; }
     
-    /* Header Container */
     header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    
-    /* Left side (Icon + Title + Info button) */
     .header-left { display: flex; align-items: center; gap: 12px; }
-    
-    /* Right side (Greeting + Clock + Moon) */
     .header-right { text-align: right; }
     
     #smartGreeting { font-weight: 700; color: var(--accent); font-size: 1.15rem; margin-bottom: 4px; }
     .clock-display { font-size: 0.8rem; color: var(--muted); }
 
-    /* MOBILE: Force greeting block to the top, full width */
     @media (max-width: 720px) {
       header { flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 20px; }
       .header-right { order: -1; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
       .header-left { justify-content: center; }
-      /* Position the moon toggle back to the top right */
       #themeToggle { position: absolute; top: 0; right: 0; margin-top: 0; font-size: 1.2rem; }
     }
 
@@ -67,29 +60,22 @@
 
     input, select, textarea { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--text); font-size: 0.95rem; }
     select { background: #1e293b !important; color: white !important; border: 1px solid var(--accent) !important; font-weight: 600; cursor: pointer; }
-    
-    /* Highly visible borders for dark mode inputs */
     body.dark input, body.dark select, body.dark textarea { background: rgba(0,0,0,0.25); border: 1px solid rgba(255, 255, 255, 0.4); }
 
-    .notes-box { height: 220px; resize: vertical !important; }
+    .notes-box { height: 110px; resize: vertical !important; }
 
     .station { border-top: 1px solid var(--border); padding-top: 20px; }
     .station-label { font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; display: block; }
 
-    /* Slider UI */
     .range-row { margin-bottom: 20px; }
     .range-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
     .range-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--muted); font-weight: 800; margin-top: 4px; }
 
-    /* Burnt Orange / Gold Soft Star Background */
     .star-block { background: var(--gold-soft); padding: 14px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.4); }
     .star-btn { background: transparent; border: none; font-size: 2.2rem; cursor: pointer; color: var(--muted); padding: 0 4px; transition: transform 0.1s; }
     .star-btn.selected { color: var(--gold); }
     .star-btn:active { transform: scale(1.1); }
 
-
-
-    /* Location Snapshot / Mini Map */
     .map-card { background: rgba(56, 189, 248, 0.08); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 255px; display:flex; flex-direction:column; }
     .map-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
     .map-status { font-size:0.72rem; color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
@@ -110,7 +96,6 @@
     .map-crosshair { position:absolute; left:50%; top:50%; width:58px; height:58px; border:2px solid rgba(255,255,255,.65); border-radius:50%; transform:translate(-50%,-50%); z-index:1; }
     .coords-line { font-size:0.74rem; color:var(--muted); font-weight:700; margin-top:10px; line-height:1.4; }
 
-    /* Bottom Action Group */
     .bottom-actions { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 24px; text-align:center; }
     .primary-action-row { max-width: 640px; margin: 0 auto 16px; }
     .utility-action-grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; max-width: 640px; margin: 0 auto; }
@@ -120,7 +105,6 @@
     .keep-copy-note { display:block; font-size:0.72rem; color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; }
     @media (max-width: 640px) { .utility-action-grid { grid-template-columns: 1fr; } }
 
-    /* Lifestyle Match Pills */
     .lifestyle-station { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 24px; }
     .pill-wrap { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; }
     .pill-row { padding:12px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,0.04); }
@@ -132,7 +116,6 @@
     @media (max-width: 768px) { .map-card { min-height:auto; } .mini-map { height:160px; flex:initial; min-height:160px; } .pill-wrap { grid-template-columns: 1fr; } }
     @media (max-width: 420px) { .pill-options { grid-template-columns:1fr; } .mini-map { height:130px; min-height:130px; } }
 
-    /* Center Light Modal */
     .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); z-index: 1000; }
     .ml-info-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1001; width: 90%; max-width: 440px; }
     .ml-info-modal-inner { background: #f7f6f2; color: #111827; border-radius: 20px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); }
@@ -242,6 +225,15 @@
         </div>
 
         <div class="station">
+          <span class="station-label">Voice Note & Transcription</span>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button type="button" id="recordBtn" style="padding:14px; border-radius:8px; border:2px solid var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:800; cursor:pointer; flex:1; font-size: 0.95rem;">🎙️ Start Recording</button>
+            <audio id="audioPlayback" controls style="display:none; height:48px; max-width: 50%;"></audio>
+          </div>
+          <div id="recordStatus" style="font-size:0.75rem; color:var(--muted); margin-top:8px; font-weight:700;">Tap to record raw audio & auto-type notes.</div>
+        </div>
+
+        <div class="station">
           <span class="station-label">Add Photo</span>
           <div style="position:relative; overflow:hidden;">
              <div style="padding:16px; border-radius:8px; border:2px dashed var(--accent); background:var(--accent-soft); color:var(--accent); text-align:center; font-weight:800; cursor:pointer;">📷 Take Photo / Add Image</div>
@@ -266,14 +258,10 @@
             <div id="coordsLine" class="coords-line">Tap “Use My Location” to attach coordinates to this scouting dossier.</div>
           </div>
         </div>
-
-
       </div>
 
       <div class="right-col">
-        <div class="station" style="border-top:0; padding-top:0;">
-          <span class="station-label">Neighborhood Match</span>
-        </div>
+        <span class="station-label" style="margin-bottom: 16px;">Neighborhood Match</span>
         <div class="range-row"><div class="range-header"><span>Street Noise</span><span data-v="noise">3</span></div><input type="range" id="noise" min="1" max="5" value="3" oninput="uVal('noise')"><div class="range-labels"><span>Silent</span><span>Loud</span></div></div>
         <div class="range-row"><div class="range-header"><span>Traffic</span><span data-v="traffic">3</span></div><input type="range" id="traffic" min="1" max="5" value="3" oninput="uVal('traffic')"><div class="range-labels"><span>Calm</span><span>Heavy</span></div></div>
         <div class="range-row"><div class="range-header"><span>Cleanliness</span><span data-v="clean">3</span></div><input type="range" id="clean" min="1" max="5" value="3" oninput="uVal('clean')"><div class="range-labels"><span>Messy</span><span>Pristine</span></div></div>
@@ -282,7 +270,6 @@
         <div class="range-row"><div class="range-header"><span>Parking</span><span data-v="parking">3</span></div><input type="range" id="parking" min="1" max="5" value="3" oninput="uVal('parking')"><div class="range-labels"><span>Difficult</span><span>Easy</span></div></div>
         <div class="range-row"><div class="range-header"><span>People Vibe</span><span data-v="people">3</span></div><input type="range" id="people" min="1" max="5" value="3" oninput="uVal('people')"><div class="range-labels"><span>Reserved</span><span>Friendly</span></div></div>
         <div class="range-row"><div class="range-header"><span>Safety</span><span data-v="safety">3</span></div><input type="range" id="safety" min="1" max="5" value="3" oninput="uVal('safety')"><div class="range-labels"><span>Uncomfortable</span><span>Secure</span></div></div>
-
       </div>
     </div>
 
@@ -303,7 +290,7 @@
         </div>
 
     <div class="bottom-actions">
-      <div class="station" style="max-width:640px; margin:0 auto 20px; text-align:left;">
+      <div class="station" style="max-width: 640px; margin: 0 auto 24px; text-align: left; border-top: none; padding-top: 0;">
         <span class="station-label">Overall Impression</span>
         <div class="star-block">
           <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
@@ -319,13 +306,14 @@
           </div>
         </div>
       </div>
+      
       <div class="primary-action-row">
         <button type="submit" class="btn-primary">Generate Dossier & Share</button>
       </div>
       <span class="keep-copy-note">Need to keep a copy? Download PDF before clicking Reset Form Button</span>
       <div class="utility-action-grid">
-        <button type="button" class="btn-reset btn-pdf" onclick="window.print()">📥 Download PDF</button>
         <button type="button" onclick="hardReset()" class="btn-reset">Reset Form</button>
+        <button type="button" class="btn-reset btn-pdf" onclick="window.print()">📥 Download PDF</button>
       </div>
     </div>
   </form>
@@ -359,10 +347,82 @@
 </div>
 
 <script>
-  // UPDATE YOUR REALTOR INFO AND TAGLINE HERE:
   const REALTOR = { name: "Your Agent Name", phone: "(000) 000-0000", brokerage: "Professional Realtor", tagline: "Your Trusted Vibe Expert." };
   let buyerName = "", curStars = 3, capturedGPS = null;
   const DATA_KEY = "v39_vibes", AGENT_KEY = "v39_agent";
+  
+  // Audio & Speech Variables
+  let audioBase64 = null;
+  let isRecording = false;
+  let mediaRecorder;
+  let audioChunks = [];
+  let recognition;
+
+  // Initialize Speech Recognition
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRec();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    
+    recognition.onresult = (event) => {
+      let finalTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
+      }
+      if (finalTranscript) {
+        const notesBox = document.getElementById('notes');
+        notesBox.value += (notesBox.value ? ' ' : '') + finalTranscript.trim();
+      }
+    };
+  }
+
+  document.getElementById('recordBtn').onclick = async function() {
+    const btn = this;
+    const status = document.getElementById('recordStatus');
+    const playback = document.getElementById('audioPlayback');
+
+    if (isRecording) {
+      mediaRecorder.stop();
+      if(recognition) recognition.stop();
+      btn.textContent = '🎙️ Start Recording';
+      btn.style.background = 'var(--accent-soft)';
+      btn.style.color = 'var(--accent)';
+      status.textContent = '✅ Audio saved & transcription paused.';
+      isRecording = false;
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        playback.src = URL.createObjectURL(audioBlob);
+        playback.style.display = 'block';
+        
+        // Convert audio to base64 to save alongside other data
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => audioBase64 = reader.result;
+      };
+
+      mediaRecorder.start();
+      if(recognition) recognition.start();
+      
+      btn.textContent = '⏹️ Stop Recording';
+      btn.style.background = '#ef4444';
+      btn.style.color = 'white';
+      status.textContent = '🔴 Recording & Listening... Speak clearly.';
+      isRecording = true;
+
+    } catch (err) {
+      status.textContent = '⚠️ Mic access denied. Check browser settings.';
+    }
+  };
 
   function uVal(id) { document.querySelector(`[data-v="${id}"]`).textContent = document.getElementById(id).value; }
 
@@ -419,31 +479,29 @@
     }, { enableHighAccuracy:true, timeout:10000, maximumAge:0 });
   }
 
-
-  // New Hard Reset Function to wipe inputs AND wipe archive
   function hardReset() {
-    // 1. Wipe the form inputs
     document.getElementById('vibesForm').reset();
-    
-    // 2. Reset the stars back to 3
     curStars = 3;
     document.getElementById('starScore').textContent = `(3/5)`;
     document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('selected', b.dataset.s <= curStars));
     
-    // 3. Reset the 8 sliders back to 3
     const sliders = ['noise','traffic','clean','light','green','parking','people','safety'];
     sliders.forEach(id => {
       document.getElementById(id).value = 3;
       uVal(id);
     });
 
-    // 4. Reset lifestyle pills and GPS display
     resetLifestylePills();
     capturedGPS = null;
     document.getElementById('gpsStatus').textContent = 'GPS not captured yet';
     document.getElementById('coordsLine').textContent = 'Tap “Use My Location” to attach coordinates to this scouting dossier.';
 
-    // 5. Wipe the saved archive from memory and screen
+    // Reset Audio State
+    audioBase64 = null;
+    document.getElementById('audioPlayback').style.display = 'none';
+    document.getElementById('audioPlayback').src = '';
+    document.getElementById('recordStatus').textContent = 'Tap to record raw audio & auto-type notes.';
+
     localStorage.removeItem(DATA_KEY);
     document.getElementById('archive').innerHTML = '';
   }
@@ -534,14 +592,12 @@
   document.getElementById('vibesForm').onsubmit = async (e) => {
     e.preventDefault();
     
-    // Check if the location field is empty
     const spotInput = document.getElementById('spotName').value.trim();
     if (!spotInput) {
       alert("⚠️ Please enter a Location / Label before saving.");
       return;
     }
 
-    // Change button text so the user knows it's working
     const submitBtn = document.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = "Processing... ⏳";
@@ -553,6 +609,7 @@
         type: document.getElementById('propType').value, context: document.getElementById('context').value,
         stars: curStars, timestamp: new Date().toLocaleString(),
         gps: capturedGPS,
+        audio: audioBase64, // Attach raw audio base64 data here
         lifestyle: getLifestyleSelections(),
         avg: (['noise','traffic','clean','light','green','parking','people','safety'].reduce((a,c)=>a+Number(document.getElementById(c).value),0)/8).toFixed(1)
       };
@@ -599,6 +656,7 @@
         ${s.photo ? `<img src="${s.photo}" style="width:100%; border-radius:12px; margin:16px 0; border:1px solid var(--border);">` : ''}
         ${s.gps ? `<div class="map-card" style="margin:16px 0;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><strong>📍 GPS Verified</strong><small style="color:var(--muted); font-weight:800;">${s.gps.capturedAt}</small></div><div class="mini-map"><div class="map-crosshair"></div><div class="map-pin"></div></div><div class="coords-line">Lat ${s.gps.lat}, Lng ${s.gps.lng} • Accuracy about ${s.gps.accuracy}m</div></div>` : ''}
         ${s.lifestyle ? `<div style="margin:16px 0; display:flex; flex-wrap:wrap; gap:8px;">${Object.values(s.lifestyle).map(v => `<span style="border:1px solid var(--border); border-radius:99px; padding:7px 10px; font-size:.72rem; font-weight:850; color:var(--text); background:rgba(255,255,255,.05);">${v.label}: <strong style="color:var(--accent);">${v.selected}</strong></span>`).join('')}</div>` : ''}
+        ${s.audio ? `<div style="margin: 12px 0;"><small style="color:var(--muted); font-weight:700;">Recorded Audio Note:</small><br><audio controls src="${s.audio}" style="width:100%; margin-top:8px; height:40px; outline:none;"></audio></div>` : ''}
         <p style="font-size:0.95rem; color:var(--text); margin:12px 0; line-height: 1.5;">${s.notes}</p>
         <div style="display:flex; gap:12px; margin-top:20px;">
            <button class="no-print btn-archive-action btn-text-agent" onclick="window.location.href='sms:${agent.p}?body=${encodeURIComponent('Hi! Check out this vibe score for '+s.name+': '+s.avg+'/5. Initial thoughts: '+s.notes)}'">📲 Text Agent</button>
